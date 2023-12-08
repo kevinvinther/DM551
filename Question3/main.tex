@@ -1,0 +1,247 @@
+\documentclass{beamer}
+\usetheme{metropolis} % Use the metropolis theme
+
+
+
+% Add tikz and pgfplots packages
+\usepackage{tikz, pgfplots}
+\usetikzlibrary{positioning}
+
+% For clicking references
+\usepackage{hyperref}
+
+% For better referencing
+\usepackage{cleveref}
+
+\usepackage{graphicx}
+
+% Define custom pastel colors
+\definecolor{pastelRed}{RGB}{255, 105, 97}   % A soft pastel red
+\definecolor{pastelBlue}{RGB}{119, 158, 203} % A muted pastel blue
+\definecolor{pastelYellow}{RGB}{255, 223, 0} % A gentle pastel yellow
+\definecolor{lightGray}{RGB}{211, 211, 211}  % A light gray for subtitles and less emphasized text
+
+% Apply the custom colors
+\setbeamercolor{palette primary}{bg=black, fg=white}
+\setbeamercolor{palette secondary}{bg=lightGray, fg=black}
+\setbeamercolor{palette tertiary}{bg=black, fg=white}
+\setbeamercolor{titlelike}{parent=palette primary, fg=black}
+\setbeamercolor{subtitle}{fg=lightGray}
+\setbeamercolor{structure}{fg=black} % For itemize, enumerate, etc
+
+% Change color of normal text
+\setbeamercolor{normal text}{fg=black, bg=white}
+
+% Set the color of the table of contents
+\setbeamercolor{section in toc}{fg=black} % Section titles in TOC
+\setbeamercolor{subsection in toc}{fg=black} % Subsection titles in TOC
+
+% Set block colors
+\setbeamercolor{block title}{use=structure,fg=white,bg=pastelRed}
+\setbeamercolor{block body}{fg=black,bg=white}
+
+
+
+% Title Page Info
+\title{Discrete Probability, Random Variables, and Bounds}
+\subtitle{Spørgsmål 3 fra Exam Questions}
+\author{Kevin Vinther}
+\date{\today}
+
+\begin{document}
+
+% Title Page
+\begin{frame}
+    \titlepage
+\end{frame}
+
+% Table of Contents
+\begin{frame}[allowframebreaks]
+    \frametitle{Table of Contents}
+    \tableofcontents
+\end{frame}
+
+\section{An Introduction to Discrete Probability}
+
+\begin{frame}[allowframebreaks]
+  \frametitle{Finite Probability}
+  \begin{itemize}
+    \item \textbf{Experiment}: En procedure som giver et resultat ud af et givet sæt a mulige resultater.
+    \item \textbf{Sample Space}: Sættet af alle mulige resultater.
+    \item \textbf{Event}: Subset af sample space.
+  \end{itemize} 
+\end{frame}
+
+\begin{frame}
+  \frametitle{Definition 1}
+  \begin{definition}
+If $S$ is a finite nonempty sample space of equally likely outcomes, and $E$ is an event, that is, a subset of $S$, then the \textit{probability} of $E$ is $p(E) = \frac{|E|}{|S|}$.
+\end{definition}
+\begin{itemize}
+\item \textit{Implikationer:}
+\item Givet, at $E$ er en event, og $S$ sample space:
+  \item $0 \leq |E| \leq |S|$, fordi $E \subseteq S$. Dermed $0 \leq p(E) = |E|/|S| \leq 1$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Example 1}
+  \begin{itemize}
+  \item<1-> En boks indeholder fire blå bolde og fem røde. Hvad er sandsynligheden at en bold der er valgt tilfældigt er blå?
+    \item<2-> $\frac{4}{9}$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Example 2}
+ \begin{itemize}
+ \item<1-> Hvad er sandsynligheden for at, når 2 terninger bliver rullet, at summen af de to tal på terningen er 7?
+ \item<1-> $6^2 = 36$ mulige udfald. (Af product rule).
+ \item<2-> Der er 6 udfald der ender i 7: (1,6), (2,5), (3,4), (4,3), (5,2), og (6,1)
+   \item<3-> Dermed: $\frac{6}{36} = \frac{1}{6}$
+ \end{itemize} 
+\end{frame}
+
+\begin{frame}
+  \frametitle{Eksempel 5}
+\begin{itemize}
+\item<1-> Hvad er sandsynligheden for at en hånd i poker har 4 kort af én slags (samme tal)? (Hint: Product rule)
+\item<2-> Antallet af hænder med 5 kort med fire af én slags er produktet af antallet måder man kan vælge én slags på, antallet af måder du kan vælge disse 4 af slagsen ud af de fire i dækket, og antallet af måder du kan vælge det femte kort. Det er:
+\item<3-> $\binom{13}{1}\binom{4}{4}\binom{48}{1}$. Næste: Hvor mange forskellige hænder af 5 kort er der? 
+\item<4-> $\binom{52}{5}$. Næste: Find sandsynligheden
+  \item<5-> $\frac{\binom{13}{1}\binom{4}{4}\binom{48}{1}}{\binom{52}{5}}= \frac{13 \cdot 1 \cdot 48}{2598960} \approx 0.00024$
+\end{itemize}  
+\end{frame}
+
+\begin{frame}
+  \frametitle{Eksempel 7 i}
+ \begin{itemize}
+ \item<1-> Hvad er sandsynligheden at tallene 11, 4, 17, 39 og 23 bliver taget i den orden fra en spand med 50 bolde med tallene 1..50, hvis (a) bolden der er valgt ikke bliver lagt tilbage i spanden før den næste bold blive valgt og (b) bolden bliver lagt tilbage før den næste bold bliver valgt?
+ \item<1-> Lad os starte med spørgsmål (a) (hint: Hvor mange måder kan man vælge boldene på?):
+ \item<2-> Man kan vælge 5 bolde på $50 \cdot 49 \cdot 48 \cdot 47 \cdot 46 = 254251200$ måder. Hvad er sandsynligheden så for at vælge præcis den orden der er beskrevet tidligere?
+ \item<3-> $\frac{1}{254251200}$.
+   \item<3-> Bogen kalder dette \textbf{sampling without replacement}.
+ \end{itemize} 
+\end{frame}
+
+\begin{frame}
+  \frametitle{Eksempel 7 ii}
+ \begin{itemize}
+ \item<1-> Hvad med (b)? Hvor mange måder kan man vælge 5 bolde på så?
+ \item<2-> $50^5$. Husk at antallet af permutationer med gentagelser er $n^r$, og her er $n = 50, r = 5$.
+ \item<3-> Måden man finder sandsynligheden på har ikke ændret sig her.
+ \item<3-> $\frac{1}{312500000}$
+ \item<3-> Bogen kalder dette \textbf{sampling with replacement}.
+   \item<3-> Hvad forskellen er mellem det og permutations with repetition er et godt spørgsmål.
+ \end{itemize} 
+\end{frame}
+
+\subsection{Probabilities of Complements and Unions of Events}
+\label{subsec:probcompunion}
+
+\begin{frame}
+  \frametitle{Theorem 1}
+  Tid til første theorem!
+  \begin{theorem}[Theorem 1]
+    Let $E$ be an event in a sample space $S$. The probability of the event $\overline{E} = S - E$, the complementary event of $E$ is given by $$P(\overline{E}) = 1 - p(E)$$
+  \end{theorem}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Theorem 1 Bevis}
+  \begin{proof}[Theorem 1 Bevis]
+For at finde sandsynligheden af begivenheden $\overline{E} = S - E$, notér at $|\overline{E}| = |S| - |E|$. Dermed: $$p(\overline{E}) = \frac{|S|-|E|}{|S|}=1 - \frac{|E|}{|S|}=1-p(E)$$
+  \end{proof}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Eksempel 8}
+  \begin{itemize}
+  \item<1-> En sekvens af 10 bits er tilfældigt genereret. Hvad er sandsynligheden for at mindst en af disse bits er 0?
+  \item<1-> Hint: Brug complement.
+  \item<2-> Lad $E$ være tilfældet at mindst en af de 10 bits er 0. Så er $\overline{E}$ sandsynligheden for at alle bitsne er 1. 
+  \item<3-> $P(E) = 1-p(\overline{E})=1- \frac{|\overline{E}|}{|S|}=1- \frac{1}{2^{10}} = 1 - \frac{1}{1024} = \frac{1023}{1024}$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Theorem 2}
+  \begin{theorem}
+Let $E_{1}$ and $E_{2}$ be events in the sample space $S$. Then $$p(E_{1} \cup E_{2}) = p(E_{1})+P(E_{2})-p(E_{1} \cap E_{2}).$$
+  \end{theorem} 
+\end{frame}
+
+\begin{frame}
+  \frametitle{Theorem 2 Bevis}
+  \begin{proof}[Theorem 2 Bevis]
+    Vi bruger subtraction rule for sæt (inclusion-exclusion for 2 sæt):
+    $$|E_{1} \cup E_{2}| = |E_{1}| + |E_{2}| - |E_{1} \cap E_{2}|$$
+    Dermed:
+    \begin{equation*}
+      \begin{split}
+        p(E_{1} \cup E_{2}) &= \frac{|E_{1} \cup E_{2}|}{|S|}\\
+                         &= \frac{|E_{1}|+|E_{2}-|E_{1}\cap E_{2}|}{|S|}\\
+                         &= \frac{|E_{1}|}{|S|} + \frac{|E_{2}|}{|S|}- \frac{|E_{1} \cap E_{2}|}{|S|}\\
+        &= p(E_{1})+p(E_{2})-p(E_{1} \cap E_{2})
+      \end{split}
+    \end{equation*}
+  \end{proof}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Eksempel 9}
+ \begin{itemize}
+ \item<1-> Hvad er sandsynligheden for at et positivt heltal valgt tilfældligt fra et sæt af positive heltal der ikke overgår 100 er deleligt med 2 eller 5?
+ \item<1-> Hint: Definér $E_{1}$ og $E_{2}$ som værende tal der er delelige med hhv. 2 og 5.
+ \item<2-> $E_{1}$ = tal der er delelige med 2, $E_{2}$ = tal der er delelige med 5.
+ \item<3-> $|E_{1}| = 50$, $|E_{2}| = 20$, $|E_{1} \cup E_{2}| = 10$.
+ \item<3-> Vi ved at $p(E_{1}\cupE_{2})=p(E_{1})+P(E_{2})-p(E_{1} \cap E_{2})$. Så: $= \frac{50}{100}+ \frac{20}{100}- \frac{10}{100} = \frac{3}{5}$
+     
+ \end{itemize} 
+\end{frame}
+
+\subsection{Probabilistic Reasoning}
+\label{subsec:probabilistic-reasoning}
+
+\begin{frame}
+  \frametitle{Probabilistic Reasonining}
+ \begin{itemize}
+ \item Probabilistic Reasoning er at bruge sandsynlighedsregning til at ræsonnere sig frem til resultater. Et eksempel på hvor man kan gøre dette, er Monty Hall Three-Door Puzzle, som vi kommer til nu!
+ \end{itemize} 
+\end{frame}
+
+\begin{frame}
+  \frametitle{Eksempel 10: The Monty Hall Three-Door Puzzle}
+  \begin{itemize}
+  \item Antag at du er en spiller i et game show.
+  \item Du bliver bedt om at vælge en af tre døre.
+  \item Den store pris er bag en af de tre døre, og de to andre døre leder til tab.
+  \item Når du vælger en dør, vil værten lade dig enten beholde døren, eller vælge en ny. Du får ikke lov til at se hvad der er i døren hvis du vælger en ny.
+  \item Vælger du en ny? 
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Eksempel 10 Løsning}
+  
+  \begin{itemize}
+  \item Ja du gør!
+  \item Sandsynligheden for at du har valgt den rigtige dør først er $\frac{1}{3}$
+  \item Sandsynligheden for at du har valg \textbf{forkert} er $\frac{2}{3}$. 
+  \item Hvis du valgte forkert, åbner game show værten en dør hvor der ingen præmie er bag.
+  \item Dermed, kommer du \textbf{altid} til at vinde, hvis dit første valg var forkert, og du så vælger at skifte døre.
+  \item Så, ved at skifte døre er chancen for at vinde $\frac{2}{3}$
+  \end{itemize}
+\end{frame}
+
+\section{Probability Theory}
+\label{sec:probability-theortheory}
+
+\subsection{Introduction}
+\label{subsec:probability-theory-introduction}
+
+
+
+
+
+\end{document}
