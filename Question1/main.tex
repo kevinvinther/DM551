@@ -1,0 +1,798 @@
+
+\documentclass{beamer}
+\usetheme{metropolis} % Use the metropolis theme
+
+
+
+% Add tikz and pgfplots packages
+\usepackage{tikz, pgfplots}
+\usetikzlibrary{positioning}
+
+% For clicking references
+\usepackage{hyperref}
+
+% For better referencing
+\usepackage{cleveref}
+
+\usepackage{graphicx}
+
+% Define custom pastel colors
+\definecolor{pastelRed}{RGB}{255, 105, 97}   % A soft pastel red
+\definecolor{pastelBlue}{RGB}{119, 158, 203} % A muted pastel blue
+\definecolor{pastelYellow}{RGB}{255, 223, 0} % A gentle pastel yellow
+\definecolor{lightGray}{RGB}{211, 211, 211}  % A light gray for subtitles and less emphasized text
+
+% Apply the custom colors
+\setbeamercolor{palette primary}{bg=black, fg=white}
+\setbeamercolor{palette secondary}{bg=lightGray, fg=black}
+\setbeamercolor{palette tertiary}{bg=black, fg=white}
+\setbeamercolor{titlelike}{parent=palette primary, fg=black}
+\setbeamercolor{subtitle}{fg=lightGray}
+\setbeamercolor{structure}{fg=black} % For itemize, enumerate, etc
+
+% Change color of normal text
+\setbeamercolor{normal text}{fg=black, bg=white}
+
+% Set the color of the table of contents
+\setbeamercolor{section in toc}{fg=black} % Section titles in TOC
+\setbeamercolor{subsection in toc}{fg=black} % Subsection titles in TOC
+
+% Set block colors
+\setbeamercolor{block title}{use=structure,fg=white,bg=pastelRed}
+\setbeamercolor{block body}{fg=black,bg=white}
+
+
+
+% Title Page Info
+\title{Counting}
+\subtitle{Spørgsmål 1 fra Exam Questions}
+\author{Kevin Vinther}
+\date{\today}
+
+\begin{document}
+
+% Title Page
+\begin{frame}
+    \titlepage
+\end{frame}
+
+% Table of Contents
+\begin{frame}[allowframebreaks]
+    \frametitle{Table of Contents}
+    \tableofcontents
+\end{frame}
+
+\begin{frame}{Introduktion}
+    \begin{itemize}
+        \item Der er pauser
+        \item Der er reflektioner
+        \item Der er eksempler (ikke kig i bogen!)
+    \end{itemize}
+\end{frame}
+% Section 1
+\section{Basics of Counting}
+\begin{frame}{Kombinatorik}
+\begin{itemize}
+    \item Hvad er kombinatorik?
+    \item Eksempler på brug
+    \begin{itemize}
+        \item Bestemmelse af kompleksitet af en algoritme
+        \item Bestemmelse af f.eks. telefonnumre eller IP-adresser
+        \item Sandsynlighedsregning
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\subsection{Product Rule}
+\begin{frame}{The Product Rule}
+   \begin{theorem}[The Product Rule]
+      Suppose that a procedure can be broken down into a sequence of two tasks. If there are $n_1$ ways to do the first task and for each of these ways of doing the first task, there are $n_2$ ways to do the second task, then there are $n_1n_2$ ways to do the procedure.
+   \end{theorem} 
+\end{frame}
+
+\begin{frame}{Udvidet version}
+   \begin{itemize}
+       \item Man kan udvide Product Rule til flere tasks:
+       \item Hvis en procedure kan udføres af opgoaver $T_1, T_2, \ldots, T_m$ i en sekvens, og hvis hver af opgaverne $T_i, i = 1,2,\ldots,n$ kan blive gjort på $n_i$ måder, uanset hvordan de tidligere opgaver er blevet udført, så kan proceduren bliver udført på $n_1n_2 \cdots n_m$ måder.
+   \end{itemize} 
+\end{frame}
+
+\begin{frame}{Hvor mange funktioner?}
+   \begin{itemize}
+       \item<1-> Hvor mange funcktioner er der fra et sæt med $m$ elementer til et sæt med $n$ elementer? 
+       \item <2-> \textbf{Løsning:} For hver muligt værdi i sættet med $n$ elementer, kan funktionen tages fra $m$ forskellige elementer. Dermed er der $n^m$ forskellige funktioner.
+   \end{itemize} 
+\end{frame}
+
+\begin{frame}{Hvor mange one-to-one funktioner?}
+   \begin{itemize}
+       \item<1-> Hvor mange one-to-one funktioner er der fra et sæt med $m$ elementer til et sæt med $n$ elementer? 
+       \item <2-> \textbf{Løsning: } Hvis $m > n$, så 0. Hvis $m \leq n$, så formod at $a_1, a_2, \ldots, a_m$ er elementerne i domænet. For $a_1$ er der..
+       \item <3-> $n$ muligheder, for $a_2$, $n-1$, etc. Dermed bliver der $n(n-1)(n-2) \cdots (n-m+1)$ one-to-one funktioner. 
+   \end{itemize} 
+\end{frame}
+
+\begin{frame}{Product Rule for Sæt}
+\begin{itemize}
+    \item Product Rule kan også udvides til sæt
+    \item Hvis $A_1, A_2, \ldots A_m$ er endelige sæt, så er antallet af elementer i Cartesian Product (dansk?) af disse sæt, produktet (igen, dansk?) af antallet af elementer i hvert sæt. 
+    \item $|A_1 \times A_2 \times \cdots \times A_m| = |A_1| \cdot |A_2| \cdot \cdots \cdot |A_m|$
+\end{itemize}
+\end{frame}
+
+\subsection{The Sum Rule}
+\begin{frame}{The Sum Rule}
+   \begin{theorem}[The Sum Rule]
+    If a task can be done either in one of $n_1$ ways or in one of $n_2$ ways, where none of the set of $n_1$ ways is the same as any of the set of $n_2$ ways, then there are $n_1 + n_2$ ways to do the task 
+   \end{theorem} 
+   \begin{itemize}
+       \item I.e., hvis en opgave kan blive gjort på $n_1$ \textbf{eller} $n_2$ måder, hvor $n_1 \cup n_2 = \emptyset$, så er antallet af måder de kan blive gjort sammen på $n_1 + n_2$. 
+   \end{itemize}
+\end{frame}
+
+\begin{frame}{Udvidet Sum Rule}
+    \begin{itemize}
+        \item Sum-reglen, som product-rule kan også udvides.
+        \item Hvis en opgave kan blive udført på $n_1$ måder, på $n_2$ måder, ellers på $n_m$ måder, hvor ingen elementer i sættet af opgaverne er ens, kan opgaverne udføres på i alt $n_1 + n_2 + \cdots + n_m$ måder. 
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Sum Rule til Sæt}
+    \begin{itemize}
+        \item Ligesom Product Rule
+        \item $|A_1 \cup A_2 \cup \cdots A_m| = |A_1| + |A_2| + \cdots + |A_m| \text{ when } A_i \cap A_j = \emptyset \text{ for all } i,j$
+    \end{itemize}
+\end{frame}
+
+\subsection{More Complex Counting Problems}
+
+\begin{frame}{Komplekse Tællingsproblemer}
+
+\begin{itemize}
+\item<1-> Nogle problemer kræver mere end bare én regel. 
+\item<1-> Eksempel 15 fra Rosen: 
+\item<1-> I BASIC er variabelnavne en streng af en eller to alphanumeriske karakterer, hvor store og små bogstaver ikke ses som forskellige. Udover det, skal et variabelnavn begynde med et bogstav, og må ikke være ens med en af de 5 strenge af to karakterer som er reserveret for programmeringssproget. Hvor mange navne er mulige i denne version af basic? 
+\item <2-> $26 \cdot 36 - 5 = 931$.
+\end{itemize}
+    
+\end{frame}
+
+\subsection{Subtraction Rule}
+\begin{frame}{Subtraction Rule}
+\begin{theorem}
+    If a task can be done in either $n_1$ ways or $n_2$ ways, then the number of ways to do the task is $n_1 + n_2$ minus the number of ways to do the task that are common to the two different ways.
+\end{theorem}
+\begin{itemize}
+    \item Kan også bruges I sæt (inclusion-exclusion): $|A \cup B| = |A| + |B| - |A \cap B|$
+\end{itemize}
+    
+\end{frame}
+
+\begin{frame}{Eksempel}
+   \begin{itemize}
+       \item<1-> Eksempel 19 i Rosen
+       \item<1-> Hvor mange bit strings af længde 8 starter med en 1-bit og ender med de to bits 00? 
+       \item<2-> Først: Hvor mange forskellige strings starter med et 1? 
+       \item<3-> $1xxxxxxx$, 7 forskellige: $2^7 = 128$
+       \item<4-> Hvor mange forskellige strings slutter med to 0'er? 
+       \item<5-> $xxxxxx00$, 6 forskellige: $2^6 = 64$
+       \item<6-> Til sidst: begge:
+       \item<6-> $1xxxxx00$, 5 forskellige: $2^5 = 32$
+       \item<6-> Hvad så? 
+       \item<7-> $2^7 + 2^6 - 2^5 = 128 + 64 - 32 = 160$
+   \end{itemize} 
+\end{frame}
+
+\subsection{The Division Rule}
+\begin{frame}{The Division Rule}
+
+\begin{itemize}
+    \item Den mest kedelige regel
+\end{itemize}
+\begin{theorem}[The Division Rule]
+   There are $n/d$ ways to do a task if it can be done using a procedure that can be carried out in $n$ ways, and for every way $w$, exactly $d$ of the $n$ wys correspond to way $w$. 
+\end{theorem}
+\end{frame}
+
+\begin{frame}{Eksempel}
+   \begin{itemize}
+       \item<1-> Eksempel 20 fra Rosen:
+       \item<1-> Hvor mange køer på en gård med 572 ben? (Ingen køer har mistet ben, og der er kun køer på gården)
+        \item<2-> $572/4 = 143$.
+   \end{itemize} 
+\end{frame}
+
+\subsection{Tree Diagrams}
+\begin{frame}{Tree Diagrams}
+    \begin{itemize}
+        \item Tælningsproblemer kan også blive løst v.h.a. \textbf{tree diagrams} (trædiagrammer?)
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Eksempel}
+\begin{columns}
+   \begin{column}{0.5\textwidth}
+   \begin{itemize}
+       \item Hvor mange bit strings af længde fire har ikke to 1'ere ved siden af hinanden? 
+   \end{itemize} 
+   \end{column} 
+   \begin{column}{0.5 \textwidth}
+        \pause 
+        \includegraphics[scale=0.75]{Skærmbillede 2023-12-05 kl. 14.04.56.png}
+   \end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Reflektion}
+    \begin{itemize}
+        \item Stop! Hvad har vi snakket om? 
+        \item Hvornår bruges product-rule? 
+        \item Hvornår bruges sum? 
+        \item Subtraction? 
+        \item Division? 
+        \item Spørgsmål til delkapitlet? (Ikke opgaverne)
+    \end{itemize}
+\end{frame}
+
+
+\begin{frame}{Pause (5 min)}
+    Pause!
+\end{frame}
+
+\section{The Pigeonhole Principle}
+
+\begin{frame}{The Pigeonhole Principle}
+\begin{theorem}
+    If $k$ is a positive integer and $k+1$ or more objects are placed into $k$ boxes, then there is at least one box containing two or more objects
+\end{theorem}
+\end{frame}
+
+\begin{frame}{Proof}
+\begin{proof}
+    Vi beviser ved brug af kontraposition. Antag at der er $k+1$ bokse. Derudover har hver boks \textbf{højest} et objekt i sig. Dermed er der højest $k$ bokse. Dette er en modsigelse, da der er $k+1$ bokse.
+\end{proof}
+\end{frame}
+
+\begin{frame}{Hvorfor?}
+   \begin{itemize}
+       \item Meget simpelt princip
+       \item Bruges meget i beviser
+   \end{itemize} 
+\end{frame}
+
+\begin{frame}{One-to-one functions}
+\begin{corollary}
+    A function $f$ from a set with $k+1$ or more elements to a set with $k$ elements is not one-to-one.
+\end{corollary}
+    \begin{itemize}
+        \item Beviset til dette bruger pigeonhole princippet.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Bevis til one-to-one}
+    \begin{proof}
+        Antag at hvert element $y$ i codomain (mængde et eller andet?) af $f$ har en boks der har alle elementer $x$ fra domænet af $f$, således at $f(x) = y$. Fordi domainet indeholder $k+1$ eller flere elementer, og codomainet indholder kun $k$ elementer, kan pigeonhole princippet fortæller os at en af disse bokse ineholder to eller flere elementer $x$ fra domænet. Dermed kan $f$ ikke være one-to-one.
+    \end{proof} 
+\end{frame}
+
+\subsection{Generalized Pigeonhole Principle}
+
+\begin{frame}{Generalized Pigeonhole Principle}
+\begin{theorem}[The Generalized Pigeonhole Principle]
+If $N$ objects are placed into $k$ boxes, then there is at least one box containing at least $\lceil N/k \rceil$  objects.
+\end{theorem}
+    \begin{itemize}
+        \item Dette tillader langt mere advanceret og brugbare beviser
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Bevis}
+   \begin{proof}
+       Vi beviser ved kontraposition. Antag at ingen af boksene holder mere end $\lceil N / k \rceil - 1$ objekter. Ved dette, må antallet af objekter så højest være
+       $$k \left ( \left \lceil \frac{N}{k} \right \rceil - 1\right )$$
+       Hvilket er mindre end
+       $$k \left ( \left ( \frac{N}{k}+1 \right )-1 \right ) = N$$
+       Hvor uligheden $\lceil N/k \rceil  < (N/k) + 1$ er brugt. Dermed er det fulde antal af objekter mindre end $N$, hvilket er umuligt.
+   \end{proof} 
+\end{frame}
+
+\begin{frame}{Eksempel}
+   \begin{itemize}
+       \item<1-> Hvor mange elever skal til, for at mindst 6 får den samme karakter, på karakterskalaen 12, 10, 7, 4, 02? 
+       \item<2-> $\lceil\frac{N}{k}\rceil = 5$, $N = 5 \cdot 5 + 1 = 26$
+   \end{itemize} 
+\end{frame}
+
+\begin{frame}{Theorem 3}
+   \begin{theorem}
+       Every sequence of $n^2 + 1$ distinct real numbers contains a subsequence of length $n+1$ that is either strictly increasing or strictly decreasing. 
+   \end{theorem} 
+   \begin{itemize}
+       \item Eksempel hvor beviset bruger Pigeonhole Princippet.
+   \end{itemize}
+\end{frame}
+
+\begin{frame}{Theorem 3 Bevis}
+   \begin{proof}
+       Lad $a_1, a_2, \ldots a_{n^2+1}$ være en sekvens af $n^2 + 1$ forskellige reelle tal. Til hvert led, associer et ordnet par(?) $(i_k, d_k)$, hvor $i_k$ er længden af den længste stigende talrække, og $d_k$ den længste faldende. 
+
+       Bevis ved kontraposition. Antag at der ikke er nogen stigende eller faldende subsekvenser af længde $n+1$. I så fald er både $i_k$ og $d_k$ højest $n$. Ved product rule er der $n^2$ forskellige ordnet par $(i_k, d_k)$ $((1..n, 1..n))$. Dette strider dog imod pigeonhole princippet, som siger at der skal være $n^2 + 1$, da det er antallet af elementer. Derfor må en af dem være ens. En af disse der er ens, puttes så enten bagpå eller foran den anden. 
+   \end{proof} 
+\end{frame}
+
+\begin{frame}{Ramsey Number}
+    \begin{itemize}
+        \item Ramsey Number (Ramsey Tallet?) $R(m,n)$ hvor $m$ og $n$ er positive heltal større end eller lig med 2, er det minimum antal af personer til en fest således at der enten er $m$ fælles venner eller $n$ fælles fjender. 
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Reflektion}
+\begin{itemize}
+    \item Hvad har vi snakket om? 
+    \item Hvad er pigeonhole princippet? Hvordan fungerer dens bevis? 
+    \item Hvad med generaliseret? Og dens bevis? 
+\item Hvordan beviser du $n^2 + 1$ sekvens teoremet? 
+\item Hvad er ramsey tal?
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Pause}
+    Pause!
+\end{frame}
+
+
+\section{Permutationer og Kombinationer}
+
+\begin{frame}{Permutation}
+\begin{itemize}
+    \item<1-> En \textbf{permutation} af et sæt af forskellige objekter er en ordnet opstilling af disse objekter. 
+    \item<1-> En \textbf{r-permutation} af et sæt af forskellige objekter, er en ordet opstilling af $r$ elementer af sættet. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Antal af permutations}
+\begin{theorem}
+    If $n$ is a positive integer and $r$ is an integer with $1 \leq r \leq n$, then there are 
+    $$P(n,r) = n(n-1)(n-2) \cdots (n-r+1)$$
+    $r$-permutations of a set with $n$ distinct elements. 
+\end{theorem}
+\end{frame}
+
+\begin{frame}{Bevis}
+    \begin{proof}
+        Vi bruger product rule. Der er $n$ måder at vælge det første element på, $n-1$ måder at vælge det næste etc indtil $n-(r-1) = n - r + 1$. Dermed, ved product rule, er der $n(n-1)(n-2) \cdots (n-r+1)$ $r$-permutationer af sættet.
+    \end{proof}
+    \begin{itemize}
+        \item Dejligt simpelt bevis, lad os håbe der ikke er flere sider lange beviser når vi kommer til probabilistisk analyse :) 
+        \item Note: $P(n,0) = 1$, da den eneste permutation af en liste med 0 elementer er listen i sig selv med 0 elementer.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Corollary}
+\begin{corollary}
+    If $n$ and $r$ are integers with $0 \leq r \leq n$, then $P(n,r) = \frac{n!}{(n-r)!}$
+\end{corollary}
+\begin{itemize}
+    \item Denne formel er anderledes ikke bare i dens udregning, men også i at den virker ved $0 \leq r < 1$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Corollary Bevis}
+   \begin{proof}
+       Når $n$ og $r$ er heltal ved $1 \leq r \leq n$, af Theorem 1 ($n(n-1)\cdots$ etc) har vi:
+       $$P(n,r) = n(n-1)(n-2) \cdots (n-r+1) = \frac{n!}{(n-r)!}$$ 
+       Fordi $\frac{n!}{(n-0)!} = \frac{n!}{n!} = 1$ når $n$ er et positivt heltal, ser vi at $P(n,r) = \frac{n!}{(n-r)!}$ også holder når $r = 0$
+   \end{proof} 
+   \begin{itemize}
+       \item Ved denne formel kan vi også nemt se at $P(n,n) = 1$, da $P(n,n) = \frac{n!}{(n-n)!} = \frac{n!}{0!} = \frac{n!}{1} = n!$
+   \end{itemize}
+\end{frame}
+
+\begin{frame}{Eksempel}
+   \begin{itemize}
+       \item<1-> Eksempel 5
+        \item<1-> Antag at der er 8 løbere i et ræs. Der er 3 vindere, en der går en guldmedalje, en der får en sølv, og en bronze. Hvor mange måder kan disse medaljer uddeles på, hvis løbere ikke kan stå lige? 
+        \item<2-> $P(8,3) = \frac{8!}{(8-3)!} = 8\cdot7\cdot6 = 336$
+   \end{itemize} 
+\end{frame}
+
+
+\subsection{Kombinationer}
+
+\begin{frame}{Kombinationer}
+    \begin{itemize}
+        \item En kombination er ligesom en permutation, undtagen vi er ligeglad med ordren af objekterne. 
+        \item Dermed er en $r-$kombination, ligesom en permutation, men igen, uden ordren. 
+        \item Eksempel: Hvor mange måder kan vi lave en gruppe af 3 personer ud fra 4 personer? 
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{R-kombinationer}
+\begin{theorem}
+    The number of $r$-combinations of a set with $n$ elements, where $n$ is a nonnegative integer and $r$ is an integer with $0 \leq r \leq n$, equals
+    $$C(n,r) = \frac{n!}{r!(n-r)!}$$
+\end{theorem}
+\end{frame}
+
+\begin{frame}{Bevis af r-kombinationer}
+   Hvis vi kigger på perspektivet fra $r$-permutationer, så kan man finde $r$-permutationer ud fra $r$-combinatoner og permutation: 
+   $$P(n,r) = C(n,r) \cdot P(r,r)$$
+   Altså, kombinationerne ganget med antallet af måder du kan ordne listen af objekter på.
+   Med denne viden, kan vi udregne $C(n,r)$:
+   $$C(n,r) = \frac{P(n,r)}{P(r,r)} = \frac{n!/(n-r)!}{r!/(r-r)!} = \frac{n!}{r!(n-r)!}$$
+\end{frame}
+
+\begin{frame}{Eksempel}
+\begin{itemize}
+    \item<1-> Eksempel 11 (Uddrag)
+    \item<1-> Hvor mange hænder af fem kort i poker can blive uddelt fra et sæt af 52 standard spillerkort? 
+    \item<2-> $C(52,5) = \frac{52!}{5!47!} = 2598960$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Corollary 2}
+   \begin{corollary}
+       Let $n$ and $r$ be nonnegative integers with $r \leq n$ . Then $C(n,r) = C(n,n-r)$
+   \end{corollary} 
+   \begin{itemize}
+       \item Der er både et algebraisk og et kombinatorisk bevis for dette. Vi kommer til det algebraiske først.
+   \end{itemize}
+\end{frame}
+
+\begin{frame}{Bevis for Corollary 2}
+   \begin{proof}
+       Fra Theorem 2 ($C(n,r)$  teoremet), følger det at
+       $$C(n,r) = \frac{n!}{r!(n-r)!}$$
+       og
+       $$C(n,n-r) = \frac{n!}{(n-r)! n-(n-r)!} = \frac{n!}{(n-r)!r!} = C(n,r)$$
+   \end{proof} 
+\end{frame}
+
+\begin{frame}{Combinatorial Proof}
+   \begin{definition}
+       A \textit{combinatorial proof} of an identity is a proof that uses counting arguments to prove that both sides of the identity count the same objects but in different ways or a proof that is based on showing that there is a bijectino between the sets of objects counted by the two sides of the identity. These two types of proofs are called \textit{double counting proofs} and \textit{bijective proofs}.
+   \end{definition} 
+\end{frame}
+
+\begin{frame}{Corollary 2 Bijective Proof}
+   \begin{proof}[Corollary 2 Bijective Proof]
+      Antag at $S$ er et sæt med $n$ elementer. Funktionen der mapper et subset A af S til $\overline{A}$ er en bijektion mellem subsettene af $S$ med $r$ elementer, og subsettene med $n-r$ elementer. Siden der er en bijektion mellem sættene, må de tælle de samme antal elementer. 
+   \end{proof} 
+\end{frame}
+
+\begin{frame}{Corollary 2 Double Counting Proof}
+    \begin{proof}[Corollary 2 Double Counting Proof]
+        Af definitionen, er antallet af subsets af $S$ med $r$ elementer $C(n,r)$. Men hvert subset $A$ af $S$ er også valgt af elementerne som \textit{ikke} er i $A$, og som så er i $\overline{A}$. Fordi der er $C(n,n-r)$ elementer i $\overline{A}$, er der lige så mange som i $A$.
+    \end{proof}
+\end{frame}
+
+\begin{frame}{Reflektion}
+   \begin{itemize}
+       \item Hvad er en permutation? 
+       \item Hvordan fander man antallet af permutationer? 
+        \item Hvad er en kombination? 
+        \item Hvordan finder man antallet af kombinationer? 
+        \item Hvad er forskellen på et double counting og bijctive kombinatorisk bevis? 
+   \end{itemize} 
+\end{frame}
+
+\begin{frame}{Pause}
+    Pause!
+\end{frame}
+
+\section{Binomial Coefficients and Identities}
+
+\begin{frame}{Binomial Coefficients}
+\begin{itemize}
+    \item Antallet af $r$-kombinationer fra et sæt med $n$ elementer er også skrevet som $\binom{n}{r}$.
+    \item Dette kaldes en \textbf{binomial coefficient} (på engelsk) fordi tallene er coefficients (igen, på engelsk) i udvidelsen af binomial expresisons, såsom $(a+b)^n$.
+\end{itemize}
+\end{frame}
+
+\subsection{Binomial Theorem}
+
+\begin{frame}{Binomial Theorem}
+   \begin{theorem}[The Binomial Theorem]
+      Let $x$ and $y$ be variables, and let $n$ be a nonnegative integer. Then
+      $$
+      (x+y)^n= \sum^n_{j=0} \binom{n}{j} x^{n-j} y^j = \binom{n}{0} x^n $$
+$$      + \binom{n}{1}x^{n-1}y + \cdots + \binom{n}{n-1}xy^{n-1} + \binom{n}{n}y^n   
+      $$
+   \end{theorem} 
+\end{frame}
+
+\begin{frame}{Binomial Theorem Bevis}
+   \begin{itemize}
+       \item Et kombinatorisk bevis!
+   \end{itemize} 
+   \begin{proof}
+       Leddene i produktet når den bliver udvidet er af formen $x^{n-j}y^j$ for $j = 0,1,2, \ldots, n$. For at tælle antallet af led i formen $x^{n-j}y^j$, læg mærke til at man først skal vælge $n-j$ x'er fra de $n$ binomial factors, så de resterende $j$ led er $y$'er). Derfor coefficienten af $x^{n-j}y^j$ er $\binom{n}{n-j}$, hvilket er lig med $\binom{n}{j}$. Dette beviser teoremet
+   \end{proof}
+   \begin{itemize}
+       \item Jeg forstår ikke det her bevis :(
+   \end{itemize}
+\end{frame}
+
+\begin{frame}{Corollaries}
+\begin{itemize}
+    \item Der kommer til at være mange corollaries, fordi Binomial theorem kan bruges til meget, så gør jer klar...
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Corollary 1}
+   \begin{corollary}
+       Let $n$ be a nonnegative integer. Then 
+       $$\sum^n_{k=0} \binom{n}{k} = 2^n$$
+   \end{corollary} 
+   \begin{proof}
+       $$2^n = (1+1)^n = \sum^n_{k=0}\binom{n}{k}1^k1^{n-k} = \sum^n_{k=0} \binom{n}{k}$$
+   \end{proof}
+\end{frame}
+
+\begin{frame}{Corollary 1 Kombinatorisk Bevis}
+    \begin{proof}[Kombinatorisk bevis på Corollary 1]
+        Et sæt med $n$ elementer har i alt $2^n$ forskellige subsets. Hvert subset har nul elementer, et element, to elementer, eller $n$ elementer i sig. Der er $\binom{n}{0}$ subsets med 0 elementer. $\binom{n}{1}$subsets med et element $\binom{n}{2}$ subsets med to elementer, osv, indtil $\binom{n}{n}$ subsets med n elementer. 
+        Derfor tæller $\sum^n_{k=0} \binom{n}{k}$ det fulde antal af subset af et sæt med $n$ elementer. Ved at sætte dem lig hinanden, ser vi at $\sum_{k=0}^n \binom{n}{k} = 2^n$
+    \end{proof}
+\end{frame}
+
+\begin{frame}{Corollary 2}
+   \begin{corollary}[Corollary 2]
+        Let $n$ be a positive integer. Then 
+        $$\sum^n_{k=0}(-1)^k \binom{n}{k} = 0$$
+   \end{corollary} 
+   \begin{proof}
+       $$0 = 0^n = ((-1)+1)^n = \sum^n_{k=0}\binom{n}{k}(-1)^k 1^{n-k} = \sum^n_{k=0}\binom{n}{k} (-1)^k = 0$$
+   \end{proof}
+\end{frame}
+
+\begin{frame}{Corollary 3}
+   \begin{corollary}[Corollary 3]
+      Let $n$ be a nonnegative integer. Then
+      $$\sum^n_{k=0}2^k \binom{n}{k} = 3^n$$
+   \end{corollary} 
+   \begin{proof}
+       $$(1+2)^n = \sum^n_{k=0} \binom{n}{k} 1^{n-k}2^k = \sum^n_{k=0} \binom{n}{k} 2^k = 3^n$$
+   \end{proof}
+\end{frame}
+
+\subsection{Pascals Identity and Triangle}
+
+\begin{frame}{Pascal's Identity}
+   \begin{theorem}[Pascal's Identity]
+        Let $n$ and $k$ be positive integers with $n \geq k$. Then $$\binom{n+1}{k} = \binom{n}{k-1}+\binom{n}{k}$$ 
+   \end{theorem} 
+   \begin{itemize}
+       \item Desværre er det et kombinatorisk bevis:( 
+   \end{itemize}
+\end{frame}
+
+\begin{frame}{Pascla's Identity Bevis}
+   \begin{proof}[Pascal's Identity Proof]
+      Antag at $T$ er et sæt med $n+1$ elementer. Lad $a$ være et element i $T$, og lad $S = T - \{a\}$ . Læg mærke til at der er $\binom{n+1}{k}$ subsets af $T$ der indeholder $k$ elementer. Men, et subset af $T$ med $k$ elementer har enten $a$ sammen med $k-1$ elementer af $S$, eller $k$ elementer af $S$ og ingen $a$ i subsettet. Fordi der er $\binom{n}{k-1}$ subsets af $k-1$ elementer af $S$, så er der $\binom{n}{k-1}$ subsets af $k$ elementer af $T$ der inderholder $a$. Og der er $\binom{n}{k}$ subsets af $k$ elementer af $T$, som ikke indeholder $a$, fordi der er $\binom{n}{k}$ subsets af $k$ elementer af $S$. Dermed bevist.
+   \end{proof} 
+   \begin{itemize}
+       \item Den forstår jeg heller ikke:( Fandens kombinatoriske beviser...
+   \end{itemize}
+\end{frame}
+
+\subsection{Other Identities Involving Binomial Coefficients}
+\begin{frame}{Vandermonde's Identity}
+\begin{theorem}[Vandermonde's Identity]
+   Let $m,n $ and $r$ be nonnegative integers with $r$ not exceeding either $m$ or $n$. Then
+   $$\binom{m+n}{r} = \sum^r_{k=0} \binom{m}{r-k} \binom{n}{k}$$
+\end{theorem}
+\begin{itemize}
+    \item My shoes? Gucci
+    \item My proofs? Combinatorial :(
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Vandermonde's Identity Bevis}
+   \begin{proof}[Vandermonde's Identity Bevis]
+      Antag at der er $m$ elementer i et sæt, og $n$ i et andet sæt. Antallet af måder du kan vælger $r$ ting fra begge sæt er dermed $\binom{n+m}{r}$ . En anden måde at vælge er at vælge $k$ elementer fra det andet sæt, og så $r-k$ fra det første sæt, hvor $k$ er et heltal mellem $0 \leq k \leq r$. Fordi der er $\binom{n}{k}$ måder at vælger $k$ elementer fra det andet sæt, og $\binom{m}{r-k}$ måder at vælge $r-k$ elementer fra det første sæt, fortæller product rule os at dette kan blive gjort på $\binom{m}{r-k}\binom{n}{k}$ måder. Dermed er det fulde antal af måder du kan vælge $r$ elementer på fra union af sættet $\sum^r_{k=0} \binom{m}{r-k}\binom{n}{k}$
+   \end{proof} 
+\end{frame}
+
+\begin{frame}{Corollary 4}
+   \begin{corollary}[Corollary 4]
+      If $n$ is anonnegative integer, then $$\binom{2n}{n} = \sum^n_{k=0} \binom{n}{k}^2$$ 
+   \end{corollary} 
+   \begin{proof}
+       Vi bruger Vandermonde's Identity med $m = r = n$:
+       $$\binom{2n}{n} = \sum^n_{k=0} \binom{n}{n-k}\binom{n}{k} = \sum^n_{k=0}\binom{n}{k}^2$$
+   \end{proof}
+\end{frame}
+
+\begin{frame}{Theorem 4}
+\begin{theorem}[Theorem 4]
+    Let $n$ and $r$ be nonnegative integers with $r \leq n$. Then
+    $$\binom{n+1}{r+1} = \sum^n_{j=r}\binom{j}{r}$$
+\end{theorem}
+\begin{itemize}
+    \item<1-> Hvorfor er kombinatoriske beviser som en dårlig GPS?
+    \item<2-> Fordi de fører dig gennem en million små veje, og til sidst er du mere forvirret om din destination end da du startede!
+    \item<3-> Credit til ChatGPT, jeg er ikke kreativ nok til at lave dårlige jokes, jeg lider bare
+    \item<3-> Jeg har undladt beviset, fordi jeg er for træt.
+\end{itemize}    
+\end{frame}
+
+\begin{frame}{Reflektion}
+   \begin{itemize}
+       \item $\sum^n_{k=0}2^k \binom{n}{k} = ?$
+       \item Hvad er binomial theorem? 
+        \item Hvad kan det bruges til? 
+        
+   \end{itemize} 
+\end{frame}
+
+\section{Generalized Permutations and Combinations}
+
+\subsection{Permutationer med Gentagelse}
+\begin{frame}{Permutation med Gentagelse}
+   \begin{itemize}
+       \item For at finde ud af hvor mange permutationer der er, hvis vi tillader gentagelser, bruger vi product rule.
+   \end{itemize} 
+   \begin{theorem}
+       The number of $r$-permutations of a set of $n$ objects with repetition allowed is $n^r$
+   \end{theorem}
+   \begin{proof}
+       Der er $n$ måder at vælge et element, og siden hver af de $n$ måder ikke ændrer sig da vi gentager objekter, så (ved product rule) tager vi $n$ $n$ gange, i.e., $n^r$. 
+   \end{proof}
+\end{frame}
+
+\subsection{Kombinationer med Gentagelse}
+
+\begin{frame}{Kombinationer med Gentagelse}
+   \begin{itemize}
+       \item Det er ikke ligeså nemt at finde løsning til kombinationer med gentagelse. 
+   \end{itemize} 
+\end{frame}
+
+\begin{frame}[allowframebreaks]{Eksempel 3}
+   \begin{itemize}
+       \item<1-> Hvor mange måder kan man vælge 5 sedler fra en boks med (jeg gider ikke skrive dollars i \LaTeX) 1dkk seddel, 2dkk seddel, 5dkk seddel, 10dkk seddel, 50dkk seddel og 100dkk seddel? Antag at ordren er ligegyldig, og at hver pengeseddel (i sin værdi) ikke skelnes, og at der er mindst 5 sedler af hver sin type.
+       \item<2-> Fordi at ordren er ligegyldig, og der kan vælges 7 forskellige typer sedler op til 5 gange, er dette problem et 7-choose-5 problem. 
+       \item<2-> (Stars and Bars) Antag at boksen med pengene i har 7 rum, en til hver slags seddel. For at skelne mellem rummene er der en skillevæg mellem hvert rum, og der er 6 af disse vægge.
+       \item<2-> Antallet af måder du kan vælge 5 sedler på er antallet af måder du kan arrangere disse 6 vægge og 5 stjerner tilsammen. 
+   \end{itemize} 
+\end{frame}
+
+\begin{frame}{Stars and Bars}
+    \includegraphics[scale=0.5]{Skærmbillede 2023-12-06 kl. 07.31.26.png}
+\end{frame}
+
+\begin{frame}{Eksempel 3 løsning}
+   \begin{itemize}
+       \item Vi løste det ikke helt. Siden der er 5 sedler, og 6 vægge, kan man vælge 5 sedler ud fra $5+6 = 11$. Dermed er det $\binom{5+6}{5} = 462$
+   \end{itemize} 
+\end{frame}
+
+\begin{frame}{Theorem 2}
+   \begin{itemize}
+       \item Vi generaliserer stars and bars med teorem 2
+   \end{itemize} 
+   \begin{theorem}
+       There are $C(n+r-1,r) = C(n+r-1,n-1)$ $r$-combinations from a set with $n$ elements when repetition of elements is allowed
+   \end{theorem}
+\end{frame}
+\begin{frame}[allowframebreaks]{Theorem 2 Bevis 1}
+   \begin{proof}[Bevis Part 1]
+       Hver $r$-kombinbation af et sæt med $n$ elementer når gentagning er tilladt kan blive repræsenteret som en liste af $n-1$ vægge (bars) og $r$ stjerner (stars).
+       De $n-1$ vægge bruges til at "markere" $n$ forskellige celler, med den $i$'e celle der har en stjerne for hver gang det $i$'e element af sættet er i kombinationen. For eksempel, en $6-$kombination af et sæt med fire elementer er repræsenteret med tre vægge seks stjerner. ** | * | | *** repræsenterer kombinationen der har præcis to af det første element, en af de andet, ingen af det tredje og 4 af det fjerde element. 
+
+   \end{proof} 
+\end{frame}
+\begin{frame}{Theorem 2 Bevis 2}
+    \begin{proof}[Bevis part 2]
+       Som vi har set, korresponderer hver forskellig liste med $n-1$ vægge og $r$ stjerne til en $r$-kombination af sættet med $n$ elementer, når gentagelser er tilladt. Antallet af sådanne lister er $C(n-1+r,r)$, fordi hver liste korresponderer(dansk?) til valget af de $r$ positioner man kan sætte $r$ stjerner i fra de $n-1+r$ positioner der har $r$ stjerner og $n-1$ vægge. Antallet af sådanne lister er også lig med $C(n-1+r,n-1)$, fordi hver liste korresponderer til et valg af de $n-1$ positioner man kan placerer $n-1$ vægge.
+    \end{proof}
+\end{frame}
+
+\begin{frame}{Eksempel 5}
+    \begin{itemize}
+        \item<1-> Hvor mange løsninger har ligningen $x_1 + x_2 + x_3 = 11$, hvor $x_i, i = 1,2,3$ er ikke-negative heltal?
+        \item<2-> Det er antallet af måder man kan vælge 11 elementer fra et sæt med 3 elementer. Dermed $C(3+11-1,11) = 78$
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Sammeligning}
+\begin{center}
+\includegraphics[scale=0.6]{Skærmbillede 2023-12-06 kl. 07.54.07.png}
+\end{center}
+\end{frame}
+
+\begin{frame}{Permutationer med objekter man ikke kan skelne imellem}
+\begin{itemize}
+    \item På engelsk: Pemrutations with indistinguishable objects
+    \item Vi bruger, sjovt nok, kombinationer for at komme med formlen for dette, som det næste bevis vil vise.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Eksempel 7}
+   \begin{itemize}
+       \item<1-> Hvor mange forskellige strenge (strings) kan blive lavet ved at flytte rundt på bogstaverne af ordet SUCCESS? (Hint: Fordi der er flere en ét af hvert bogstav er det ikke $r-$permutationer.
+       \item<2-> Ordet indeholder 3 S'er, 2 C'er, 1 U, 1 E. 
+       \item<3-> Du kan flytte S'erne (f.eks.) 3 ud af de 7 positioner (7 bogstaver i SUCCESS)
+       \item<4-> Så 2 C'er kan placeres i 4 steder, 1 U 2 steder, 1 E 1 sted.
+       \item<5-> $C(7,3)C(4,2)C(2,1)C(1,1) = 420$
+   \end{itemize} 
+\end{frame}
+
+\begin{frame}{Theorem 3}
+   \begin{theorem}
+       The number of different permutations of $n$ objects, where there are $n_1$ indistinguishable objects of type 1, $n_2$ indistinguishable objects of type 2, $n_k$ of type k, is
+       $$\frac{n!}{n_1!n_2!\cdots n_k!}$$
+   \end{theorem} 
+\end{frame}
+\begin{frame}{Theorem 3 Bevis}
+   \begin{itemize}
+       \item Beviset er basically bare det vi gik igennem fra Eksempel 7. Ved $n_1$ er der $C(n,n_1)$ forskellige steder $n_1$ kan være, ved $n_2$ er der $C(n-n_1, n_2)$, etc, indtil, $C(n-n_1 - \cdots - n_{k-1}, n_k)$.
+   \end{itemize} 
+\end{frame}
+
+\subsection{Fordeling af objekter i bokse}
+\begin{frame}{Fordeling af objekter i bokse}
+   \begin{itemize}
+       \item Mange problemer kan løses ved at modellere dem som bokse og objekter der skal fordeles i boksene. Dermed er der 4 typer af disse problemer:
+       \begin{itemize}
+           \item Objekte man kan skelne imellem og bokse man kan skelne imellem
+           \item Objekte man ikke kan skelne imellem og bokse man kan skelne imellem
+           \item Objekte man ikke kan skelne imellem og bokse man ikke kan skelne imellem
+           \item Objekte man kan skelne imellem og bokse man ikke kan skelne imellem
+       \end{itemize}
+   \end{itemize} 
+\end{frame}
+
+\subsubsection{Distinguishable Objects and Distinguishable Boxes}
+\begin{frame}{Eksempel 8}
+\begin{itemize}
+    \item<1-> Eksempel 8 viser hvordan man udregner antallet af måder man kan fordele objekter man kan skelne imellem i bokse man kan skelne imellem. 
+    \item<1-> Eksempel 8: Hvor mange måder kan man fordele hænder af 5 kort hver til 4 spillere fra et standard kortspil af 52 kort? 
+    \item<2-> Vi bruger samme metode som i eksempel 7. $C(52,5)C(47,5)C(42,5)C(37,5)$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Theorem 4}
+   \begin{theorem}
+       The number of ways to distribute $n$ distinguishable objects into $k$ distinguishable boxes so that $n_i$ objects are placed into box $i$, $i = 1, 2, \ldots, k$, equals:
+       $$\frac{n!}{n_1!n_2! \cdot n_k!}$$
+   \end{theorem} 
+   \begin{itemize}
+       \item Kan blive bevist v.h.a. product rule (som set i eksempel 7)
+   \end{itemize}
+\end{frame}
+
+\subsubsection{Indistinguishable Objects and Distinguishable Boxes}
+\begin{frame}{Dinstinguishable Objects and Distinguishable Boxes}
+\begin{itemize}
+    \item Hvis man ikke kan skelne mellem objekterne, men man kan boksene, så bruger man stars and bars methoden, i.e. $$C(n+r-1,n-1)$$.
+\end{itemize}
+\end{frame}
+
+\subsubsection{Distinguishable Objects and Indistinguishable Boxes}
+\begin{frame}{Distinguishable Objects and Indistinguishable Boxes}
+\begin{columns}
+\begin{column}{0.5 \textwidth}
+    
+    \begin{itemize}
+        \item For at finde ud af hvor mange måder man kan fordele objekter man kan skelne imellem blandt bokse man ikke kan, så bruger man \textbf{Stirling numbers of the second kind}
+    \end{itemize}
+        $\sum^k_{j=1}S(n,j) = \sum^k_{j=1}\frac{1}{j!}\sum^{j-1}_{i=0}(-1)^i\binom{j}{i}(j-i)^n$
+\end{column}    
+\begin{column}{0.5 \textwidth}
+\includegraphics[scale=0.2]{image.png}
+\end{column}    
+\end{columns}
+\end{frame}
+
+\subsubsection{Indistinguishable Objects and Indistinguishable Boxes}
+
+\begin{frame}{Indistinguishable Objects and Indistinguishable Boxes}
+    \begin{itemize}
+        \item Dem her er du nødt til at tælle. Der er desværre ikke en metode eller formel til det som sådan.
+    \end{itemize}
+\end{frame}
+
+
+\end{document}
