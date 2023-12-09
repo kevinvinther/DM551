@@ -3,6 +3,7 @@
 
 
 
+
 % Add tikz and pgfplots packages
 \usepackage{tikz, pgfplots}
 \usetikzlibrary{positioning}
@@ -195,7 +196,7 @@ Let $E_{1}$ and $E_{2}$ be events in the sample space $S$. Then $$p(E_{1} \cup E
  \item<1-> Hint: Definér $E_{1}$ og $E_{2}$ som værende tal der er delelige med hhv. 2 og 5.
  \item<2-> $E_{1}$ = tal der er delelige med 2, $E_{2}$ = tal der er delelige med 5.
  \item<3-> $|E_{1}| = 50$, $|E_{2}| = 20$, $|E_{1} \cup E_{2}| = 10$.
- \item<3-> Vi ved at $p(E_{1}\cupE_{2})=p(E_{1})+P(E_{2})-p(E_{1} \cap E_{2})$. Så: $= \frac{50}{100}+ \frac{20}{100}- \frac{10}{100} = \frac{3}{5}$
+ \item<3-> Vi ved at $p(E_{1}\cup E_{2})=p(E_{1})+P(E_{2})-p(E_{1} \cap E_{2})$. Så: $= \frac{50}{100}+ \frac{20}{100}- \frac{10}{100} = \frac{3}{5}$
      
  \end{itemize} 
 \end{frame}
@@ -234,14 +235,533 @@ Let $E_{1}$ and $E_{2}$ be events in the sample space $S$. Then $$p(E_{1} \cup E
   \end{itemize}
 \end{frame}
 
+\begin{frame}
+  \frametitle{Reflektion}
+ \begin{itemize}
+ \item Hvad er et eksperiment?
+ \item Sample space?
+ \item Event?
+ \item Laplace's Definition?
+ \item Hvad er værdimængden for $P(E)$? (Givet at $E$ er en event)
+ \item Hvad er sampling with og without replacement?
+ \item Hvordan fungerede beviset til $P(\overline{E})$?
+ \end{itemize} 
+\end{frame}
+
 \section{Probability Theory}
 \label{sec:probability-theortheory}
 
-\subsection{Introduction}
-\label{subsec:probability-theory-introduction}
+\subsection{Assigning Probabilities}
+\label{subsec:assigning-probabilities}
 
 
+\begin{frame}
+  \frametitle{Assigning probabilities}
+  We giver sandsynligheden $p(s)$ til hvert udfald $s$. We kræver at to betingelser bliver overholdt:
+  \begin{itemize}
+  \item $0 \leq p(s) \leq 1 \text{for each} s \in S$ og
+  \item $\sum_{s \in S}p(s) = 1$
+  \end{itemize}
+  Funktionen $p$ bliver kaldt \textbf{probability distribution}.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Definition 1}
+  \begin{definition}
+Suppose that $S$ is a set with $n$ elements. The \textit{uniform distribution} assigns the probability $1/n$ to each element of $S$.
+  \end{definition}
+ \begin{itemize}
+ \item Basically, uniform distribution er hvor hvert udfald har lige stor sandsynlighed for at ske (og det er $1/n$ fordi vi ved at $\sum_{s \in S}^{}p(s) = 1$.)
+ \end{itemize} 
+\end{frame}
+
+\begin{frame}
+  \frametitle{Definition 2}
+  \begin{definition}
+The \textit{probability}  of the event $E$ is the sum of the probabilities of the outcomes in E. That is $$p(E) = \sum_{s \in E}^{}p(s)$$
+
+\end{definition}
+\begin{itemize}
+\item Bare det jeg sagde på sidste slide, lol. Jeg er ikke helt sikker på hvorfor det er gentaget her.
+\end{itemize}
+\end{frame}
+
+\subsection{Probabilities of Complements and Unions of Events}
+\label{subsec:label}
+
+\begin{frame}
+  \frametitle{Theorem 1}
+ \begin{theorem}
+
+If $E_{1}, E_{2}, \ldots$ is a sequence of pairwise disjoint events in a sample space $S$, then $$p \left ( \bigcup_{i} E_{i} \right ) = \sum_{i}^{} p(E_{i})$$
+\end{theorem}
+\begin{itemize}
+\item Beviset undlades, men jeg mindes at det bringes op i KT 13.1
+\end{itemize}
+\end{frame}
+
+\subsection{Conditional Probability}
+\label{subsec:condprob}
+
+\begin{frame}
+  \frametitle{Definition 3}
+  \begin{definition}
+Let $E$ and $F$ be events with $p(F) > 0$. The \textit{conditional probability} of $E$ given $F$, denoted by $p(E |F)$, is defined as $$p(E|F) = \frac{p(E \cap F)}{p(F)}$$
+  \end{definition}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Eksempel 3}
+
+  \begin{itemize}
+  \item<1-> En bit streng af længde 4 er tilfældligt generet, således at hver af de 16 bits af længde 4 er lige sandsynlige. Hvad er sandsynligheden at den har mindst to 0er i træk (Til oplægsholder: næste slide har lidt hjælp)
+    \item<2-> Lad $E$ være begivenheden at en bit streng af længde 4 har mindst to 0er i træk. 
+    \item<2-> Lad $F$ være begivenheden at den første bit af en streng af længde fire er et 0. 
+    \item<2-> Hvad er sandsynligheden så?
+    \item<3-> $p(E|F) = \frac{p(E \cap F)}{p(F)}$
+    \item<3-> Siden $E \cap F = \{0000,0001,0010,0011,0100\}$, og dermed, $|E \cap F| = 5$, så må $p(E \cap F) = 5/16$. Ydermere er $p(F) = 1/2 = 8/16$. Derfor:
+    \item<3-> $p(E|F) = \frac{5/16}{1/2}= \frac{5}{8}$
+  \end{itemize}
+\end{frame}
+
+\subsection{Independence}
+\label{subsec:independence}
+
+\begin{frame}
+  \frametitle{Independence}
+  \begin{columns}
+    \begin{column}{.5\textwidth}
+      \begin{itemize}
+        \item En begivenhed (event) er independent (uafhængig), hvis tidligere udfald ikke har effekt på sandsynligheden af begivenheden.
+      \end{itemize}
+      \begin{definition}[Definition 4]
+        The events \(E\) and \(F\) are \textit{independent} if and only if \(p(E \cap F) = p(E)p(F)\)
+      \end{definition}
+    \end{column}
+    \begin{column}{.5\textwidth}
+      \includegraphics[width=\linewidth]{independence-day.png}
+    \end{column}
+  \end{columns} 
+\end{frame}
+
+\begin{frame}
+  \frametitle{Eksempel 5}
+  \begin{itemize}
+  \item<1-> Antag at $E$ er begivenheden at en tilfældigt genereret big streng af længde 4 begynder med et 1, og $F$ er begivenheden at denne bit streng har præcis et lige antal 1'er. Er $E$ og $F$ uafhængige, hvis de 16 bits er lige sandsynlige?
+  \item<2-> $E = \{100, 1001, 1010, 1011, 1100, 1101, 1110, 1111\}$
+  \item<2-> $F = \{0000, 0011, 0101, 0110, 1001, 1010, 1100, 1111\}$.
+  \item<3-> Dermed: $p(E) = p(F) = 8/16 = 1/2$
+  \item<3-> Fordi $E \cap F = \{1111, 1100, 1010, 1001\}$, ser vi at:
+  \item<3-> $p(E \cap F) = 4/16 = 1/4 = (1/2)(1/2) = p(E)p(F)$
+  \item<3-> Dermed er $E$ og $F$ uafhængige.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Pairwise and Mutual Independence}
+  \begin{definition}[Definition 5]
+The events $E_{1}, E_{2}, \ldots, E_{n}$ are \textit{pairwise independent} if and only if $p(E_{i} \cap E_{j})=p(E_{i})p(E_{j})$ for all pairs of integers $i$ and $j$ with $1 \leq i< j \leq n$. These events are \textit{mutually independent} if $p(E_{i_{1}} \cap E_{i_{1}} \cap \cdots \cap E_{i_{m}}) = p(E_{i_{1}})p(E_{i_{2}}) \cdots p(E_{i_{m}})$ whenever $i_{j}, j = 1, 2, \ldots, m$ are integers with $1 \leq i_{1} < i_{2} < \cdots < i_{m} \leq n$ and $m \geq 2$.
+\end{definition}
+\begin{itemize}
+\item Forskellen er, i sin essens, at pairwise independence tillader at en begivenhed kan påvirke mere end én begivenheds sandsynlighed, bare ikke kun én.
+\item Derudover, kan sandsynligheder godt være mutually independent uden at være pairwise independent.
+\end{itemize}
+\end{frame}
+
+\subsection{Bernoulli Trials and the Binomial Distribution}
+\label{subsec:bernoulli}
+
+\begin{frame}
+  \frametitle{Bernoulli Trials}
+ \begin{itemize}
+ \item En \textbf{Bernoulli Trial} er et ekseperiment hvor der kun er to mulige udfald. 
+ \item Generelt er disse udfald kaldet \textit{success} eller \textit{fejl} (failure). 
+ \item Givet at $p$ er sandsynligheden for success, og $q$ for fejl, må $p + q = 1$.
+ \item Bernoulli Trials er mutually independent, hvis conditional probability af success på et givet trial er $p$, givet hvilket som helst information om udfaldet af andre \textit{trials}.
+ \end{itemize} 
+\end{frame}
+
+\begin{frame}
+  \frametitle{Eksempel 8}
+  \begin{itemize}
+  \item<1-> En mønt er biased, så sandsynligheden for plat er $2/3$. Hvad er sandsynligheden for at præcis fire plat kommer up når man kaster mønten syv gange? 
+  \item<2-> Der er $2^{7} = 128$  forskellige udfald. Antallet af måder fire ud af de 7 møntkast kan være plat på er $\binom{7}{4}$. 
+  \item<2-> Sandsynligheden for det præcise udfald er $(2/3)^{4}(1/3)^{3}$. Dermed er sandsynligheden:
+  \item<3-> \[ \binom{7}{4} (2/3)^{4} (1/3)^{3} = \frac{35 \cdot 16}{3^{7}} = \frac{560}{2187} \]
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Theorem 2}
+  \begin{theorem}[Theorem 2]
+    The probability of exactly $k$ successes in $n$ independent Bernoulli trials, with probability of success $p$ and probability of failure $q = 1 - p$, is
+    \[\binom{n}{k} p^{k} q^{n-k} \]
+  \end{theorem}
+\end{frame}
+\begin{frame}
+  \frametitle{Theorem 2 Bevis}
+  Længe siden vi har set sådan et, hva? 
+ \begin{proof}[Theorem 2 Bevis]
+   Når $n$ Bernoulli trial bliver udført, er udfaldet en $n$-tuple $(t_{1}, t_{2},\ldots, t_{n})$, hvor $t_{i} = S$ (success) eller $t_{i} = F$ (fejl), for $i = 1, 2, \ldots, n$. Fordi de $n$ trials er uafhængige, så er sandsynligheden af hvert udfald af de $n$ trials af $k$ succeser og $n-k$ fejl $p^{k}q^{n-k}$. Fordi der er $\binom{n}{k}$ $n-$tupler af $S$'er og $F$'er som har præcis $k$ S'er, er sandsynligheden for præcis $k$ successer:
+   \[ \binom{n}{k}p^{k}q^{n-k} \]
+ \end{proof} 
+\end{frame}
+
+\begin{frame}
+  \frametitle{Binomial Distribution}
+  \begin{itemize}
+  \item Vi betegner $b(k;n,p)$ til at være sandsynligheden af $k$ sucesser i $n$ uafhængige Bernoulli trials med sandsynlighed for succes $p$ og sandsynlighed for fejl $q = 1-p$. Vi kalder denne funktion \textbf{binomial distribution}. 
+  \end{itemize}
+\end{frame}
+
+\subsection{Random Variables}
+\label{subsec:random-variables}
+
+\begin{frame}
+  \frametitle{Random Variables}
+ \begin{itemize}
+ \item Random Variables, kendt som at være et af de mest vildledende navne i matematik efter Dynamic Programmering, er ellers ret vigtigt i sandsynlighedsregning.
+ \item De er dog ret simple, de kommer nok ikke til at fylde en specielt stor del af resten af kurset.
+ \end{itemize} 
+\end{frame}
+
+\begin{frame}
+  \frametitle{Definition 6}
+ \begin{definition}
+A \textit{random variable} is a function from the sample space of an experiment to the set of real numbers. That is, a random variable assigns a real number to each posssible outcome.
+\end{definition}
+\begin{itemize}
+\item Så.. Det er bare en tilfældig variabel?
+\item Nej!
+\item Den er hverken tilfældig, og den er heller ikke variabel! Det er en funktion!!!
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Definition 7}
+  \begin{definition}
+The \textit{distribution} of a random variable $X$ on a sample space $S$ is the set of pairs $(r, p(X=r))$  for all $r \in X(S)$, where $p(X=r)$ is the probability that $X$ takes the value $r$. (The set of pairs in this distribution is determined by the probabilities $p(X=r)$ for $r \in X(S)$.)
+  \end{definition}
+\end{frame}
+
+\begin{frame}[allowframebreaks]
+  \frametitle{Eksempel 13: The Birthday Problem}
+  \begin{itemize}
+  \item (Dette er ikke en opgave lignende andre eksempler, jeg giver svaret, og forventer ikke at I kan det).
+  \item Hvad er det minimum antal af folk der skal være i et rum således at sandsynligheden for at to af dem har samme fødselsdag er større end $1/2$?
+  \item Vi antager at fødselsdagene er uafhængige. 
+  \item Vi antager at hver fødselsdag har lige sandsynlighed for at være præcis den dag, i.e. sandsynligheden for at fødselsdagen er på en præcis dag: $1/n$ hvor $n$ er antallet af dage, som er:
+  \item Vi antager at antallet af dage på et år er 366.
+  \item Fremgangsmåde:
+    \begin{itemize}
+    \item Vi må først udregne sandsynligheden $p_{n}$ for at all $n$ personer har forskellige fødselsdage
+    \item Derefter taget vi $1-p_{n}$, som så giver os sandsynligheden for at mindst to personer deler fødselsdag.
+    \end{itemize}
+  \item Sandsynligheden for at to personer har samme fødselsdag er $\frac{365}{366}$. Dermed, ved at vi tager til $j$ personer bliver det:
+  \item \[ \frac{366(j-1)}{366} = \frac{367-j}{366} \]
+  \item Fordi vi har antaget at fødselsdagene af personerne i rummet er uafhængige, kan vi konkludere at sandsynligheden at de $n$ personer i rummet har forskellige fødselsdage er: \[ p_{n} = \frac{365}{366} \frac{364}{366} \frac{363}{366} \cdots \frac{367-n}{366}\].
+  \item Sandsynligheden for at to har samme fødselsdag er $1-p_{n}$.
+  \item Vi gider ikke til at bruge differentialregning eller whatever, så vi prøver os bare frem, og finder ud af at denne formel giver $n = 23, 1-p_{n} \approx 0.506$.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[allowframebreaks]
+  \frametitle{Eksempel 14: Probability of a Collision in Hashing Functions}
+  \begin{itemize}
+  \item Denne her er god at kunne når vi kommer til hashing!
+  \item Hvad er sandsynligheden for at ingen nøgler mapper til den samme lokation af én hashing funktion?
+  \item Vi antager universal hashing function (i.e., sandsynligheden for at den rammer en specifik lokation er $1/m$, hvor $m$ er antallet af slots.)
+  \item Vi modellerer nøglerne til at være $k_{1}, k_{2}, \ldots, k_{n}$, hvor $n$ er antallet af nøgler.
+  \item Sandsynligheden for at $h(k_{2}) \neq h(k_{1}) = \frac{(m-1)}{m}$ fordi der er $m-1$ lokationer den kan komme til, ud af $m$ i alt, og den første er allerede taget. Det fortsætter og bliver til:
+  \item $\frac{m-(j-1)}{m}$ hvor $j$ er nøglenummeret (fra 1 opad). Dermed, givet at $p_{n}$ er sandsynligheden for at $h(k_{1}) \neq h(k_{2}) \neq \cdots \neq h(k_{n}) = p_{n}$, \[p_{n}= \frac{m-1}{m} \cdot \frac{m-2}{m } \cdot \cdots \cdot \frac{m-n+1}{m} \]. 
+  \item Vi finder så sandsynligheden ved at tage komplement, i.e. $1 - p_{n}$.
+  \end{itemize}
+\end{frame}
+
+\subsection{The Probabilistic Method}
+\label{subsec:probabilistic-method}
+
+\begin{frame}
+  \frametitle{Theorem 3}
+  \begin{theorem}[Theorem 3]
+    \textbf{The Probabilistic Method} If the probability that an element chosen at random from a $S$ does not have a particular property is less than 1, there exists an elementi n $S$ with this property.
+  \end{theorem}
+  \begin{itemize}
+  \item Kan blive brugt til at lave nonkonstruktive eksistensbeviser (i.e., du viser at et element eksisterer, du viser bare ikke hvor det er, eller hvordan du finder det).
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Theorem 4}
+  \begin{theorem}
+If $k$ is an integer with $k \geq 2$, then $R(k,k) \geq 2^{k/2}.$
+  \end{theorem}
+\end{frame}
+
+\begin{frame}[allowframebreaks]
+  \frametitle{Theorem 4 Bevis}
+  Vi ved at teoremet holder for $k = 2$ og $k = 3$, fordi $R(2,2) = 2, R(3,3) = 6$. (Dette var vist i kapitel 6.2).
+
+  Hvis vi så antager at $k \geq 4$, vil vi bruge den probabilistike metode til at vise om der er færre end $2^{k/2}$ personer til en fest, så er det muligt at ingen $k$ af dem er \textit{mutual friends or mutual enemies} (jeg gider ikke til at oversætte).
+
+  Vi antager at sandsynligheden for at to personer er venner eller fjender er lige stor.
+
+  Antag at der er $n$ personer til festen. Dermed er der $\binom{n}{k}$ forskellige sæt af $k$ personer til denne færst, hvilke vi skriver som $S_{1}, S_{2}, \ldots, S_{\binom{n}{k}}$ (altså, sættene af personer).
+
+  Lad $E_{i}$ være begivenheden at alle $k$  personer i $S_{i}$ er enten \textit{mutual friends} eller \textit{mutual enemies}.
+
+  Sandsynligheden for at der enten er $k$ \textit{mutual friends} eller \textit{mutual enemies} blandt de $n$ personer er lig med \[ \bigcup\limits_{i=1}^{\binom{n}{k}}E_{i} \].
+
+  Ifølge vores antagelse at det er lige sandsynligt for to personer at være fjender eller venner, så er sandsynligheden for begge $1/2$. Ydermere er der $\binom{k}{2} = \frac{k(k-1)}{2}$ par af personer i $S_{i}$, fordi der er $k$ personer i $S_{i}$. Dermed er sandsynligheden for at alle $k$ personer i $S_{i}$ er \textit{mutual friends} og sandsynligheden for at alle k personer i $S_{i}$ er \textit{mutual enemies} er begge lig $(1/2)^{k(k-1)/2}$. Det følger at $p(E_{i}) = 2(1/2)^{k(k-1)/2}$.
+
+  Sandsynligheden for at der er enten $k$ \textit{mutual friends} eller $k$ \textit{mutual enemies} i gruppen af $n$ personer er lig med $p(\bigcup\limits_{i=1}^{\binom{n}{k}} E_{i})$. Ved brug af Boole's Inequality, følger det at:
+
+  \[ p\left( \bigcup\limits_{i=1}^{\binom{n}{k}} \leq \sum_{i=1}^{\binom{n}{k}} p(E_{i}) = \binom{n}{k} \cdot 2 \left( \frac{1}{2} \right)^{k(k-1)/2}   \right) \]
+
+  Af exercise 21 i 6.4 har vi at $\binom{n}{k} \leq n^{k}/2^{k-1}$. Dermed,
+  \[ \binom{n}{k} 2 \left( \frac{1}{2} \right)^{k(k-1)/2} \leq \frac{n^{k}}{2^{k-1}}2 \left( \frac{1}{2} \right)^{k(k-1)/2} \]
+
+  Hvis $n < 2^{k/2}$, har vi at :
+
+  \[ \frac{n^{k}}{2^{k-1}}2 \left( \frac{1}{2} \right)^{k(k-1)/2} < \frac{2^{k(k/2)}}{2^{k-1}}2 \left( \frac{1}{2} \right)^{k(k-1)/2} = 2^{2-(k/2} \leq 1 \]
+  \end{frame}
+
+  \begin{frame}[allowframebreaks]
+    \frametitle{Reflektion}
+   \begin{itemize}
+   \item Hvad er probability distribution? 
+   \item Hvad er en uniform distribution?
+   \item Hvad er conditional probability?
+   \item Hvordan udregnes $P(E|F)$?
+   \item Forklar, uden brug af matematik, hvad uafhængige begivenheder er.
+   \item Forklar med matematik.
+   \item Hvad er pairwise independence
+   \item Hvad er mutual independence
+   \item Hvad er forskellen?
+   \item Ligheden?
+   \item Hvad er en bernoulli trial?
+   \item Hvad er en binomial distribution (binomial fordeling)?
+   \item Hvad er en random variable? 
+   \item Er det en variable?
+   \item Hvad er den probabilistiske metode?
+   \end{itemize} 
+\end{frame}
+
+\section{Bayes' Theorem}
+\label{sec:bayes}
+
+\begin{frame}
+  \frametitle{Bayes' Theorem}
+ \begin{itemize}
+ \item Bayes' Theorem er et teorem der kan hjælpe dig med at finde en sandsynlighed, baseret udelukkende på partial knowledge.
+ \end{itemize} 
+\end{frame}
+
+\subsection{Bayes' Theorem}
+\label{subsec:bayes-theorem}
+
+
+\begin{frame}[allowframebreaks]
+  \frametitle{Eksempel 1}
+
+  \begin{itemize}
+  \item Vi har to bokse. Den første indeholder to grønne bolde, og syv røde bolde. Den anden indeholder fire grønne bolde og tre grønne bolde.
+  \item Bob vælger en bold ved først at vælge en af de to bokse tilfældigt, og derefter en bold tilfældeligt. Hvis bob har valgt en rød bold, hvad er sandsynligheden at han tog fra den første boks? 
+  \item Lad $E$ være begivenheden at Bob har valgt en rød bold. $\overline{E}$ er begivenheden at Bob har valgt en grøn bold. Lad $F$ være begivenheden at Bob har valgt fra den første boks ($\overline{F}$ er dermed begivenheden at han har valgt fra anden).
+  \item Vi vil gerne finde $P(F|E)$. Vi ved at $P(F|E) = \frac{P(F \cap E)}{P(E)}$. Kan vi bruge informationen givet til at finde både $P(F \cap E)$ og $P(E)$, så vi kan finde $P(F|E)$?
+    \item For det første ved vi at vi kan finde sandsynligheden for at han vælger en rød bold, hvis han tager fra den første boks. $P(E|F) = 7/9$. Vi ved også sandsynligheden for at han tager en rød bold hvis han tager fra den anden boks: $P(E|\overline{F}) = 3/7$. 
+    \item Siden vi antager at Bob vælger en boks tilfældig, er $P(F) = P(\overline{F}) = 1/2$.
+    \item Vi ved at $p(E|F) = \frac{p(E \cap F)}{p(F)}$. Hvis vi ganger med $p(F)$ på begge sider får vi: $p(E|F) \cdot p(F) = \frac{p(E \cap F)}{p(F)} \cdot p(F) = p(E \cap F)$. Dermed kan vi finde $p(E \cap F)$ ved at have $p(E|F)$ og $p(F)$. Vi har etableret, at vi har denne information.
+    \item $\frac{7}{9}\cdot \frac{1}{2} = \frac{7}{18}$
+    \item Ligeledes: $p(E \cap \overline{F}) = p(E| \overline{F}) p(\overline{F}) = \frac{3}{7} \cdot \frac{1}{2} = \frac{3}{14}$
+    \item Da $E = (E \cap F) \cup (E \cap \overline{F})$ kan vi nu finde $p(E)$.
+    \item $p(E) = p(E \cap F) + p(E \cap \overline{F}) = \frac{7}{18} + \frac{3}{14} = \frac{49}{126} + \frac{27}{126} = \frac{76}{126} = \frac{38}{63}$
+    \item Dermed:
+    \item \[ p(F|E) = \frac{p(F \cap E)}{p(E)} = \frac{7/18}{38/63} = \frac{49}{76} \approx 0.645 \]
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Theorem 1}
+ \begin{theorem}[Bayes' Theorem]
+   Suppose that $E$ and $F$ are events from a sample space $S$ such that $p(E) \neq 0$ and $p(F) \neq 0$. Then
+  \[ p(F|E) = \frac{p(E|F)p(F)}{p(E|F)p(F)+p(E|\overline{F})p(\overline{F})} \]
+ \end{theorem} 
+\end{frame}
+
+\begin{frame}[allowframebreaks]
+  \frametitle{Bayes' Theorem Bevis}
+  Definitionen af conditional probability fortæller os at $p(F|E) = p(E \cap F)/p(E)$ og $p(E|F) = p(E \cap F)/p(F)$. Derfor, $p(E \cap F) = p(F|E)p(E)$ og $p(E \cap F) = p(E|F)p(F)$. Hvis vi sætter disse lig hinanden, får vi:
+  \[ p(F|E)p(E) = p(E|F)p(F)  \]
+
+  Hvis vi dividerer begge disse sider med $p(E)$ får vi:
+  \[ p(F|E) = \frac{p(E|F)p(F)}{p(E)} \]
+
+  Som det næste viser vi at $p(E) = p(E|F)p(F)+P(E|\overline{F})p(\overline{F})$. For at se dette, så læg først mærke til at $E = E \cap S = E \cap (F \cup \overline{F}) = (E \cap F) \cup ( E \cap \overline{F})$. Ydermere, $E \cap F$ og $E \cap \overline{F}$ er \textit{disjoint} (usammenhængende), fordi hvis $x \in E \cap F$ og $x \in E \cap \overline{F}$, så $x \in F \cap \overline{F} = \emptyset$.
+
+  Konsekvent må $p(E) = p(E \cap F) + p(E \cap \overline{F})$. Vi har allerede vist at $p(E \cap F) = p(E |F) p(F)$. Derudover, har vi at $p(E | \overline{F}) = p(E \cap \overline{F})/p(\overline{F})$, som viser os at $p(E \cap \overline{F}) = p(E|\overline{F})p(\overline{F})$. Det følger nu at:
+  \[ p(E) = p(E \cap F) + p(E \cap \overline{F}) = p(E |F) p(F) + p(E | \overline{F} p(\overline{F}) \]
+
+  For at færdiggøre beviset plopper vi bare vores nye $p(E)$ ind og får:
+  \[ p(F|E) = \frac{p(E|F)p(F)}{p(E|F)p(F)+p(E|\overline{F})p(\overline{F})} \]
+\end{frame}
+
+\begin{frame}
+  \frametitle{Theorem 2}
+  \begin{theorem}[Generalized Bayes' Theorem]
+    Suppose that $E$ is an event from a sample space $S$ and that $F_{1}$, $F_{2}, \ldots, F_{n}$ are mutually exclusive events such that $\bigcup\limits_{i=1}^{n}F_{i}=S$. Assume that $p(E) \neq 0$ and $p(F_{i}) \neq 0$, for $i = 1, 2, \ldots, n$. Then
+    \[ p(F_{j}|E) = \frac{p(E|F_{j}) p(F_{j})}{\sum_{i=1}^{n}p(E|F_{i})p(F_{i})} \]
+  \end{theorem}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Reflektion}
+  \begin{itemize}
+  \item Hvad er Bayes' Theorem?
+  \item Hvad kan det bruges til?
+  \item Hvornår?
+  \item Hvorfor er $E = E \cap (F \cup \overline{F})$?
+  \end{itemize}
+  
+\end{frame}
+
+\subsection{Expected Value and Variance}
+\label{subsec:expectedvalue}
+
+\begin{frame}
+  \frametitle{Expected Value}
+  \begin{itemize}
+  \item \textbf{Expected Value} af en random variable er summen over alle elementer i et sample space af produktet af sandsynligheden af elementet og værdien af den tilfældelige variable på dette element. Konsekvent er expected value et vægtet gennemsnit af værdierne af en random variable.
+  \end{itemize}
+\end{frame}
+
+\subsection{Expected Values}
+\label{subsec:expected-values}
+
+\begin{frame}
+  \frametitle{Definition 1}
+ \begin{definition}
+   The \textit{expected value}, also called the \textit{expectation} or \textit{mean}, of the random variable $X$ on the sample space $S$ is equal to
+   \[ E(X) = \sum_{s \in S}^{}p(s)X(s) \]
+   The \textit{deviation} of $X$ at $s \in S$ is $X(s)-E(X)$, the difference between the value of $X$ and the mean of $X$.
+ \end{definition}
+ Læg mærke til at når sample space $S$ har $n$ elementer, $S = \{x_{1}, x_{2}, \ldots, x_{n}\}, E(X) = \sum_{i=1}^{n}p(x_{i})X(x_{i})$
+\end{frame}
+
+\begin{frame}
+  \frametitle{Eksempel 1}
+ \begin{itemize}
+ \item<1-> Nu er vi tilbage til nogle lidt nemmere opgaver. 
+ \item<1-> Så her er der også nogle skjulte svar.
+ \item<1-> Lad $X$ være tallet der kommer up når en terning bliver rullet. Hvad er expected value af $X$? (Næste slide indeholder sandsynligheden, ikke $E(X)$)
+ \item<2-> $p(X = r) = 1/6, r = 1,2,\ldots 6$
+ \item<3-> $E[X] = \frac{1}{6} \cdot 1 + \frac{1}{6} \cdot 2 + \cdots + \frac{1}{6} \cdot 6 = \frac{21}{6} = \frac{7}{2}$
+ \end{itemize} 
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Theorem 1}
+ \begin{theorem}
+   If $X$ is a random variable and $p(X = r)$ is the probability that $X = r$, so that $p(X=r) = \sum_{s \in S, X(s)=r} p(s)$, then
+   \[ E[X] = \sum_{r \in X(S)}^{} p(X=r)r  \]
+ \end{theorem} 
+ \begin{itemize}
+ \item a.k.a., den langt nemmere måde at udregne $E[X]$ på.
+ \item vent? er der en forskel? er oprigtigt i tvivl
+ \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Theorem 1 Bevis}
+ \begin{proof}
+   (Endelig et bevis så kort at vi kan have bevis-rammen tilbage!)
+   Antag at $X$ er en random variable med værdimængde $X(S)$, og let $p(X=r)$ være sandsynligheden at en random variable $X$ tager vrædien $r$. Konsekvent, $p(X=r)$ er summen af sandsynlighederne $s$, således at $X(s) = r$. Det følger at
+   \[E[X] = \sum_{r \in X(S)}^{} p(X = r)r  \]
+ \end{proof}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Forskel}
+  \begin{itemize}
+  \item Ifølge ChatGPT er forskellene at:
+    \begin{itemize}
+    \item Definition 1 summerer over hele sample spacet, og udregner indsatsen af hvert udfald individuelt.
+    \item Teoremet summerer over de distinkte værdier som et random variable kan have. 
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Theorem 2}
+ \begin{theorem}
+The expected number of successes when $n$ mutually independent \textbf{Bernoulli Trials} are performed, where $p$ is the probability of success on each trial, is $np$.
+ \end{theorem} 
+\end{frame}
+
+\begin{frame}
+  \frametitle{Theorem 2 Bevis}
+  Lad $X$  være det random variable lig med antallet af sucesser i $n$ trials. Af Teorem 2 i 7.2 ser vi at $p(X=k) = \binom{n}{k}p^{k}q^{n-k}$. Dermed har vi:
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Theorem 2 bevis part 2}
+  \begin{equation*}
+    \begin{split}
+      E(X) &= \sum_{k=1}^{n}kp(X=k) \;\; \text{by Theorem 1}\\
+           &= \sum_{k=1}^{n}k \binom{n}{k}p^{k}q^{n-k} \;\; \text{by Theorem 2 in 7.2}\\
+           &= \sum_{k=1}^{n} n \binom{n-1}{k-1}p^{k} q^{n-k} \; \; \text{by Exercise 21 in 6.4}\\
+           &= np\sum_{k=1}^{n} \binom{n-1}{k-1}p^{k-1}q^{n-k} \; \; \text{factoring np from each term} \\
+           &= np \sum_{j=0}^{n-1} \binom{n-1}{j}p^{j}q^{n-1-j}\;\; \text{shifting index of summation with} j = k - 1\\
+            &= np(p+q)^{n-1} \;\; \text{by the binomial theorem}\\
+           &= np \;\; \text{because p + q = 1}
+    \end{split}
+  \end{equation*}
+\end{frame}
+
+\subsection{Linearity of Expectations}
+\label{subsec:linexp}
+
+\begin{frame}
+  \frametitle{Theorem 3}
+  \begin{theorem}
+    If $X_i, i = 1, 2, \ldots, n$ with $n$ a positive integer, are random variables on $S$, and if $a$ and $b$ are real numbers, then
+    \begin{itemize}
+    \item $E(X_{1}+X_{2}+ \cdots + X_{n}) = E(X_{1})+ E(X_{2})+ \cdots E(X_{n})$
+    \item $E(aX+b) = aE(X)+b$
+    \end{itemize}
+  \end{theorem}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Theorem 3 Beviser}
+  Part 1:
+  \begin{equation}
+    \begin{split}
+      E(X_{1} + X_{2}) &= \sum_{s \in S}p(s) (X_{1}(s) + X_2(s)) \\
+                       &= \sum_{s \in S}p(s) X_{1}(s) + \sum_{s \in S}p(s) X_{2}(s)\\
+                       &= E(X_{1}) + E(X_{2})
+    \end{split}
+  \end{equation}
+
+  Part 2:
+  \begin{equation}
+    \begin{split}
+      E(aX+b) &= \sum_{s \in S}p(s)(aX(s)+b)\\
+              &= a \sum_{s \in S}p(s)X(s) + b \sum_{s \in S}p(s)\\
+              &= aE(X) + b \text{ because } \sum_{s \in S}p(s) = 1\\
+    \end{split}
+  \end{equation}
+\end{frame}
 
 
 
 \end{document}
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-engine: xetex
+%%% TeX-command-extra-options: "-shell-escape"
+%%% End:
