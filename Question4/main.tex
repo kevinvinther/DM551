@@ -1,0 +1,187 @@
+\documentclass{beamer}
+\usetheme{metropolis} % Use the metropolis theme
+
+
+
+
+% Add tikz and pgfplots packages
+\usepackage{tikz, pgfplots}
+\usetikzlibrary{positioning}
+
+% For clicking references
+\usepackage{hyperref}
+
+% For better referencing
+\usepackage{cleveref}
+
+\usepackage{graphicx}
+
+
+\usepackage{amsmath}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+% Define custom pastel colors
+\definecolor{pastelRed}{RGB}{255, 105, 97}   % A soft pastel red
+\definecolor{pastelBlue}{RGB}{119, 158, 203} % A muted pastel blue
+\definecolor{pastelYellow}{RGB}{255, 223, 0} % A gentle pastel yellow
+\definecolor{lightGray}{RGB}{211, 211, 211}  % A light gray for subtitles and less emphasized text
+
+% Apply the custom colors
+\setbeamercolor{palette primary}{bg=black, fg=white}
+\setbeamercolor{palette secondary}{bg=lightGray, fg=black}
+\setbeamercolor{palette tertiary}{bg=black, fg=white}
+\setbeamercolor{titlelike}{parent=palette primary, fg=black}
+\setbeamercolor{subtitle}{fg=lightGray}
+\setbeamercolor{structure}{fg=black} % For itemize, enumerate, etc
+
+% Change color of normal text
+\setbeamercolor{normal text}{fg=black, bg=white}
+
+% Set the color of the table of contents
+\setbeamercolor{section in toc}{fg=black} % Section titles in TOC
+\setbeamercolor{subsection in toc}{fg=black} % Subsection titles in TOC
+
+% Set block colors
+\setbeamercolor{block title}{use=structure,fg=white,bg=pastelRed}
+\setbeamercolor{block body}{fg=black,bg=white}
+
+
+
+% Title Page Info
+\title{Randomized Algorithms}
+\subtitle{Spørgsmål 4 fra Exam Questions}
+\author{Kevin Vinther}
+\date{\today}
+
+\begin{document}
+
+% Title Page
+\begin{frame}
+  \titlepage
+\end{frame}
+
+% Table of Contents
+\begin{frame}[allowframebreaks]
+  \frametitle{Table of Contents}
+  \tableofcontents
+\end{frame}
+
+\section{Randomly Permuting Arrays}
+\label{sec:cormen5}
+
+
+\begin{frame}
+  \frametitle{Randomly Permuting Arrays}
+  \begin{itemize}
+  \item Givet et array, vil vi gerne have en måde hvorpå vi kan permutere det tilfdæligt. 
+  \item Der er flere måder at gøre dette på.
+  \item En af måderne:
+    \begin{itemize}
+    \item Giv hvert element i array A[i] en prioritet P[i], og sortér after prioriteterne.
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Permute-By-Sorting}
+  
+  \begin{algorithmic}[1]
+      \State $n \gets A.\text{length}$
+      \State Let $P[1..n]$ be a new array
+      \For{$i \gets 1 \text{ to } n$}
+      \State $P[i] \gets \text{RANDOM}(1, n^3)$
+      \EndFor
+      \State sort $A$, using $P$ as sort keys
+    \end{algorithmic}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Lemma 5.4}
+  \begin{lemma}[Lemma 5.4]
+  Procedure \texttt{Permute-By-Sorting} produces a uniform random permutation of the input, assuming that all priorities are distinct
+  \end{lemma}
+\end{frame}
+
+\begin{frame}[allowframebreaks]
+  \frametitle{Lemma 5.4 Bevis}
+ Vi starter med at overveje den præcise permutation hvor elementet $A[i]$ får den $i$'e laveste prioritet. Vi viser at denne permutation sker med den præcise sandsynlighed $1/n!, for i =, 1, 2, \ldots, n$. Lad $E_{i}$ være hændelsen at elementet $A_{i}$ får den $i'e$ mindste prioritet. Vi ønsker at udregne sandsynligheden for alle $i$.
+
+   \begin{equation*}
+P(E_{1} \cap E_{2} \cap \cdots \cap E_{n-1} \cap E_{n})
+   \end{equation*}
+
+   Denne sandsynlighed er lig med (iflg. opgave C.2-5):
+
+   \begin{equation*}
+     P(E_{1}) \cdot P(E_{2}|E_{1}) 
+     \cdots P(E_{i}| E_{i-1} \cap E_{i-2} \cap \cdots \cap E_{1}) \cdots P(E_{n}|E_{n-1} \cap \cdots \cap E_{1}) 
+   \end{equation*}
+
+   Vi har at $p(E_{1}) = 1/n = 1/n = 1/n = 1/n$ fordi det er sandsynligheden at en prioritet valgt tildældigt ud af et sæt af $n$ er den mindste sandsynlighed.
+
+   Som det næste observerer vi at $P(E_2|E_{1}) = \frac{1}{n-1}$ fordi, givet at elementet $A[1]$ har den mindste prioritet, har hver af de resterende $n-1$ elementer en lige chance for at have den anden mindste prioritet. Generelt:
+
+   \begin{equation*}
+     p(E_{i} | E_{i-1} \cap E_{i-2} \cap \cdots \cap E_{1}) = \frac{1}{(n-i+1)}
+   \end{equation*}
+
+   Dermed har vi:
+
+   \begin{equation*}
+     \begin{split}
+     p(E_{1} \cap E_{2} \cap E_{3} \cap \cdots \cap E_{n-1} \cap E_{n}) &=\\
+     \left( \frac{1}{n} \right) \left( \frac{1}{n-1} \right) &\cdots \left( \frac{1}{2} \right) \left( \frac{1}{1} \right) \\
+    &= \frac{1}{n!}\\
+     \end{split}
+   \end{equation*}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Randomize-in-Place}
+
+  \begin{itemize}
+  \item Vi kan gøre det endnu bedre. Permute-By-Sorting var $\Theta (n \lg n)$. Randomize-In-Place er $O(n)$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Randomize-in-Place}
+  \begin{algorithmic}[1]
+      \State $n \gets A.\text{length}$
+      \For{$i \gets 1 \text{ to } n$}
+      \State $\text{swap }A[i]\text{ with }A[Random(i,n)] $
+      \EndFor
+    \end{algorithmic}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Lemma 5.5}
+
+  \begin{lemma}[Lemma 5.5]
+    Procedure \texttt{Randomize-in-Place} computes a uniform random permutation.
+  \end{lemma}
+\end{frame}
+
+\begin{frame}[allowframebreaks]
+  \frametitle{Lemma 5.5 Bevis}
+
+  Vi bruger den følgende loop invariant\footnote{En invariant skal være sand under hele beviset}:
+ Lige før den $i'e$  iteration af \textbf{for} loopet (linjerne 2-3), for hver mulig $(i-1)$-permutation af de $n$ elementer; indeholder subarrayen $A[1..i-1]$ denne $(i-1)$-permutation med sandsynligheden $(n-i+1)!/n!$
+
+ (Altså, sandsynligheden for at subarrayen indtil videre er en præcis subarray skal gerne være $(n-i+1)!/n!$ (for ellers er den ikke uniformly random.))
+
+ Vi skal så vise at invarianten er sand:
+ \begin{itemize}
+ \item Før den første loop
+ \item I hvert loop efterfølgende
+ \item Når loopet er færdigt
+ \end{itemize}
+\end{frame}
+
+\end{document}
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-engine: xetex
+%%% TeX-command-extra-options: "-shell-escape"
+%%% End:
