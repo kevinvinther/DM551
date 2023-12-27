@@ -1,0 +1,258 @@
+\documentclass{beamer}
+\usetheme{metropolis} % Use the metropolis theme
+
+% Add tikz and pgfplots packages
+\usepackage{tikz, pgfplots}
+\usetikzlibrary{positioning}
+
+% For clicking references
+\usepackage{hyperref}
+
+% For better horizontal lines
+\usepackage{booktabs}
+
+% For better referencing
+\usepackage{cleveref}
+
+\usepackage{graphicx}
+
+
+\usepackage{amsmath}
+
+\usepackage{wasysym}
+
+% Define custom pastel colors
+\definecolor{pastelRed}{RGB}{255, 105, 97}   % A soft pastel red
+\definecolor{pastelBlue}{RGB}{119, 158, 203} % A muted pastel blue
+\definecolor{pastelYellow}{RGB}{255, 223, 0} % A gentle pastel yellow
+\definecolor{lightGray}{RGB}{211, 211, 211}  % A light gray for subtitles and less emphasized text
+
+% Apply the custom colors
+\setbeamercolor{palette primary}{bg=black, fg=white}
+\setbeamercolor{palette secondary}{bg=lightGray, fg=black}
+\setbeamercolor{palette tertiary}{bg=black, fg=white}
+\setbeamercolor{titlelike}{parent=palette primary, fg=black}
+\setbeamercolor{subtitle}{fg=lightGray}
+\setbeamercolor{structure}{fg=black} % For itemize, enumerate, etc
+
+% Change color of normal text
+\setbeamercolor{normal text}{fg=black, bg=white}
+
+% Set the color of the table of contents
+\setbeamercolor{section in toc}{fg=black} % Section titles in TOC
+\setbeamercolor{subsection in toc}{fg=black} % Subsection titles in TOC
+
+% Set block colors
+\setbeamercolor{block title}{use=structure,fg=white,bg=pastelRed}
+\setbeamercolor{block body}{fg=black,bg=white}
+
+
+
+% Title Page Info
+\title{Misc}
+\subtitle{Ting vi ikke gik igennem, eller ikke er en del af spørgsmålene}
+\author{Kevin Vinther}
+\date{\today}
+
+\begin{document}
+
+% Title Page
+\begin{frame}
+  \titlepage
+\end{frame}
+
+% Table of Contents
+\begin{frame}[allowframebreaks]
+  \frametitle{Table of Contents}
+  \tableofcontents
+\end{frame}
+
+\section{Misc 1}
+\label{sec:misc1}
+
+
+
+\subsection{Notes on combinatorial proofs}
+\label{sec:weeklynote2}
+
+\begin{frame}[allowframebreaks]
+  \frametitle{Notes on Combinatorial Proofs}
+ \begin{itemize}
+ \item Det her er bare et simpelt kombinatorisk bevis af Jørgen. 
+ \end{itemize} 
+ \begin{theorem}
+If $S$ is a finite set with at least one element, then the number of even subsets of $S$ is the same as the number of odd subsets of $S$.
+ \end{theorem}
+ \begin{itemize}
+ \item Der kommer to beviser. 
+ \item Først, læg mærke til at dette ikke gælder når $S = \emptyset$.
+ \item Lad $E_{S}$  være antallet af lige subsets og $O_{S}$ antallet af ulige subsets af S. 
+ \item Sidst, lad $n = |S|$ (i.e., kardinaliteten af $S$.)
+ \item \textbf{Første bevis:}
+ \item Der er præcis $\binom{n}{k}$ måder at vælge et sæt med $k$ elementer fra $S$.
+ \item Husk binomial theorem: $(x+y)^{n} = \sum_{k=0}^{n} \binom{n}{k}x^{n-k}y^{ k}$.
+ \item Hvis vi siger at $x = 1$ og $y = -1$ får vi $0 = \sum_{k=0}^{n} \binom{n}{k} (-1)^{k}$. 
+ \item Vi kan dermed se at hvert lige subset bliver 1, og hvert ulige bliver -1.
+ \item \textbf{Andet bevis:}
+ \item Teoremet holder klart når $n=1$, så tænk på et sæt $S$ med $n > 1$ elementer. 
+ \item Vi ``fikser'' et element $s \in S$ og lader $S' = S \setminus \{s\}$. 
+ \item Lad $e_{s}, o_{s}$ være antallet af lige og ulige subsets af $S$ som indeholder $s$ (dvs. det tal vi ``fiksede'' før.)
+ \item Hvert lige (ulige) subset af $S$ som har $s$ i sig, har $s$ plus et ulige (lige) subset af $S'$. 
+ \item Dermed har vi $e_{s} = O_{S'}$ og $o_{s} = E_{S'}$. 
+ \item Til sidst, observér at, gennem sum-reglen, antallet af lige (ulige) subsets fa $S$ er lig med antallet af lige (ulige) subsets der indeholder $s$ plus antallet af lige (ulige) subsets af $S$ der ikke indeholder $s$. 
+ \item Dermed: \[ E_{S} = e_{s} + E_{S'} = O_{S'} + E_{S'} = O_{S'} + o_{s} = O_{S} \]
+ \end{itemize}
+\end{frame}
+
+\begin{frame}[allowframebreaks]
+  \frametitle{Andet teorem}
+ \begin{itemize}
+ \item Vi giver nu endnu et eksempel af hvordan kombinatoriske argumenter kan bruges.
+ \item For givne heltal $k,n$ lader vi $S_{n,k} = \{(n_{1}, n_{2}, \ldots, n_{k}) | n_{i} \geq 0 \text{ og } n_{1} + n_{2} + \cdots + n_{k} = n\}$
+ \item Læg mærke til at $S_{n,k}$ er sættet af alle ordnet (ordered) $k$-tupler, med et ikke-negativt tal for hvilke summen af elementerne i tuplen er $n$. 
+ \item Fra Rosen 6.5.3 ved vi at der er $\binom{n+(k-1)}{n}$ af disse.
+ \end{itemize} 
+ \begin{theorem}
+\[ \sum_{(n_{1}, n_{2}, \ldots, n_{k}) \in S_{n,k}}^{} \frac{n!}{n_{1}! \cdot n_{2}! \cdot \cdots \cdot n_{k}!} = k^{n} \]
+\end{theorem}
+\begin{itemize}
+\item \textbf{Bevis:}
+\item Vi påstår at begge sider af lighedstegnet tæller antallet af måder at distribuere $n$ distinkte bolde i $k$ distinkte bokse. 
+\item Det er nemt at se på højresiden: vi har $k$ valg for hver af de $n$ bolde, så $k^{n}$ i alt. 
+\item For venstresiden tæller vi det samme. Af Rosen Theorem 4 side 452 ved vi at for fiksede $n_{1}, n_{2}, \ldots, n_k$ således at $\sum_{i=1}^{k} n_{i} = n$ er der $\frac{n!}{n_{1}! \cdot n_{2}! \cdot \cdots \cdot n_{k}!}$ måder at distribuere dem.
+\end{itemize}
+\end{frame}
+
+\subsection{Kombinatoriske Beviser (Rosen 6.3)}
+\label{subsec:rosen63}
+
+\begin{frame}[allowframebreaks]
+  \frametitle{Kombinatoriske Beviser}
+  \begin{itemize}
+  \item Håber I er klar gutter!
+  \end{itemize}
+  \begin{definition}
+A \textit{combinatorial proof} of an identity is a proof that uses counting arguments to prove that both sides of the identity count the same objects but in different ways or a proof that is based on showing that there is a bijectino between the sets of objects counted by the two sides of the identity. These two types of proofs are called \textit{double counting proofs} and \textit{bijective proofs} respectively.
+  \end{definition}
+  \begin{itemize}
+  \item Så, med \textbf{dobbelttælningsbeviser} er målet af vise at begge sider af en identitet i essensen tæller det samme sæt af objekter (se f.eks. $\binom{n}{k} = \binom{n}{n-k}$).
+  \item Et \textbf{bijektivt bevis} arbejder ved at etablere en en-til-en korrespondance mellem de to sæt, som tælles. Det skal bekræftes at hvert element i et sæt svarer \textbf{præcist} til et objekt i et andet sæt. Hvis dette gælder, tæller de det samme, og er dermed lig hinanden. 
+  \item Lad os, for eksempel, kigger på beviserne for $\binom{n}{r} = \binom{n}{n-r}$. 
+  \item Antag at $S$ er et sæt med $n$ elementer. 
+  \item Funktionen som ``mapper'' et subset $A$ af $S$ til $\overline{A}$  er en bijketion mellem subsetsne af $S$ med $r$ elementer, og subsetsne med $n-r$ elementer.
+  \item Du kan tænke på det på den her måde: For hvert sæt der bliver talt i $A$ bliver der udeladt et antal af elementer, $|\overline{A}|$. 
+  \item Disse elementer bliver undlandt lige så mange gange, som du tæller de originale tal.
+  \item \textbf{Dobbelttælningsbevis}:\footnote{jeg tænker bare jeg skriver double countign fra nu af, det er godt nok irriterende at skrive et så langt ord.} Af deginitionen er antallet af subsets af $S$ med $r$ elementer $\binom{n}{r}$. Men hvert subset $A$ af $S$ bliver også valgt ved at specificere hvilke elementer der \textbf{ikke} er en del af $A$ og dermed er i $\overline{A}$. 
+  \end{itemize}
+  \begin{theorem}[1. The Binomial Theorem]
+    Let $x$ and $y$ be variables, and let $n$ be a nonnegative integer. Then
+    \[ (x+y)^{n} = \sum_{j=0}^{n} \binom{n}{j} x^{n-j}y^{j} = \binom{n}{0}x^{n} \binom{n}{1}x^{n-1}y + \cdots + \binom{n}{n-1}xy^{n-1} + \binom{n}{n} y^{n} \]
+  \end{theorem}
+  \begin{itemize}
+  \item Vi beviser kombinatorisk. 
+  \item Leddene i produktet, når de bliver udvidet, er af formen $x^{n-j}y^{j}$ for $j = 0, 1, 2, \ldots, n$. 
+  \item For at tælle antallet af led af formen $x^{n-j}y^{j}$, notér at for at få sådan et led skal man vælge $n-j$ $x'$er fra de $n$ binnomiale faktorer (således at de andre $j$ led i produktet er $y$'er). 
+  \item Dermed er koefficienten af $x^{n-j}y^{j} = \binom{n}{n-j}$, hvilket er lig med $\binom{n}{j}$. Dette beviser teoremet. 
+  \end{itemize}
+  \begin{theorem}[2. Pascal's Identity]
+Let $n$ and $k$ be positive integers with $n \geq k$. Then \[ \binom{n+1}{k} = \binom{n}{k-1} + \binom{n}{k} \].
+  \end{theorem}
+  \begin{itemize}
+  \item Igen beviser vi kombinatorisk (haha, man skulle næsten tro at det var målet med den her fremlæggelse.)
+  \item Antag at $T$ er et sæt tilhørende $n+1$ elementer. 
+  \item Lad $a$ være et element i $T$ og lad $S = T - \{a\}$.
+  \item Læg mærke til at der er $\binom{n+1}{k}$ subsets af $T$ med $k$ elementer. 
+  \item (igen, $n+1$ fordi $T$ er defineret, ikke til at have $n$ elementer, men $n+1$)
+  \item Et subset af $T$ med $k$ elementer indeholder enten $a$ sammen med $k-1$ elementer af $S$, eller $k$ elementer af $S$ og inderholder ikke $a$.
+  \item Fordi der er $\binom{n}{k-1}$ subsets af $k-1$ elementer af $S$, er der $\binom{n}{k-1}$ subsets af $k$ elementer af $T$ der indeholder $a$. 
+  \item Der er $\binom{n}{k}$ subsets af $k$ elementer af $T$ som ikke indeholder $a$, fordi der er $\binom{n}{k}$ subsets af $k$ elementer af $S$.
+  \item Dermed teoremet.
+  \end{itemize}
+  \begin{theorem}[3. Vandermonde's Identity]
+    Let $m, n$ and $r$ be nonnegative integers with $r \leq m, n$. Then
+    \[ \binom{m+n }{r} = \sum_{k=0}^{r} \binom{m}{r-k} \binom{n}{k}  \]
+  \end{theorem}
+  \begin{itemize}
+  \item Antag at der er $m$ elementer i et sæt, og $n$ i et andet. 
+  \item Så er der i alt $\binom{m+n }{r}$ måder at vælge $r$ elementer fra begge sæt.
+  \item En anden måde at vælge $r$ elementer fra fællesmængden er at vælge $k$ elementer fra det andet sæt, og så $r-k$ elementer fra det første sæt, hvor $k$ er et heltal $0 \leq k \leq r$. 
+  \item Fordi der er $\binom{n}{k}$ måder at vælge $k$ elementer fra det andet sæt på, og $\binom{m}{r-k}$ måder at vælge $r-k$ elementer fra det første sæt, fortæller product rule os at det kan blive gjort på $\binom{m}{r-k} \binom{n}{k}$ måder. 
+  \item Dermed er det fulde antal af måder du kan vælge $r$ elementer på fra fællesmængden lig med \[ \sum_{k=0}^{r} \binom{m}{r-k} \binom{n}{k} \]
+  \item Vi har fundet du udtryk for antallet af måder at vælge $r$ elementer på fra fællesmængden af et sæt med $m$ elementer, og et sæt med $n$ elementer. 
+  \item Dette beviser Vandermonde's Identitet
+    \end{itemize}
+    \begin{theorem}[4]
+      Let $n$ and $r$ be nonnegative integers with $r \leq n$. Then
+      \[ \binom{n+1}{r+1} = \sum_{j=r}^{n}\binom{j}{r} \]
+    \end{theorem}
+    \begin{itemize}
+    \item Et tidligere eksempel har vist at $\binom{n+1}{r+1}$ tæller antallet af bit-strenge af længde $n+1$ der har $r+1$ et'taller
+    \item Vi vil vise at højresiden tæller de samme objekter ved at se på antallet af korresponderende mulige lokationer af det sidste 1 i en streng med $r+1$ 1'ere. 
+    \item Det sidste 1 må være ved position $r+1, r+2, \ldots, \text{ eller } n+1$. 
+    \item Ydermere, hvis det sidste et er det $k$'e bit, må der være $r$ et'ere imellem de første $k-1$ positioner. 
+    \item Vi ved at der er $\binom{k-1}{r}$ af disse slags bitstrenge. 
+    \item Hvis vi summerer over $k$ med $r + 1 \leq k \leq n + 1$, finder vi at der er
+      \[ \sum_{k=r+1}^{n+1} \binom{k-1}{r} = \sum_{j=r}^{n} \binom{j}{r} \]
+      bit strenge af længde $n$ med præcis $r+1$ et'taller.
+    \end{itemize}
+\end{frame}
+
+\subsection{Recurrence Relations}
+\label{subsec:recurrencerelations}
+
+\begin{frame}
+  \frametitle{Recurrence Relations}
+ \begin{itemize}
+ \item En recurrence relation er en rekursiv definition med mere end et initial term. 
+ \item En sekvens er en løsning af recurrence relationen hvis dets led satisfy relationen. 
+ \item \textbf{Eksempel med fibonacci:} $f_{n} = f_{n-1} + f_{n-2}, n \geq 3, f_{1} = 1, f_{2} = 1$.
+ \item \textbf{Eksempel: Tower of Hanoi}
+ \end{itemize} 
+\end{frame}
+
+\begin{frame}[allowframebreaks]
+  \frametitle{Algorithms and Recurrence Relations}
+ \begin{itemize}
+ \item Recurrence Relations kan bruges til at finde kompleksiteten af divide-and-conquer algoritmer. 
+ \item Vi introducerer nu \textbf{Dynamic Programming}. 
+ \item Dynamic Porgramming er et paradigme en algoritme følger, hvis den rekursivt ``breaker down'' et problem i mindre, men overlappende subproblemer, og så udregner løsningne ved brug af løsningerne af subproblemerne. 
+ \end{itemize} 
+\end{frame}
+
+\begin{frame}[allowframebreaks]
+  \frametitle{Solving Linear Recurrence Relations}
+  \begin{itemize}
+  \item En vigtigt klasse af recurrence relations kan blive løst på en systematisk måde. 
+  \end{itemize}
+  \begin{definition}
+    A \textit{linear homogeneous recurrence relation of degree $k$ with constant coefficients} is a recurrence relation of the form
+
+    \[ a_{n} = c_{1}a_{n-1} + c_{2}a_{n-2} + \cdots + c_{k}a_{nk} \]
+    where $c_{1}, c_{2}, \ldots, c_{k}$ are real numbers, and $c_{k} \neq 0$.
+  \end{definition}
+  \begin{itemize}
+  \item Den er \textbf{lineær} fordi højresiden er summen af de tidligere led af sekvensen, hvert led ganget med en funktion af $n$. 
+  \item Den er \textbf{homogen} fordi ingen led forekommer som er multiplum af $a_{j}$'erne. 
+  \item Koefficienterne i sekvensen er alle \textbf{konstanter}, i stedet for funktioner der afhænger af $n$.
+  \item \textbf{Degreeen} (dansk?) er $k$ fordi $a_{n}$ er udtrykt ved brug af de tidligere $k$  led i sekvensen. 
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Eksempel på linear recurrence}
+  $P_{n} = (1.11)P_{n-1}$ er et eksempel på en homogen rekursionsligning (siger chatgpt det hedder på dansk, ret mig lige hvis jeg tager fejl). Ligningen har ``degree'' 1.
+  Fibonacci $f_{n} = f_{n-1} + f_{n-2}$ er også lineær, men med en degree på to.
+  $a_{n} = a_{n-5}$ har en degree af 5.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Eksempel der ikke er lineær}
+  \begin{itemize}
+  \item Rekursionsligningen $a_{n} = a_{n-1} + a^{2}_{n-2}$  er ikke lineær.
+  \item Rekursionsligningen $H_{n} = 2H_{n-1} + 1$ er ikke homogen.
+  \item Rekursionsligningen $B_{n} = nB_{n-1}$ har ikke konstante koefficienter. 
+  \end{itemize}
+\end{frame}
+
+
+\end{document}
