@@ -180,30 +180,159 @@ Suppose that $x, y, $ and $z$ are strings such that $x \sqsupset z$ and $y \sqsu
   \end{itemize}
 \end{frame}
 
+\subsection{Rabin-Karp}
+\label{subsec:label}
+
+
 
 \begin{frame}[allowframebreaks]
   \frametitle{Rabin-Karp}
   \begin{itemize}
-  \item Det var da godt nok lort, hva? 
-  \item Tid til Rabin-Karp som (måske nok) er bedre!
-  \item Preprocessing tid: $\Theta (m)$
-  \item Køretid worst-case: $\Theta ((n-m+1)m)$.
-  \item Dog er køretiden bedre baseret på nogle assumptions. 
-  \item Antag at $\Sigma = \{0, 1, 2, \ldots, 9\}$.
-  \item Så kan vi se en streng af $k$ konsekutive karakterer som et længde-$k$ decimaltal.
-  \item F.eks. kan strengen $31415$ ses som decimaltallet $31,415$. 
-  \item Givet et mønster $P[1..m]$, lad $p$ betegne dens korresponderende decimalværdi. 
-  \item I en lignende manér, givet en tekst $T[1..n]$, lad $t_{s}$ betegne decimlaværdien af længde-$m$ substrengen $T[s+1..s+m]$, for $s = 0, 1, \ldots, n -m$. 
-  \item Hvis $t_{s} = p$ så er $T[s+1..s+m] = P[1..m]$.
-  \item Dermed er $s$ et \textbf{valid shift} iff $t_{s} = p$. 
-  \item Hvis vi kan udregne $p$ i $\Theta(m)$ tid, og alle $t_{s}$ værdier i alt på en tid af $\Theta (n-m+1)$ tid, kan vi vælge alle valide shifts $s$ i tiden $\Theta(m) + \Theta(n-m+1) = \Theta(n)$ ved at sammenligne $p$ med hver af de $t_{s}$ værdier. 
-  \item Vi kan udregne $p$ i tid $\Theta(m)$ ved brug af \textbf{Horner's Regel:}
-  \item $p = P[m] + 10 (P[m-1]+ 10 (P[m-2] + \cdots + 10(P[2] + 10P[1]) \cdots ) ) $
-  \item For at udregne de resterende værdier $t_{1}, t_{2}, \ldots, t_{n-m}$ i $\Theta(n-m)$, observerer vi at vi kan udregne $t_{s+1}$ fra $t_{s}$ i konstant tid, siden: 
-  \item $t_{s+1} = 10(t_{s}-10^{m-1}T[s+1]) + T[s+m+1]$
+    \item Randomiseret algoritme, dog bliver den først beskrevet uden randomisering
+    \item Idé: Tænk på $P$ og $T$ som værende tal og sammenlign $P$ og $T_{s+1..s+m}$ ved at sammenligne tallene
+    \item Vi kører i radix-$d$ hvor $d = |\Sigma|$. 
+    \item Det betyder at vi bruger tallene i base-$d$.
+    \item Mere notation!:
+    \item $p$ (lille $p$): Decimalværdien af $P[1..m]$
+    \item $t_{s}$: Decimalværdien af $T[s+1..s+m]$
+    \item Dermed, hvis $p = t_{s}$ har vi et \textbf{match}!
+    \item \textbf{Antagelse}: Størrelsen af tallene $p$ og $t$ er ikke så store at deres lighed ikke kan findes i konstant tid.
+    \item Hvordan finder vi så værdien af $p$?
   \end{itemize}
-  
 \end{frame}
+
+\begin{frame}[allowframebreaks]
+  \frametitle{Horner's Rule og udregning af tal}
+  \begin{itemize}
+  \item Horners rule er en regneregel til at finde værdien af store tal hurtigt, specielt hurtigt i computere. 
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=300pt]{main--the-naive-string-matching-algorithm--rabin-karp-c553.png} 
+  \end{center}
+  \begin{itemize}
+  \item Dermed: $p = P[m] + 10(P[m-1] + 10(P[m-2]+ \cdots + 10(P[i])\cdots))$
+  \item På samme måde er $t_{0}$ udregnet fra $T[1..m]$ i $\Theta(m)$
+  \item Vi kan hurtigt udregne $t_{s+1}$ fra $t_{s}$ da $t_{s+1} = 10(t_{s}-10^{m-1}T[s+1])+T[s+m+1]$
+  \end{itemize}
+  \includegraphics[width=300pt]{main--the-naive-string-matching-algorithm--rabin-karp-44af.png}
+  \begin{itemize}
+  \item Det tager $O(1)$ konstant tid er udregne det næste $t_{s+1}$, når $10^{m-1}$ er udregnet tidligere, som tager $O(m)$ tid (men, som vi ser senere, kan blive gjort i $O(\log m)$ tid.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Rabin-Karp}
+  \begin{verbatim}
+Compute p in time O(m)
+Compute t_0 in time O(m) - report match if p = t_0
+Compute t_1 in time O(1) - Report match if p = t_1
+.
+.
+.
+Compute t_(n-m) in time O(1) - Report match if p = t_(n-m)
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[allowframebreaks]
+  \frametitle{Rabin-Karp}
+ \begin{itemize}
+ \item Total tid: $\Theta(m)$ preprocessing (konvertering til tal)
+ \item $\Theta(n-m+1)$ matching tid.
+ \item Det er dog too-good-to-be-true:(
+ \item Hvad hvis $p$ er for stort til at vi kan sammenligne i konstant tid?
+ \end{itemize} 
+\end{frame}
+
+\begin{frame}[allowframebreaks]
+  \frametitle{Løsning til køretidsproblemet}
+  \begin{itemize}
+  \item Vi løser dette problem ved at udregne $p$ og $t_{s}$ modulo $q$.
+  \item Vi kan udregne $p \mod q$ i $\Theta(m)$, $t_{0} \mod q$ i $\Theta(m)$
+  \item \textbf{Hvordan finder vi en god værdi af $q$}?
+  \item Så stort som muligt. $10q$ skal gerne være værdien af et \texttt{word}.
+  \item $10q$ fordi vi gerne vil kunne lave udregningen v.h.a Horner's Rule. 
+  \item Ved et generelt alfabet: 
+  \end{itemize}
+  \begin{theorem}
+    $\Sigma = \{0,1,2,\ldots, d-1\}$
+    Chose $q$ such that $dq$ fits in one computer word.
+    $t_{s+1} = (d(t_{s}-T[s+1] \cdot h) + T[s+m+1]) \mod q$
+    when $h = d^{m-1} \mod q$
+  \end{theorem}
+  \begin{itemize}
+  \item Nyt problem: 
+  \item ``Spurious Hits'' $t_{s} \equiv p \mod q$ men $t_{s} \neq p$: 
+  \item Vi gider ikke de hits! >:(
+  \item Vi skal derfor teste alle shifts med $t_{s} \equiv p \mod q$
+  \item Det er $\Theta(m)$ per test.
+  \item Dermed bliver worst case matching tid en del værre: $\Theta((n-m+1)m)$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[allowframebreaks]
+  \frametitle{Forventede antal hits}
+  
+  \begin{itemize}
+  \item Antag at $\mod q$ agerer som en tilfældig mapping fra alfabetet til hele tal base q, i.e., $\Sigma^{*} \rightarrow \mathbb{Z}_{q}$
+  \item Hvis vi antager at alle værdierne $\mod q$ er lige sandsynlige, så $p(t_{s} \equiv p \mod q)= \frac{1}{q}$
+  \item Så er antallet af ``spurious hits'', i.e., hits vi ikke vil have (falske), $\frac{O(n)}{q} = O(\frac{n}{q})$
+  \item Nu når vi ved det, kan vi så finde den forventerede matchingtid (køretid).
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[allowframebreaks]
+  \frametitle{Forventede køretid}
+  \begin{itemize}
+  \item $O(n) + O(m(v + \frac{n}{q}))$
+  \item Hvor $v$ er antallet af korrekte hits
+  \item Og $v$ er $O(1)$ og $q \geq m$.
+  \item Tiden på dette er $O(n)$
+  \item So den totale tid (med preprocessing og matches) er $O(n+m) = O(n)$ da $n \geq m$
+  \item Yippeee!
+  \end{itemize}
+\end{frame}
+
+\subsection{String matching with DFA's}
+\label{subsec:label}
+
+\begin{frame}[allowframebreaks]
+  \frametitle{String matching med DFA's}
+  \begin{itemize}
+  \item Vi kan også matche strings med DFA'er.
+  \item Jeg går ikke over de helt basale definitioner. 
+  \item Vi siger at en endelig maskine $M$ accepterer $w \in \Sigma^{*}$ hvis, når maskinen har kørt $w$ igennem (spist, ifølge Jørgen), og den sidste state er en accept state. 
+  \item $M$ accepterer \textbf{ikke} $w \in \Sigma^{*}$ hvis den ikke ender i en accepting state.
+  \item Vi definerer $\phi$ til at være \textbf{final state funktionen}, som er den state $M$ er i efter den har spist $w$. 
+  \item Så hvis $\phi(w) \in A$ hvor $A$ er sættet af accepting states, så accepterer vi $w$.
+  \item Vi vil nu bygge en automata lavet til string matching, innovativt nok, kalder vi den for \textbf{string matching automata}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[allowframebreaks]
+  \frametitle{String Matching Automata}
+  \begin{itemize}
+  \item \textbf{Mål}: $M$ accepterer hvert præfix $T_{s+m}$ af en tekst $T$ hvor de sidste $m = |P|$ karakterer af $T_{s+m}$ er lig $p$.
+  \item Notationstid!
+  \item \textbf{Suffix Funktion} for mønster $p$:
+  \item $\sigma : \Sigma^{*} \rightarrow \{ 0,1,2 \ldots, m \} $
+  \item $\sigma(x) = \text{max}\{k | P_{k} \sqsupset x\}$
+  \item $\sigma$ er \textit{well-defined} da $\varepsilon \sqsupset x\;\; \forall x \in \Sigma^{*}$
+  \item Well-defined, da der er et værdi for hvert input.
+  \end{itemize}
+  \begin{lemma}[32.2]
+$\forall x \in \Sigma^{*}, a \in \Sigma \;\;\;\;\; \sigma(xa) \leq \sigma(x)+1$
+  \end{lemma}
+  \includegraphics[width=300pt]{main--the-naive-string-matching-algorithm--string-matching-with-dfa's-6ee3.png}
+  \begin{itemize}
+  \item Så er det tid til at definere \textit{string matching automaton}!
+  \item $M = M(p)\;\;\;\;p=P[1..m]$
+  \item Givet at længden af mønstret $p$ har længde $m$, i så fald vil $M$ have states $Q = \{0, 1, 2, \ldots, m\}, q_{0} = 0, A = \{m\}$
+  \item $\sigma (q,a) = \sigma_{q}(P_{a})$
+  \item Vi vælger $\sigma$ så, hvis automataen er i state q, så er den nuværrende streng $T_{i}$ satisfier at $P_{q} \sqsupset T_{i}$ og $q = \sigma(T_{i})$
+  \item I.e., når der er spist $T_{i}$, så skal $P_q \sqsupset T_{i}$ og $q$ den længste suffiks af $T_{i}$.
+  \end{itemize}
+\end{frame}
+
 
 
 \end{document}
