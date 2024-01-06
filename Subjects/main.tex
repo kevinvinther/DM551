@@ -199,6 +199,11 @@ Worst-case er i samme situation som ved den naive algoritme. Hvis teksten er en 
 
 
 
+\subsubsection{Forventede antal hits}
+
+Vi vil gerne finde det forventede antal hits. Vi antager at $\mod q$ agerer som en tilfældig mapping (funktion) fra alfabetet til heltal base $q$, altså $\Sigma^{*} \rightarrow \mathbb{Z}_{q}$. Ydermere antager vi at alle værdierne modulo $q$ er lige sandsynlige, i.e, $p(t_{s} \equiv p \mod q) = \frac{1}{q}$. Det vil sige at antallet af falske hits er $\frac{O(n)}{q} = O(\frac{n}{q}) $. Dette får vi fra antal af hvor mange der modulerer til samme værdi. Hvis der er 10 forskellige bogstaver, og vi er i base-3, så $\frac{10}{3} = 3.\overline{3}$ ca. tal der mapper til det samme.
+
+Den forventede køretid bliver derfor $O(n) + O(m(v + \frac{n}{q}))$ hvor $v$ er antallet af korrekte hits, det's køretid er $O(1)$ og $q \geq m$. Dermed bliver den totale køretid $O(n+m) = O(n)$ da $n \geq m$.
 
 
 
@@ -209,8 +214,199 @@ Worst-case er i samme situation som ved den naive algoritme. Hvis teksten er en 
 \item Hvordan laver man en DFA?
 \end{itemize}
 
+Jeg tænker \textbf{ikke} du behøver at forklare hvad en DFA er osv. Du får her en kort introduktion, som du bare kan springe over, givet at du forstår finite automata fint.
+
+\subsection{Introduktion}
+\label{subsec:DFAIntro}
+
+Mange algoritmer bygger en Finite Automata (herfra forkortet som DFA), da den er utroligt hurtig til at finde matches. Hver karakter bliver kigget på præcis én gang, og bruger tid $O(1)$ per gang den bliver kigget på. Efter maskinen bliver bygget er matching tiden $\Theta(n)$. Dog kan tiden der bruges til at bygge maskinen være meget stor hvis $\Sigma$ er stort. 
+
+\begin{definition}[Finite Automata]
+  A \textbf{finite automaton} $M$, is a 5-tuple $(Q, q_{0}, A, \Sigma, \delta)$, where
+
+  \begin{itemize}
+  \item $Q$ is a finite set of \textbf{states}
+  \item $q_{0} \in Q$ is the \textbf{start state}
+  \item $A \subseteq Q$ is a disntinguished set of \textbf{accepting states},
+  \item $\Sigma$ is a finite \textbf{input alphabet}, 
+  \item $\delta$ is a function from $Q \times \Sigma$ into $Q$ called the \textbf{transition function} of  $M$.
+  \end{itemize}
+\end{definition}
+
+Ved hvert state, læser maskinen et input, og går fra den state, $q$, til den næste defineret state, $\delta(q,a)$. Hvis $q$ er en del af $A$, og, efter strengen er blevet ``spist'', ender maskinen i $q \in A$, så er strengen ``accepteret'', ellers er den ikke. 
+
+Ydermere bliver funktionen $\phi$ defineret som \textbf{Final-state funktion} fra $\Sigma^{*}$ til $Q$ således at $\phi(w)$ er den state som    $M$ ender op i, efter den scanner strengen $w$. Så, $M$ accepterer streng $w$ hvis \textbf{og kun hvis}, $\phi(w) \in A$.
+
+\begin{equation}
+  \label{eq:finalstatefunction}
+\begin{split}
+  \phi(\varepsilon) &= q_{0},\\
+         \phi(wa) &= \delta(\phi(w),a) \; \; \text{for } w \in \Sigma^{*}, a \in \Sigma\\
+\end{split}
+\end{equation}
 
 
+\subsection{Streng-matchende automat}
+\label{subsec:stringmatchingautomata}
+
+
+For at givet mønster $P$, vil vi lave en streng-matchende automat som preprocessing skridt før den bruges til at søge efter strengen.  Se figur~\ref{fig:stringmatchingautomata} for hvordan vi konsturerer automaten for mønstret $P = ababaca$. 
+
+\begin{figure}[ht]
+  \centering
+
+\includegraphics[width=400pt]{main--string-matching--streng-matchende-automat-6f23.png}  \caption{\label{fig:stringmatchingautomata} For mere information om figuren, se pp. 997 i Cormen}
+\end{figure}
+
+
+\begin{definition}[Suffiks Funktion]
+  Givet et mønster $P[1..m]$, definerer vi funktionen $\sigma$, kaldet \textbf{suffiks funktion} korresponderende til $P$. Funktionen $\sigma$ mapper $\Sigma^{*}$ til $\{0,1, \ldots, m\}$, således at $\sigma(x)$ er længden af det længste præfix af $P$ som også er et suffiks af $x$:
+  \[ \sigma(x) = \text{max}\{k : P_{k} \sqsupset x\} \]
+
+  Suffiks Funktionen  er \textbf{well-defined} (hvert element mapper til noget), da $P_{0} = \varepsilon$ er et suffiks er hver streng. 
+\end{definition}
+
+\begin{example}[Eksempler på Suffiks Funktionen]
+
+  Givet mønstret $P = ab$, har vi $\sigma(\varepsilon) = 0$, $\sigma(ccaca) = 1$ og $\sigma(ccab) = 2$.
+  Givet mønstret med længde $m$ har vi $\sigma(x) = m$ hvis og kun hvis $P \sqsupset x$. Fra definitionen af suffiksfunktionen betyder $x \sqsupset y$ også at $\sigma(x) \leq \sigma(y)$.
+\end{example}
+
+Vi definerer en streng-matchende automat som korresponderende til et mønster $P[1..m]$ som følger:
+
+\begin{itemize}
+\item Sættet af states $Q$ er $\{0, 1, \ldots, m\}$. Start staten $q_{0}$, og staten $m$ er de eneste accepteret states. 
+\item Transition function $\delta$ er defineret ved følgende ligning, for hver state $q$ og karakter $a$:
+
+  \begin{equation}
+    \label{32.4}
+\delta(q,a) = \sigma(P_{q}a)
+  \end{equation}
+  
+\end{itemize}
+
+Det vil sige, at givet en karakter $a$, vil vi gå fra state $q$ til længden af det længste præfiks af $P$, som også er et suffiks af $x$. Så, altså, hvis $a$ får dig én længere, vil du også gå én state tilbage. Men, hvis du går tilbage til kun at være 2 inde, så er du tilbage på state 2. 
+
+\begin{forklaring}[Yderligere forklaring]
+  \label{forkl:yderligeredfa}
+  Vi definerer $\delta(q,a) = \sigma(P_{q}a)$ fordi vi vil holde fast i det længste præfix af mønsteret $P$ der har matchet strengen $T$ indtil videre.
+
+  Antag at $p = \phi (T_{i})$, så, efter at have læst $T_{i}$, så er automatonet i state $q$. Vi designer $\delta$ således at state $q$ fortæller os længden af det længste præfiks af $P$ der er en suffiks af $T_{i}$. Det vil sige, i state $q$, $P_{q} \sqsupset T_{i}$ og $q = \sigma(T_{i})$. Dette vil også sige at \textbf{hvis $q = m$, så har vi fundet et match!} Dermed, siden $\phi (T_{i})$ og $\sigma(T_{i})$ begge er lig $q$, ser vi at automaten holder følgende invariant:
+
+  \begin{equation}
+    \label{32.5}
+\phi(T_{i}) = \sigma(T_{i})
+  \end{equation}
+
+  Dermed, hvis vi er i state $q$, og automaten læser karakter $T[i+1] = a$, så skal vores transition lede til det korresopnderende længste præfiks af $P$ som er et suffiks af $T_{i}a$. Den state er $\sigma(T_{i}a)$. 
+  
+Fordi $P_{q}$ er det længste præfiks af $P$ som er et suffiks af $T_{i}$, så er det længste præfiks af $P$ som er et suffiks af $T_{i}a$ ikke kun $\sigma(T_{i}a)$, men også $\delta(P_qa)$. (Dette bliver bevist senere)
+\end{forklaring}
+
+Der er to states vi skal kigge på, den første, $a = P[q+1]$, så er $\delta(q,a) = q+1$.
+Den næste, $a \neq P[q+1]$, så skal vi finde et mindre præfiks af $P$ som også er et suffiks af $T_{i}$.
+
+Lad os kigge på et eksempel. Streng-matching automaten fra Figur~\ref{fig:stringmatchingautomata} har $\delta(5,c) = 6$, som så er first case, hvor vi bare går videre. Et sekmepl på second case er $\delta(5, b) = 4$. Vi laver denne transition fordi, hvis automaten læser et $b$ når $q = 5$, så $P_{q}b = ababab$, og det længste præfiks af $P$ som også er et suffiks af $ababab$ er $P_{4} = abab$.
+
+Følgende er algoritmen for at lave en finite automata til streng-matching. Sættet af states $Q = \{0, 1, \ldots, m\}$, start staten $q_{0} = 0$, den eneste accepting state er $m$, ${m} \in A$.
+
+
+\begin{figure}[ht]
+  \centering
+  \begin{verbatim}
+Finite-Automaton-Matcher(T, d, m):
+
+n = T.length
+q = 0
+for i = 1 to n
+    q = d(q, T[i])
+    if q == m
+        print "Pattern occurs with shift" i - m
+\end{verbatim}
+  \caption{\label{fig:dfa-algorithm} }
+\end{figure}
+
+Transition function er som beskrevet tidligere. Hvis dette ikke er klart, se Forklaring \ref{forkl:yderligeredfa}.
+
+Det er her nemt at se at køretiden på en tekst-streng af længde $n$ er $\Theta(n)$.
+Før vi viser pre-processing tid, kigger vi på et bevis for at algoritmen kører som forventet.
+
+
+\begin{figure}[ht]
+  \centering
+\includegraphics[width=300pt]{32.8.png}  
+  \caption{\label{fig:32.8} En illustration til beviset af Lemma~\ref{lemma:suffixfunctioninequality}. FIguren viser $r \leq \delta(x) + 1$, hvor $r = \delta(xa)$}
+\end{figure}
+
+
+\begin{lemma}[Suffix-Function Inequality]
+  \label{lemma:suffixfunctioninequality}
+  For hver streng $x$ og karakter $a$, har vi at $\sigma(xa) \leq \sigma(x) + 1$.
+\end{lemma}
+
+\begin{proof}
+Se Figur~\ref{fig:32.8}. Hvis $r = 0$, så $\sigma(xa) = r \leq \delta(x) + 1$ er trivielt løst, da $\sigma(x)$ er nonnegativt. Antag at $r > 0$, så $P_{r} \sqsupset xa$ per definition af $\sigma$. Dermed, $P_{r-1} \sqsupset x$, ved at fjerne $a$ fra enden af $P_{r}$ og fra enden af $xa$. Dermed $r-1 \leq \sigma(x)$, siden $\sigma(x)$ er det største $k$ således $P_{k} \sqsupset x$, og således $\sigma(xa) = r \leq \sigma(x) + 1$
+\end{proof}
+
+\begin{figure}[ht]
+  \centering
+\includegraphics[width=300pt]{32.9.png}
+  \caption{\label{fig:32.3} Illustration af beviset for Lemma~\ref{lemma:32.3}. Figuren fiser at $r = \delta(P_{q}a)$, hvor $q = \sigma(x)$ og $r = \sigma(xa)$}
+\end{figure}
+
+
+\begin{lemma}[Suffix-Function Recursion Lemma]
+\label{lemma:32.3}
+For enhver streng $x$ og karakter $a$, hvis $q = \sigma(x)$, så $\sigma(xa) = \sigma(P_{q}a)$.
+\end{lemma}
+
+\begin{proof}
+Vi ved fra definitionen af $\sigma$ at $P_{q} \sqsupset x$. Som vist i figur~\ref{fig:32.3}, har vi også $P_{q}a \sqsupset xa$. Hvis $r = \sigma(xa)$, så $P_r \sqsupset xa$ og, gennem Lemma~\ref{lemma:suffixfunctioninequality}, $r \leq q + 1$. Dermed har vi at $|P_{r}| = r \leq q + 1 = |P_{q}a|$. Derfor, $r \leq \sigma(P_{q}a)$, dermed $\sigma(xa) \leq \sigma(P_qa)$. Vi har dog også $\sigma (P_{q}a) \leq \sigma(xa)$, siden $P_{q}a \sqsupset xa$. Dermed $\sigma(xa) = \sigma(P_{q}a)$
+\end{proof}
+
+Tid til det vigtigste skridt. Vi skal vise at automaten vedligeholder invarianten i ligning \ref{32.4}.
+
+\begin{theorem}
+  \label{the:32.4}
+  If $\phi$ is the final-state function of a string-matching automaton for a given pattern $P$ and $T[1..n]$ is an input text for the automaton, then
+  $\phi(T_{i}) = \sigma(T_{i})$
+  for $i = 0, 1, \ldots, n$.
+\end{theorem}
+
+\begin{proof}
+  Vi beviser gennem induktion på $i$.
+
+ Ved $i = 0$ er teoremet sandt, da $T_{0} = \varepsilon$ dermed $\phi(T_{0}) = 0 = \sigma(T_{0})$.
+\end{proof}
+
+Vi antager nu at $\phi (T_{i}) = \sigma(T_{i}) $ og beviser at $\phi(T_{i+1}) = \sigma(T_{i+1})$.
+Lad $q$ være $\phi(T_{i})$, og lad $a$ være $T[i+1]$.
+Så:
+
+\begin{equation*}
+  \begin{split}
+    \phi(T_{i+1}) &= \phi T(_{i}) \; \text{(fra definition på} $T_{i+1}$ \text{ og } \text{a})\\
+               &= \delta(\phi (T_{i}), a) \; \text{(fra definitionen på} \phi \text{)}\\
+               &= \delta(q,a) \; \text{(af defintiion på q)}\\
+               &= \sigma(P_{q}a) \; \text{(fra definitionen tidligere )}\\
+               &= \sigma(T_{i}a)\\
+                 &= \sigma(T_{i+1}) \\
+  \end{split}
+\end{equation*}
+
+
+\subsection{Find Transition Function}
+
+Vi vil gerne finde transition funktion. Vi har allerede defineret den tidligere, men vi vil have en algoritmisk metode hvorpå vi kan gøre det.
+
+
+\begin{figure}[ht]
+  \centering
+\includegraphics[width=250pt]{compute-transition-function.png}
+  \caption{\label{fig:compute-transition-function} Algoritmen for at finde transition function på.}
+\end{figure}
+
+Køretiden på algoritmen er $O(m^{3}|\Sigma|)$.
 
 
 
