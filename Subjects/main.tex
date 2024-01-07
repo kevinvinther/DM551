@@ -78,6 +78,180 @@ Dueslagsprincippet (pigeonhole principle) er et simpelt princip, men kan bruges 
 \section{Universal Hashing}
 \label{sec:hashing}
 
+
+I hashing har vi et univers der er meget større end størrelsen på tabellen hvortil hash funktionen finder et index. Dvs. $|U| >> m$, hvor $m$ er størrelsen på tabellen.
+
+Problem med normal hashing: Der kan blive lavet angreb hvor en person der kender hash funktionens værdi kan lave en masse argumenter der alle hasher til det samme index. Vi fikser dette ved at tilfældigt og uafhængigt af nøglerne, vælge en universal hash funktion. På en universal hash funktion er sandsynligheden for at to værdier hasher til det samme $\leq 1/m$.
+
+Vi kalder det en \textbf{kollision}, hvis to værdier hasher til den samme værdi. Vi ved naturligvis fra dueslagsprincippet (Teorem~\ref{theorem:pigeonhole}) at hvis der er mere end $m$ værdier der bliver hashet, så vil der være mindst én kollision. 
+
+
+\subsection{Universal Hashing}
+
+Lad $\mathcal{H}$ være en endelig kollektion af hash funktioner således at $h : U \rightarrow [m]$  for hver $h \in \mathcal{H}$.
+
+\begin{theorem}
+  Hash kollektionen $\mathcal{H}$ er \textbf{universal} hvis følgende holder:
+
+  Lad $h \in \mathcal{H}$ være valgt tilfældigt. Så $\forall k, l \in U \text{ med } k \neq l \; \; p(h(k) = h(l)) \leq \frac{1}{m}$
+  \end{theorem}
+
+\begin{theorem}
+  Antag at $h$ er valgt tilfældigt fra en universal kollektino $\mathcal{H}$ af hash funktioner fra $U \rightarrow [m]$.
+
+  Antag at vi har brugt $h$ til at hashe et sæt $s \subseteq U$ med $|S| = n$ hvor vi bruger chaining til at løse kollisioner.
+
+  Lad $T = T[0], T[1], \ldots, T[m-1]$ være tabellen af linked lister vi får når $T[i]$ er en linked list med de elementer $x \in S$ hvorfra $h(x) = i$.
+
+  Derfra gælder følgende:
+  \begin{itemize}
+  \item Hvis $k \notin S$, så $E[n_{h(k)}] \leq \frac{n}{m} = \alpha$ hvor $n_{h(k)}$ er længden af $T[h(k)]$
+  \item Hvis $k \in S$ så $E(n_{h(k)}) \leq \alpha + 1$
+    \end{itemize}
+ \end{theorem}
+
+\begin{proof}
+  $\forall k, l \in U, k \neq l$ definerer vi
+  \[
+    X_{kl} = \begin{cases}
+      1 & \text{ hvis } h(k) = h(l) \\
+      0 & \text{ hvis } h(k) \neq h(l) \\
+      \end{cases}
+  \]
+
+  For et fixed $k \in U$ definerer vi $Y_{k} = |\{ l \in S \setminus \{k\} | h(k) = h(l) \}|$, altså er $Y_{k}$
+  antallet af nøgler i $S \setminus \{k\}$ der hasher til samme værdi som $k$.
+
+  Derfor ved vi at $Y_k = \sum_{l \neq k, l \in S} X_{kl}$
+
+
+  \begin{equation}
+    \begin{split}
+      E(Y_{k}) &= E( \sum_{l \neq k, l \in S} X_{kl}) \\
+               &= \sum_{l \neq k, l \in S} E(X_{kl}) \\
+               &\leq \sum_{l \neq k, l \in S} \frac{1}{m}\\
+    \end{split}
+  \end{equation}
+
+  \begin{itemize}
+   \item Hvis $k \notin S$ så $n_{h(k)} = Y_{k}$  og $|\{l \in S | l \neq k\}| = |S| = n$ så \[ E(n_{h(k)}) = E(Y_{k}) \leq \sum_{l \neq k, l \in S} \frac{1}{m} = \frac{|S|}{m} = \frac{n}{m} = \alpha \]
+   \item Hvis $k \in S$, så $n_{h(k)} = Y_{k}+1$ og $|\{l \in S | l \neq k\}| = |S|-1  = n - 1$ dermed \[ E(n_{h(k)}) = 1 + E(Y_{k}) \leq 1 + \sum_{l \neq k, l \in S} \frac{1}{m} = 1 + \frac{n-1}{m} \leq 1 + \alpha \]
+  \end{itemize}
+  
+\end{proof}
+
+\begin{corollary}
+ Ved brug af Universal hashing + chaining, ved at starte fra en tom tabel med $m$ pladser, tager det forventet tid $O(n)$ til at lave en sekvens af \texttt{INSERT}, \texttt{SEARCH} og \texttt{DELETE} operations når $O(m)$ af dem er \texttt{INSERT}
+\end{corollary}
+
+\begin{proof}
+
+  Vi indsætter $O(m)$ elementer, hvilket betyder at $|S| \in O(m)$. Dermed $\alpha = \frac{n}{m} \in O(1)$, fordi det er mindre end $m$.
+  Den forventede længde af hver liste i tabellen er $O(1)$, så hver operation tager $O(1)$ forventede tid, så $O(n)$ for alle operationer. 
+\end{proof}
+
+
+\subsection{Design af Universal Class}
+
+\subsubsection{Cormen}
+
+Følgende er Cormen's metode til at lave en universal class:
+
+\begin{itemize}
+\item Vælg et primtal $p \geq |U|$ og antag at $U \subseteq \{0, 1, 2, \ldots, p-1\}$, $\mathbb{Z}_{p} = \{0,1,2, \ldots, p-1\}, \mathbb{Z}_{p}^{*} = \{1, 2, \ldots, p-1\}$
+\item Fordi $p$ er et primtal kan vi løse ligninger $\mod p$.
+\item $p \geq |U| > m$ så $p > m$.
+\item For $a \in \mathbb{Z}_{p}^{*}$ og $b \in Z_{p}$ definér $h_{ab}(k) = ((ak+b) \mod p) \mod m$, $h_{ab} : \mathbb{Z}_{p} \rightarrow \mathbb{Z}_{m}$
+\item Sæt $\mathcal{H} = \mathcal{H}_{pm} = \{h_{ab} | a \in \mathbb{Z}_{p}^{*}, b \in \mathbb{Z}_{p}\}$
+\end{itemize}
+
+
+\begin{theorem}
+  Klassen $\mathcal{H}_{pm}$ er universal.
+\end{theorem}
+
+
+\subsubsection{KT}
+
+I KT's metode identificerer vi universet $U$ med tupler af formen $(x_{1}, x_{2}, \ldots, x_{r})$ for et haltal når $0 \leq x_{i} < p$ for $i = 1, 2, \ldots, r$. Derudover antager vi at universet er $U \subseteq \{0, 1, 2, \ldots, N-1\}$. Antag ydermere at $n$ er størrelsen af hashtabellen, i den tidligere metode fra Cormen var dette $m$.
+
+Da vi antager at universet er lavet af tal, kan vi konvertere de tal til binære tal á $log_{2}p$ bits. D.v.s, at hvis $p = 11$, og du har tallet $85$, som du gerne vil hashe. $log_{2}(11) = 3.45 \approx 4$. Vi tager 85 i binær: $1010101$. Længden af det binære tal er kun 7 ciffrer, derfor tager vi og tilføjer et 0 først (da dette ikke ændrer på tallet). Dermed bliver det $01010101$ som har 8 ciffrer. Vi kan dermed dele det op i 2, så vi har en vektor der hedder $(0101, 0101)$. Vi konverterer dette tilbage til heltal, $(5,5)$
+
+ Hvor mange bits skal vi bruge til  at repreæsenterer et tal af størrelse $N$? $\log_{2}N$. Hvor mange stykker af længde $log_{2}P$ kan du lave? $\frac{\log_{2}N}{\log_{2}p} \approx r \approx \frac{\log N}{\log n}$. Det er stadig log 2, jeg er bare doven.
+
+Lad $A = \{(a_{1}, a_{2}, \ldots, a_{r}) | a_{i} \in \{0, 1, 2, \ldots, p-1\} \forall i \in [r]\}$
+
+For $a \in A$ lad
+\[ h_{a}(x) = \left( \sum_{i=1}^{r} a_{i}x_{i} \right) \mod p \]
+
+\[ \mathcal{H} = \{h_{a} | a \in A\} \]
+
+\begin{theorem}
+  $\mathcal{H}$ er en universal hashfamilie.
+\end{theorem}
+
+\begin{proof}
+  Lad $x = (x_{1}, x_{2}, \ldots, x_{r})$ og $y = (y_{1}, y_{2}, \ldots, y_{r})$ være distinkte elementer fra $U$.
+
+  Hvad vi nu vil vise er at når $a = (a_{1}, a_{2}, \ldots, a_{r}) \in A$ er valgt tilfældigt, så $p(h_{a}(x) = h_{a}(b)) \leq \frac{1}{p}$. Hvis det er højest $1/p$ er det også højest $1/n$, da $p > n$.
+
+  Da $x \neq y$ er der et $j \in [r]$ således at $x_{j} \neq y_{j}$, altså, der \textbf{må} være en koordinat hvorpå de er uenige.
+
+  Vi bruger følgende måde at vælge et tilfældigt $a \in A$ på:
+  Først vælg alle $a_{i}, i \neq j$. Så vælg $a_{j}$. 
+
+
+  Vi vil nu bevise at for hvert valg af $a_{i}$ hvor $i \neq j$, så er sandsynligheden for at det sidste valg af $a_{j}$ ender med $h_{a}(x) = h_{a}(y)$ er præcis $\frac{1}{p}$.
+
+  \begin{equation}
+\begin{split}
+             h_{a}(x) &= h_{a}(y) \\
+  \sum_{q=1}^{r}a_{q}x_{q} &= \sum_{q=1}^{r} a_{q}y_{q} \mod p \\
+  \sum_{q = 1}^{r} a_{q}(x_{q}-y_{q}) &= 0 \mod p\\
+  \sum_{q \neq j} a_{q} (x_{q} - y_{q}) + a_{j} (x_{j} - y_{j}) &= 0 \mod p \\
+  \sum_{q \neq j} a_{q} (x_{q}-y_{q}) &= a_{j}(y_{j}-x_{j}) \mod p\\
+  \end{split}
+    \end{equation}
+
+    Grunden til vi skriver $\mod p$ til sidst, er fordi, hvis $a \mod p = b \mod p$ så $a = b \mod p$.
+
+    Efter vi har fikset $a_{i}$ for $i \neq j$ har vi $\sum_{q \neq j} a_{q}(x_{q} - y_{q}) = s \mod p$ for some $s \in \{0,1,2, \ldots, p-1\}$
+
+    Dermed $h_{a}(x) = h_{a}(y)$ hvis og kun hvis $a_{j}(y_{j}-x_{j}) = s \ mod p$ da $z = y_{j} - x_{j} \neq 0$ siden vi har sikret os at $x_{j} \neq y_{j}$ har ligningen $a_{j}(y_{j}-x_{j}) = s \mod p$ en unik løsning $a_{j} = s (y_{j}-x_{j})^{-1} \mod p$
+    Vi ved at $z$ ikke er 0, da vi antog at $i \neq j$.
+
+    $a_{j}$ får en tilfældig værdi i $\{0, 1, 2, \ldots, p-1\}$ når $a = \{a_{1}, a_{2}, \ldots, a_{r}\}$ bliver konstrueret. Dermed er sandsynligheden at $a_{j} = s \cdot (y_{j} - x_{j})^{-1} \mod p$ holder (og dermed $h_{a}(x) = h_{a}(y)$) $1/p$. Q.E. FUCKING D.
+\end{proof}
+
+\subsection{Perfect Hashing}
+
+Målet med Perfect Hashing er at få en virkelig god worst case behavior. Vi kan dog kun få det når nøglerne er statiske, så når tabellen er blevet lavet, kan nøglerne ikke ændres. Dette kan eksempelvis bruges i CD/DVD.
+
+Vi ønsker at få $O(1)$ memory access i worst case (dvs. konstant tid selv i worst case), og et lavt memory use.
+
+Perfect hashing bruger to niveauer af hashing hvor begge bruger universal hashing. Så først hashes der til tabel 1, og derefter hashes der til tabel 2, frem for en linked list. 
+  
+Ved level et finder vi et nøjagte valgt hash funktion $h \in \mathcal{H}$ når $h$ er universal.
+
+I stedet for at bruge en linked list bruger vi en sekundær hashtabel $S_{j}$ sammen med en associeret hashfunktion $h_{j}$ for at undgå kollisioner i level 2. Størrelsen af $n_{j}$ vil være $n_{j}^{2}$ hvor $n_{j} = |\{x \in S | h(x) = j\}|$
+
+Ved level 1 bruger vi $h \in \mathcal{H}_{pm}$ når $p > |S|\;\;(S \subseteq \{0, 1, 2, \ldots, p-1\})$ ( dette er familien af hash funktioner defineret fra Cormen)
+
+Nøgler hvor $h(x) = j$ bliver hashet til tabellen $S_{j}$ af størrelsen $m_{j}$ ved brug af $h_{j} \in \mathcal{H}_{pm_{j}}}$
+
+
+Vores første mål er at vi skal blive sikre på at der er ingen collisions på level 2. Derefter skal vi vise at de forventede hukkommelsesbrug er $O(n), n = |S|$.
+
+\begin{theorem}
+Antag at vi lagrer $n$ distinkte nøgler i en hashtabel af størrelse $m = n^{2}$ ved brug af en tilfældig $h \in \mathcal{H}$, når $\mathcal{H}$ er universal. Så er sandsynligheden at der er \textbf{ingen} kollisioner mindst $1/2$.
+  \end{theorem}
+
+  \begin{proof}
+
+    \end{proof}
+
+\newpage
+
 \section{String Matching}
 \label{sec:string}
 
