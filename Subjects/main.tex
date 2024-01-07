@@ -69,6 +69,95 @@ Dueslagsprincippet (pigeonhole principle) er et simpelt princip, men kan bruges 
 \section{Randomized Algorithms}
 \label{sec:random}
 
+\begin{itemize}
+\item Sandsynligheden for et korrekt min-cut med Karger's
+\item Max K-sat
+\item Max-3-SAT
+\item Quicksort og Median-Finding
+\item Monte Carlo
+\item Hiring Problem
+\item Majority Element
+\end{itemize}
+
+
+\subsection{Randomized Majority Element}
+\label{subsec:majorityelement}
+
+
+
+\subsection{Majority Element med Uendelig Datastrøm}
+\label{subsec:randommajority}
+
+Ved Majority Element (Subsection \ref{subsec:majorityelement}) må vi læse array'et mere end én gang, og array'et er af en endelig mængde. Men hvad hvis vi har en datastrøm af en uendelig mængde, som vi kun må læse én gang?
+
+Følgende er en algoritme der kan finde majority element (eller, hvis der ikke er et majority element, så finder den et element der ikke er) ved at kigge på datastrømmen kun én gang:
+
+\begin{verbatim}
+Majority(S):
+c:= 0, l := Ø
+for i := 1 to m
+    if (x_i = l) then c := c + 1
+    else c := c - 1
+    if c <= 0 then
+        c := 1, l := a_i
+return l
+\end{verbatim}
+
+Hvis der er et majority element, så vil den her algoritme returnere det. Algoritmen er positiv fordi den kun bruger $O(\log m)$ hukommelse for tælleren og $O(\log n)$ hukommelse fordi værdierne. Dette er godt, da datstrømmen i sig selv kan være kæmpe stor.
+
+
+Vi antager at $x_{j}$ forekommer mere end $m/2$ gange i $S$. Lad $X = x_{j}$ være værdien af majority elementet. For hvert $i$ således at $x_{i = X}$ gør vi følgende:
+
+\begin{enumerate}
+\item\label{item:1} Enten er $l \neq X$ og vi decreaser tælleren (og sætter måske $l = x_{i}$)
+\item\label{item:2} Eller $l = X$ og vi increase tælleren
+\end{enumerate}
+
+\noindent
+\ref{item:1} kan ske mindre end $m/2$ gange\\
+\noindent
+\ref{item:2} Tælleren er $\geq 1$ ved termation af hvert loop. Så \ref{item:2} vil ske til sidst.
+
+\subsubsection{Heavy Hitters Problem}
+
+Målet er at lave \textbf{k-frequency estimation} (også kaldet k-counters).
+
+Lad $f_{j}$ være frekvensen af værdi $j$, altså, antallet af gange $j$ forekommer i datastrømmen $A = \langle a_{1}, a_{2}, \ldots, a_{m} \rangle\;\;\;\;a_{i} \in \{1, 2, \ldots, n\}$
+
+Vi vil gerne finde et estimat, $\hat{f_{j}}$, således at $f_{j} - \frac{m}{k} \leq \hat{f_{j}} \leq f_{j}$ for alle værdier $j$ i datastrømmen.
+
+Antag at vi er givet en variabel $\varepsilon, 0 < \varepsilon < 1$. Så vil vi gerne have en datastruktur for en $\varepsilon$-approximate heavy hitters, så vi kan returnere:
+\begin{itemize}
+\item Alle $f_{j}$ således at $f_{j} \geq \frac{m}{k}$ er i listen.
+\item Hvert element i listen forekommer mindst $\frac{m}{k} - \varepsilon m$ gange i $A$.
+\end{itemize}
+
+\noindent
+\large\textbf{Misra-Gries Algoritme}
+
+Dette er en algoritmen med $k$ tællere, $c[1], c[2], \ldots, c[n]$ fremfor 1. Lad $L[1], L[2], \ldots, L[k]$ være et array af $k$ lokationer.
+
+\begin{center}
+\includegraphics[scale=0.3]{misra.png}
+\end{center}
+
+Givet denne algoritme, hvis du giver en værdi $q \in [n]$, så,
+\begin{itemize}
+\item Hvis $\exists j \in [k]$ med $L[j]=q$, returnerer den $\hat{f}_q = C[j]$
+\item Ellers returnerer $\hat{f}_{q} = 0$
+\end{itemize}
+
+\noindent
+\large Korrekthed\\
+\noindent
+\begin{itemize}
+\item En tæller $C[j]$ med $L[j] = q$ er kun incremented hvis $a_{i} = q$ så $f_{q} \leq f_{q}$ holder altid
+\item Hvis $C[j]$ med $L[j] = q$ er decremtned, så er alle andre counters decremented
+\end{itemize}
+
+
+\newpage
+
 \section{Probabilistic Analysis}
 \label{sec:proban}
 
@@ -237,18 +326,201 @@ I stedet for at bruge en linked list bruger vi en sekundær hashtabel $S_{j}$ sa
 
 Ved level 1 bruger vi $h \in \mathcal{H}_{pm}$ når $p > |S|\;\;(S \subseteq \{0, 1, 2, \ldots, p-1\})$ ( dette er familien af hash funktioner defineret fra Cormen)
 
-Nøgler hvor $h(x) = j$ bliver hashet til tabellen $S_{j}$ af størrelsen $m_{j}$ ved brug af $h_{j} \in \mathcal{H}_{pm_{j}}}$
+Nøgler hvor $h(x) = j$ bliver hashet til tabellen $S_{j}$ af størrelsen $m_{j}$ ved brug af $h_{j} \in \mathcal{H}_{pm_{j}}$
 
 
 Vores første mål er at vi skal blive sikre på at der er ingen collisions på level 2. Derefter skal vi vise at de forventede hukkommelsesbrug er $O(n), n = |S|$.
 
 \begin{theorem}
-Antag at vi lagrer $n$ distinkte nøgler i en hashtabel af størrelse $m = n^{2}$ ved brug af en tilfældig $h \in \mathcal{H}$, når $\mathcal{H}$ er universal. Så er sandsynligheden at der er \textbf{ingen} kollisioner mindst $1/2$.
-  \end{theorem}
+  Antag at vi lagrer $n$ distinkte nøgler i en hashtabel af størrelse $m = n^{2}$ ved brug af en tilfældig $h \in \mathcal{H}$, når $\mathcal{H}$ er universal. Så er sandsynligheden at der er \textbf{ingen} kollisioner mindst $1/2$.
+\end{theorem}
 
-  \begin{proof}
+\begin{proof}
 
-    \end{proof}
+  Der er $\binom{n}{2}$ mulige kollisioner.
+  Lad $Z_{kl} = \begin{cases} 1 &\text{hvis } h(k) = h(l) \\ 0 &\text{ellers} \end{cases}$
+
+  Da $h$ er universal, gælder det at $p(Z_{kl} = 1) \leq \frac{1}{m} = \frac{1}{n^{2}}$ når $k \neq l$.
+
+  Så $Z = \sum_{k, l \in S, k \neq l}^{}Z_{kl}$ er antallet af kollisioner.
+
+  Vi bruger naturligvis vores elskede linearity of expectation til dette.
+  \begin{equation}
+    \begin{split}
+      E(Z) &= E(\sum_{k, l \in S, l \neq s}^{}Z_{kl})\\
+           &= \sum_{k,l \in S, k \neq l}^{} E(Z_{kl}) \\
+           &\leq \sum_{k, l \in S, k \neq l}^{} \frac{1}{n^{2}}\\
+           &= \frac{\binom{n}{2}}{n^{2}}\\
+      &< \frac{1}{2}\\
+    \end{split}
+  \end{equation}
+
+  Vi vil så gerne finde sandsynligheden for at antallet af kollisioner er større end 1. Det gør vi ved hjælp af \textbf{Markov's Inequality} (Teorem \ref{teorem:markovsinequality}):
+  \[ p(Z \geq 1) \leq \frac{E(Z)}{1} = E(Z) < \frac{1}{2} \]
+
+  Dermed er chancen for at der er 0 kollisioner større end $\frac{1}{2}$.
+\end{proof}
+
+Så, hvor mange gange skal vi køre algoritmen, før vi finder noget uden nogen kollisioner? I gennemsnit vil det være: $\frac{1}{p(Z=0)} < \frac{1}{\frac{1}{2}} = 2$
+
+Vi møder dog et problem nu. \textbf{Hvad hvis $n$ er stort, og $n^{2}$ så er for stort?}. F.eks., hvis $n = 1000$, så er $n^{2} = 1 000 000$, og det er heller ikke usandsynligt at $n > 1 000 000$; så der kan du begynde at se nogle store problemer.
+
+Vi \textbf{løser} dette problem ved at udelukkende bruge størrelsen at tabellen $n^2$ til andet niveau, og lade det første niveau være $n = m$.
+
+Lad $h \in \mathcal{H}$ være hash funktionen vi bruger på level 1.
+
+Lad $n_{j} = |\{x | h(x) = j\}|$\footnote{Altså, antallet af elementer der hasher til værdi $j$} og lad $S_{j}, j \in [m]$ være en tabel med $n_{j}^{2}$ entries og $h_{j}$ en kollisionsfri hash funktion der mapper fra $\{x | h(x) = j\}$ til $S_{j}$.
+
+Ved level 1, når vi antager at $m = n$, altså, størrelsen af tabellen er lig $n$, så bruger vi $O(n)$ hukommelse til at lagre:
+\begin{itemize}
+\item Den primære hashtabel (da der er $n$ slots)
+\item Tallene $m_{j} = n_{j}^{2}\;\;\;j \in [m]_{0}$
+\item $a_{j} \in \mathbb{Z}_{p}^{*}, b_{j} \in \mathbb{Z}_{p}$ hvilke definerer det andet andet niveau af hash funktionen $n_{j}$ som bliver brugt når $\{x | h(x) = j\}$.
+\end{itemize}
+
+\begin{theorem}
+Antag at vi lagrer $n$ nøgler i en hash funktion af størrelse $m = n$ ved brug af universal hashing, og lad $n_{j}, j \in \{0,1,2, \ldots, m\}$ være antallet af nøgler der bliver hashet til $j$ ($h(x) = j$). Så $E\left( \sum_{j=0}^{m-1}n_{j}^{2}  \right) < 2n$ ($n_{j}$ er en random variable der afhænger af valget af $h$)
+\end{theorem}
+
+\begin{proof}
+  Husk at $\forall a \in \mathbb{Z}^{+}\;\;\; a + 2 \binom{a}{2} = a + a(a-1) = a^{2}$
+
+  \begin{equation}
+    \label{}
+\begin{split}
+  E \left( \sum_{j=0}^{m-1}n_{j}^{2} \right) &= E \left( \sum_{j=0}^{m-1} n_{j} + 2 \binom{n_{j}}{2} \right)\\
+                                          &= E \left( \sum_{j=0}^{m-1}n_{j} \right) + 2E(\sum_{i=0}^{m-1}\binom{n_{j}}{2})\\
+                                          &= E(n) + 2E(r)\\
+  &= n + 2 E(r)\\
+\end{split}
+  \end{equation}
+
+  Hvor $r$ er der totale antal kollisioner når vi bruger $h \in \mathcal{H}$, som altså er lig $\sum_{i=0}^{m-1}\binom{n_{j}}{2}$
+
+  Fordi vi bruger universal hashing gælder det at $E(r) \leq \binom{n}{2} \cdot \frac{1}{m} = \binom{n}{2} \frac{1}{n} = \frac{n-1}{2}$
+  Dermed \[ E \left( \sum_{j=0}^{m-1}n_{j}^{L} \right) \leq n + 2 \cdot \frac{n-1}{2} < 2n\]
+\end{proof}
+
+\begin{corollary}
+  Hvis du vælger et hashing scheme således at $m = n$ på level et og $m_{j} = n_{j}^{2}\;\;j \in \{0,1, \ldots, n-1\}$ på level 2, så er det forvetenede plads brugt p åden sekundere hash tabel mindre end 2n. 
+\end{corollary}
+
+\begin{proof}
+\[ E(\sum_{j=0}^{m-1}m_{j}) = E \left( \sum_{j=0}^{m-1}n_{j}^{2} \right) < 2n\]
+\end{proof}
+
+\begin{corollary}
+Ved brug af at hashing scheme som det nævnt før, er sandsynligheden for at vi har brug for mere end $4n$ hukoemmelse i alt for det andet niveau af hash tabeller mindre end $\frac{1}{2}$.
+\end{corollary}
+
+\begin{proof}
+  Vi Bruger markov's inequality:
+
+
+  \begin{equation}
+p \left( \sum_{j=0}^{m-1} m_{j} \geq 4n \right) \leq \frac{E \left( \sum_{j=0}^{m-1}m_{j} \right)}{4n} < \frac{2n}{4n} = \frac{1}{2}
+  \end{equation}
+
+\end{proof}
+
+\subsubsection{Konklusion}
+
+Ved at bruge få trials til at finde en god $h \in \mathcal{H}$ når $\mathcal{H}$ er universal, så kan vi hurtigt få et skema $(h \text{ ved niveau 1 }, h_{1}, h_{2}, \ldots, h_{m-1} \text{ ved niveau 2})$ som bruger en fin mængde hukommelse.
+
+
+\subsection{Count-min Sketch}
+\label{subsec:count-min-sketch}
+
+Antag at $S$ er en datastrøm hvor vi vil estimere frekvenserne af elementerne som forekommer ofte i $S$, for eksempem til at løse heavy hitters.
+
+
+\begin{itemize}
+\item Lad $b,l$ være heltal.  
+\item Lad $\mathcal{H}$ være en univerel familie af hash funktioner, $h \in \mathcal{H}$ hasher $U \rightarrow [b]$ når U er universet af alle mulige elementer i strømmen.
+\item Lad $h_{1}, h_{2}, \ldots, h_{l}$ være dinstikte medlemmer fra $\mathcal{H}$
+\item Når vi siger at $h_{i} \in \mathcal{H}$ er universal, mener vi at $h_{i}$ er et tilfældigt medlem af $\mathcal{H}$
+\end{itemize} 
+
+Vi bruger $h_{1}, h_{2}, \ldots, h_{l}$ til at bygge en $l \times b$ array $M$ af tællere som følger:
+
+Til at starte med $M_{ij} = 0$ for $i \in [l]$ og $j \in [b]$.
+
+For hvert element $x$ i datastrømmen, processer vi det som følger:
+\begin{enumerate}
+\item Vi går igennem hver række $l$, og så finder vi hash-værdien af $x$, $h_{l}(x)$, hvis den f.eks., er 6, så increaser vi tælleren ved første række, 6. kolonne med 1. 
+\end{enumerate}
+
+Count-min sketch finder et upper bound på frekvensen. Det er et upper-bound, fordi den muligvis tæller nogle andre tal med. 
+
+Vi har set at $M_{i}, h_{i}(x)$\footnote{Hvor $M_{i}$ er række $i$ i tabellen} altid er mindst frekvensen af $x$ of ofte højere. Dette er fordi:
+\begin{enumerate}
+\item[(a)] Hver occurence af $x$ increaser $M_{i}, h_{i}(x)$ med en, så $M_{i}, h_{i}(x) \geq fx$ når $fx$ er den rigtige frekvens af $x$ indtil videre. 
+\item[(b)] Hver occurence af a $y \neq x$ med $h_{i}(x) = h_{i}(y)$ wil også increase $M_{i}, h_{i}(x)$
+\end{enumerate}
+
+
+Lad $S_{n}$ være de første $n$ elementer i datastrømmen. Vi lader $f_{y}$ være frekvensen af $y$ i $S_{n}$. Vi lader $M_{i}, h_{i}(x)$ være $Z_{i,x}$. $Z_{i,x}$ er en random variable der afhænger af det tilfældige valg af $h_{i} \in \mathcal{H}$.
+Vi definerer indicatoer random variable $I_{i,x}$ som følger:
+\[
+I_{i,x}(y) = \begin{cases}
+  1 & \text{ hvis } h_{i}(x) = h_{i}(y)\\
+  0 & \text{ ellers }\\
+\end{cases}
+\]
+
+Da $h_{i}$ er en universal hash funktion er $p(I_{i,x}(y) = 1) \leq \frac{1}{b}$ hvor $b$ er størrelsen på hash tabellen.
+
+Det følger fra (a) og (b) at:
+\[
+Z_{i,x} = f_{x} + \sum_{\{ y \in S_{n} | y \neq x \}}^{} f_{y} \cdot I_{i,x}(y) \geq f_{x}
+\]
+
+Hvad er så den forventede værdi af $Z_{i,x}$?
+
+Vi kommer til at bruge $\sum_{y \in S_{n}}^{}f_{y}=n=|S_{n}|$
+
+\begin{equation}
+  \begin{split}
+    E(Z_{i,x}) &= E(f_{x} + \sum_{\{ y \in S_{n} | y \neq x\}}^{}f_{y} \cdot I_{i,x}(y))\\
+               &= E(f_{x}) + E(\sum_{\{y \in S_{n} | y \neq x\}}^{} f_{y} \cdot I_{i,x}(y))\\
+               &= f_{x} + \sum_{\{ y \in S_{n} | y \neq x \}}^{} f_{y} \cdot E(I_{i,x}(y)) \\
+               &\leq f_{x} + \sum_{\{y \in S_{n} | y \neq x\}}^{} f_{y} \cdot \frac{1}{b}\\
+               &\leq f_{x} + \frac{1}{b} \sum_{\{y \in S_{n} | y \neq x\}}^{} f_{y}\\
+               &\leq f_{x} + \frac{1}{b} \sum_{y \in S_{n}}^{} f_{y}\\
+               &= f_{x} + \frac{n}{b}\\
+  \end{split}
+\end{equation}
+
+Dermed er den forventede værdi ``off'' med \textbf{højest} $\frac{n}{b}$ (den forventede værdi!). Desværre, gennem dueslagsprincippet vil der være mange collisions, så længe $n > b$, hvilket den jo er.
+
+Ved brug af Markov's Inequality vil vi nu gerne bounde sandsynligheden for at vores estimat for $f_{x}$ er mere end $\frac{2n}{b}$ væk.
+
+\[
+p(Z_{i,x}-f_{x} \geq \frac{2n}{b})  \leq \frac{E(Z_{i,x} - f_{x})}{\frac{2n}{b}} = \frac{\frac{n}{b}}{\frac{2n}{b}} = \frac{1}{2} 
+\]
+
+Så, sandsynligheden for at vores estimat er mere end $\frac{2n}{b}$ væk er $\frac{1}{2}$, hvilket, er en ret stort sandsynlighed.
+
+
+Hvad så hvis vi kun kigger på den hash funktion der giver os det tætteste estimat? Lad $\hat{f_{x}} = \min_{i \in [l]} Z_{i,x}$, så $\hat{f_{x}} \geq f_{x}$ og siden $h_{1}, h_{2}, \ldots, h_{l}$ er uafhængige af hinanden betyder det at:
+\[
+p(\hat{f_{x}} - f_{x} \geq \frac{2n}{b}) \leq \frac{1}{2^{l}}
+\]
+
+Antag at vi er givet værdier $\varepsilon, \delta$ og vi vil finde
+\[
+p(\hat{f_{x}} - f_{x} \geq \varepsilon n) \leq \delta
+\]
+
+Vi ved fra den tidligere ligning at hvis vi tager $b = \frac{2}{\varepsilon}$ og $l = \log_{2} \left( \frac{1}{\delta} \right)$ så
+
+\[
+p(\hat{f_{x}} - f_{x} \geq \varepsilon n) = p(\hat{f_{x}} - f_{x} \geq \frac{2n}{b}) \leq 2^{-l} = 2^{-\log (\frac{1}{\delta})} = \frac{1}{\frac{1}{\delta}} = \delta
+\]
+
+Så $p(\hat{f_{x}} - f_{x} \geq \varepsilon n) \leq \delta$
+
+Vi bruger $b \cdot l = \frac{2}{\varepsilon} \cdot \log \left( \frac{1}{\delta} \right)$ tællere til at implementere sketchen og så får vi akkuratheden $p(\hat{f_{x}} - f_{x} \geq \varepsilon n) \leq \delta$, uanset længden af datastrømmen.
 
 \newpage
 
@@ -579,12 +851,12 @@ Så:
 
 \begin{equation*}
   \begin{split}
-    \phi(T_{i+1}) &= \phi T(_{i}) \; \text{(fra definition på} $T_{i+1}$ \text{ og } \text{a})\\
+    \phi(T_{i+1}) &= \phi T(_{i}) \; \text{(fra definition på } T_{i+1}  \text{ og } \text{a})\\
                &= \delta(\phi (T_{i}), a) \; \text{(fra definitionen på} \phi \text{)}\\
                &= \delta(q,a) \; \text{(af defintiion på q)}\\
-               &= \sigma(P_{q}a) \; \text{(fra definitionen tidligere )}\\
+               &= \sigma(P_{q}a) \; \text{(fra definitionen tidligere)}\\
                &= \sigma(T_{i}a)\\
-                 &= \sigma(T_{i+1}) \\
+               &= \sigma(T_{i+1})\\
   \end{split}
 \end{equation*}
 
@@ -603,12 +875,152 @@ Vi vil gerne finde transition funktion. Vi har allerede defineret den tidligere,
 Køretiden på algoritmen er $O(m^{3}|\Sigma|)$.
 
 
+\newpage
+
 
 \section{Flows}
 \label{sec:flows}
 
+Et \textbf{netværk} $N = (V,E,C)$ er en digraph med en associeret funktion, kapacitetsfunktionen $c : E \rightarrow \mathbb{R}_{0}$ ($c(u,v) \geq 0 \forall (u,v) \in A$). I et netværk, hvis $(u,v) \notin E$, så $c(u,v) = 0$.
+Ydermere er der en assumption i Cormen, om at parallele grafer ikke er tilladt, altså, hvis $(u,v) \in E,$ så $(v,u) \notin E$.
+
+Jørgen's definition af flow er mere generel end den i Cormen:
+
+\begin{theorem}[Flow]
+  Et \textbf{flow} $f$ i $N$ er en funktion $f : E \rightarrow \mathbb{R}_{0}$ således at $0 \leq f(u,v) \leq c(u,v) \forall (u,v) \in E$
+\end{theorem}
+
+\begin{theorem}[Balance]
+  \textbf{Balancen}  $b_{f}$ af et flow $f$ er funktionen
+  \[
+    b_{f}(v) = \sum_{(v,w) \in E}^{} f(v,w) - \sum_{(u,v) \in E}^{} f(u,v)
+  \]
+\end{theorem}
+
+Altså, \textbf{balancen} af et flow er mængden af flow der kommer ud af en knude ($v$) minus mængden af flow der kommer ind. 
+
+
+Vi kan her lave den observation at, hvis vi summerer alle balancer i flows, må deres sum blive 0, i.e., $\sum_{v \in V}^{} b_{f}(v) = 0$.
+
+\begin{proof}
+  $b_{f}(v) = \sum_{(v,w) \in E}^{}f(v,w) - \sum_{(u,v) \in E}^{}f(u,v)$
+  så i $\sum_{v \in V}^{}b_{f}(v)$ bidrager hver kant $(u,v)$ med $f(u,v)$, og $b_{f}(v)$ og, $-f(u,v)$ i $b_{f}(u)$ så 0 i alt.
+\end{proof}
+
+\begin{definition}
+  Lad $N = (V,E,c)$  være et netværk, og lad $s, t \in V$ være distinkte punkter. Et flow $f$ i $N$ er et $(s,t)-$flow, hvis der er et $K \geq 0$ således at
+  \[
+    b_{f}(v) =
+    \begin{cases}
+      k & \text{ hvis } v = s \\
+      -k & \text{ hvis } v = t\\
+      0 & \text{ hvis } v \notin \{s, t\}
+    \end{cases}
+    \]
+\end{definition}
+
+Altså, \textit{source} knuden har balance lig med flow, da der ikke kommer noget ind, og \textit{sink} knuden har balance lig med minus flow, da intet kommer ud. Dette gælder fordi et $(s,t)-$flow overholder \textbf{flow conservation}, hvilket vil sige at hvad der kommer ind, må også komme ud, og omvendt. 
+
+\begin{definition}
+  Værdien af et $(s,t)$-flow $f$ i $N = (V,E,c)$ er skrevet $|f|$ og er defineret til at være
+  \[
+|f| = \sum_{u \in V}^{}f(s,v) - \sum_{v \in V}^{} f(v,s)
+  \]
+\end{definition}
+
+Altså, alt det flow der kommer ud fra source knuden, versus det der kommer ind.  Dermed er det det samme som $b_{f}(s)$, og $-b_{f}(t)$.
+
+\begin{definition}
+  Maksimum-flows problemet på et netværk $N = (V,E,c)$ med $s,t$ skal man maksimere $K$ således at
+
+  \[
+b_{f}(v) = \begin{cases}
+  k & \text{ hvis } v = s\\
+  -k & \text{ hvis } v = t\\
+  0 & \text{ hvis } v \notin \{s,t\}\\
+\end{cases}
+    \]
+
+    \[
+0 \leq f(u,v) \leq c(u,v) \;\;\;\; \forall (u,v)
+    \]
+\end{definition}
+
+Jørgen skelner mellem \textbf{maximum} og \textbf{maksimalt} flow. Et maksimalt flow kan ikke increases længere, \textbf{men} det er ikke maximum! Et maximumsflow er der ingen måder hvorpå værdien af $(s,t)-$flowet kan blive større.
+
+Vi er nu efterladt med to spørgsmål:
+\begin{itemize}
+\item Hvordan ved vi at et flow er maximum?
+\item Hvordan finder vi et flow der er maximum?
+\end{itemize}
+
+\noindent
+{\Large \textbf{Cuts}}
+\noindent
+
+\begin{definition}
+Lad $N = (V,E,c)$ være et netværk med source $s$ og sink $t$. Et $(s,t)-$cut er en partition $V = S \cup T$ hvor $T = V \setminus s$ og $s \in S, t \in T$. Kapaciteten af $(s,t)-$cut $(S,T)$ er $c(S,T) = \sum_{u \in S, v \in T}^{}c(u,v)$
+\end{definition}
+
+\begin{lemma}
+  Lad $N = (V,E,c)$ være et netværk og $f$ et $(S,T)$-flow i $N$. Så, for hvert $(s,t)$-cut $(S,T)$ i $N$, har vi at:
+  \[ |f| = f(S,T) - f(T,S) \]
+\end{lemma}
+
+\begin{proof}
+\begin{equation}
+  \begin{split}
+    |f| &= \sum_{v \in S}^{} b_{f}(v)\\
+        &= \sum_{v \in S}^{} \left(  \sum_{(v,w) \in E}^{} f(v,w) - \sum_{(u,v) \in E}^{} f(u,v) \right)\\
+        &= \sum_{v \in S} \sum_{w \in T} f(v,w) - \sum_{u \in T, v \in S}^{}f(u,v) = f(S,T) - f(T,S)\\
+  \end{split}
+\end{equation}
+\end{proof}
+
+\begin{lemma}
+  For hvert $(s,t)$-cut $(S,T)$ i $N = (V,E,c)$ og hvert $(s,t)$-flow $f$ i $N$, har vi at
+  \[
+|f| \leq c(S,T)
+  \]
+\end{lemma}
+
+\begin{proof}
+\begin{equation*}
+  \begin{split}
+    |f| &= f(S,T) - f(T,S)\\
+    &\leq c(S,T) - 0 \;\;\;\; \text{ da } f(u,v) \leq c(u,v) og f(u,v) \geq 0\\
+    &= c(S,T)
+  \end{split}
+\end{equation*}
+\end{proof}
+
+\subsubsection{Residual Networks}
+\label{subsub:residual}
+
+Lad $N = (V,E,c)$ og lad $f$ være et $(s,t)-$flow i $N$. \textbf{Residual Netværket} $N_{f}$ af $N$ med respekt til $f$ er $N_{f} = (V, E_f, c_{f})$, når
+
+\[
+c_{f}(u,v) = \begin{cases}
+  c(u,v) - f(u,v) & \text{ hvis } (u,v) \in E\\
+  f(u,v) & \text{ hvis }(v,u) \in E\\
+  0 & \text{ ellers}
+\end{cases}
+\]
+\textbf{Husk} at vi antager ingen anti-parallele kanter. 
+Ydermere er $E_{f} = \{(u,v) \in V \times V | c_{f}(u,v) > 0\}$, altså, kanterne i residualnetværket er kanter hvis residual kapacitet er større end 0.
+
+\textbf{Hvad skal vi bruge et residualnetværk til?} Simpelt! Vi bruger det til at finde vejene til et maximum flow.
+
 \section{Min-Cut}
 \label{sec:mincut}
+
+\section{Misc}
+\label{sec:misc}
+
+
+
+
+
 
 
 
