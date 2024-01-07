@@ -994,8 +994,8 @@ Lad $N = (V,E,c)$ være et netværk med source $s$ og sink $t$. Et $(s,t)-$cut e
 \end{equation*}
 \end{proof}
 
-\subsubsection{Residual Networks}
-\label{subsub:residual}
+\subsection{Residual Networks}
+\label{subsec:residual}
 
 Lad $N = (V,E,c)$ og lad $f$ være et $(s,t)-$flow i $N$. \textbf{Residual Netværket} $N_{f}$ af $N$ med respekt til $f$ er $N_{f} = (V, E_f, c_{f})$, når
 
@@ -1010,6 +1010,54 @@ c_{f}(u,v) = \begin{cases}
 Ydermere er $E_{f} = \{(u,v) \in V \times V | c_{f}(u,v) > 0\}$, altså, kanterne i residualnetværket er kanter hvis residual kapacitet er større end 0.
 
 \textbf{Hvad skal vi bruge et residualnetværk til?} Simpelt! Vi bruger det til at finde vejene til et maximum flow.
+
+
+Hver direkted $(s,t)$-path (vej) i $N_{f}$ korresponderer til en vej i $N$. 
+Lad
+\begin{equation}
+  \begin{split}
+  \delta_{-}(p) &= \min \{c(u,v) - f(u,v) | (u,v) \text{ er fremadgående på } P'\}\\
+  \delta_{+}(p) &= \min\{ f(u,v) | (u,v) \text{ er tilbagegående på } P'\}\\
+  \delta(p) &= \min\{ \delta_{+}(p), \delta_{-}(p)\}
+  \end{split}
+\end{equation}
+
+Dette resultat er skrevet $(f \uparrow f_{p})$, og er et $(s,t)$ flow af værdi $|f| + |f_{p}| = |f| + \delta(p)$
+
+Hovedidéen er simpel:
+\begin{itemize}
+\item $0 \leq (f \uparrow f_{p})(u,v) \leq c(u,v) $ af definitionen på $\delta(p)$
+\item $(f \uparrow f_{p}) $ er et $(s,t)-$flow siden we tilføjer det samme mængde flow i hver $v \neq s,t$ som ud af det. 
+\item $|f \uparrow f_{p}| = |f| + |f_{p}| = |f| + \delta(p)$ da vi increase flowet med $\delta(p)$ på præcis en ud af s.
+\end{itemize}
+
+Vi kalder en directed $(s,t)$-vej $P$ i $N_{f}$ en \textbf{augmenting path} og dens kapacitet er værdien $\delta(p)$ som vi udregnede. 
+
+\subsection{Ford-Fulkerson}
+\label{subsec:fordfulkerson}
+
+Ford-fulkerson er en metode (ikke algoritme, da den mangler noget for implementation) til at finde maximum flow. Den tager som input et netværk hvor kapacitetsfunktionen $c$ udelukkende bruger heltal, og $s \neq t$. Dens output er et maximum $(s,t)$ flow $f$ i $N$.
+
+\begin{center}
+\includegraphics[scale=0.5]{ff.png}
+\end{center}
+
+Husk at så længe $N_{f}$ har et augmenting path $P$, så ved vi at $f$ ikke er maksimum, da $|f \uparrow f_{p}| = |f| + |\delta(p)| > |f|$.
+Siden vi udelukkende dealer i integers, gælder det førsagte, da vi altid increaser med mindst én. Derfor findes der også et max-flow med sikkerhed. Dette bliver udvidet i følgende teorem:
+
+\begin{theorem}[Max-flow Min-Cut]
+  Hvis én af disse gælder, gælder alle:
+  \begin{enumerate}
+  \item[(1)]\label{item:1} $f$ er et maximum flow
+  \item[(2)]\label{item:2} Der er ingen $(s,t)$-path i $N_{f}$
+  \item[(3)]\label{item:3}  $|f| = c(S,T)$ for et $(s,t)$-cut $(S,T)$
+  \end{enumerate}
+\end{theorem}
+
+37:15
+
+
+
 
 \section{Min-Cut}
 \label{sec:mincut}
