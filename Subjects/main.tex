@@ -227,6 +227,43 @@ Der må du bare tælle. Desværre
 \section{Inclusion Exclusion}
 \label{sec:inclexcl}
 
+I sin essens er inclusion-exclusion princippet bare subtraction rule. Men den er vi ligeglad med.Du kan til gengæld få formlen her:
+$|A \cup B| = |A| + |B| - |A \cap B|$. Vi fjerner deres snit, da vi ellers ville overtælle.
+
+
+Følgende teorem er den generaliseret version.
+\begin{theorem}[The Principle of Inclusion-Exclusion]
+  Lad $A_{1}- A_{2}, \ldots, A_{n}$ være endelige sæt. Så:
+
+  \begin{equation}
+    \begin{split}
+      |A_{1} \cup A_{2} \cup \cdots \cup A_{n}| &= \sum_{1 \leq i \leq n}|A_{i}| - \sum_{1 \leq i < j \leq n}|A_{i}\cap A_{j}|\\
+      &+ \cdots + (-1)^{n+1} |A_{1} \cap A_{2} \cap \cdots A_{n}|
+    \end{split}
+  \end{equation}
+  \end{theorem}
+
+  Før vi kommer med beviset: Grunden til at vi løfter op i $n+1$ fremfor bare $n$, er fordi hvis vi tager $n$ får vi de forkerte fortegn. Se eksempel med $n = 3$, $(-1)^{3} = 1$ men $(-1)^{3+1}=-1$ hvilket er korrekt, da vi vil fjerne ved 3. 
+
+  Følgende er bevis for inclusion-exclusion:
+
+\begin{proof}
+  Vi beviser formlen ved at vise at hvert element i fællesmængden bliver talt præcis en gang af højresiden af ligningen.
+  Antag at $a$ er et medlem af præcis $r$ af sættene $A_{1}, A_{2}, \ldots, A_{n}$, hvor $1 \leq r \leq n$. Vores mål er at vise at $r$ kun bliver talt én gang. Ved første led, $\sum |A_{i}|$ bliver den talt $\binom{r}{1}$ gange. Ved andet led $\binom{r}{2}$ osv. Generelt set bliver $a$ talt $\binom{r}{m}$ gange ved summationen der indeholder $m$ af sættene. Dermed bliver elementet talt præcis
+  \[
+\binom{r}{1} - \binom{r}{2} + \binom{r}{3} - \cdots + (-1)^{r+1} \binom{r}{r}
+  \]
+
+  gange. Vores mål er at vise at dette er lig 1. Vi ved fra corollary 2 i kapitel 6.4, at
+  \[
+\binom{r}{0} - \binom{r}{1} + \binom{r}{2} - \cdots + (-1)^{r}\binom{r}{r} = 0
+  \]
+  Dermed må det gælde at:
+ $1 = \binom{r}{0} = \binom{r}{1} - \binom{r}{2} + \cdots + (-1)^{r+1} \binom{r}{r}$ 
+\end{proof}
+
+\newpage
+
 
 \section{Discrete Probability}
 \label{sec:discprob}
