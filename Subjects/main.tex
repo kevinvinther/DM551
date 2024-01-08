@@ -55,8 +55,174 @@ Dueslagsprincippet (pigeonhole principle) er et simpelt princip, men kan bruges 
 
 \begin{theorem}[Dueslagsprincippet]
 \label{theorem:pigeonhole}
+Hvis $k+1$ objekter er i $k$ bokse, så er der mindst en boks som vil have mere end ét element. 
 \end{theorem}
 
+\begin{proof}
+  Vi beviser gennem modsigelse.
+
+  Hvis vi antager at ingen boks har mere end ét element, så er der højest $k \cdot 1 = k$ objekter i alt. Dette modsiger vores antagelse om at der er $k+1$ obekter.
+  \end{proof}
+
+\begin{theorem}[Generaliseret Dueslagsprincip]
+  Hvis vi placerer $N$ objekter i $k$ bokse, så har en givet boks \textbf{mindst} $\left \lceil \frac{N}{k} \right \rceil $
+\end{theorem}
+
+\begin{proof}
+  Hvis vi antager at der er $\leq \left \lceil \frac{N}{k} \right \rceil - 1$ i hver boks, så $N \leq k \cdot (\lceil N/k \rceil - 1) < k ((\frac{N}{k}+1)-1)=N$
+\end{proof}
+
+\begin{theorem}
+Hver sekvens af $n^{2}+1$ distinkte reelle tal $a_{1}, a_{2}, \cdots, a_{n^{2}+1}$ indeholder en subsekvens af $n$ tal der enten er strictly increasing eller decreasing.
+\end{theorem}
+
+\begin{proof}
+  Lad $i_{k}$ være længde af den længste increasing sekvens med start i $a_{k}$, og $d_{k}$ den længste decreasing med start i $a_{k}$.
+
+  Hvis vores teorem ikke passer, så, for alle $k \in \{1, 2, \ldots, n^{2}+1\}$ gælder det for alle pair $(i_{k}, d_{k})$ at $i_{k}, d_{k} \in \{1, 2, \ldots, n\}$.
+
+  Men siden der er $n^{2 }+1$ par gælder det at $\exists p,q, \text{ således at } (i_{q}, d_{q}) = (i_{p}, d_{p})$ hvor vi kan antage at $p < q$. Hvis $a_{p} < a_{q}$ så $i_{p} > i_{q}$, og på samme måde omvendt. 
+\end{proof}
+
+\subsection{Kombinationer og Permutationer}
+
+\textbf{Permutationer}: \\
+$P(n,r) = \text{ antal r-permutationer af et n-sæt}$\\
+$P(n,r) = n \cdot (n-1) \cdot \cdots \cdot (n-r+1) = \frac{n!}{(n-r)!}$
+
+\begin{proof}
+Dette er tydeligt gennem product rule.
+  \end{proof}
+
+\textbf{Kombinationer}: \\
+
+$C(n,r) = \text{Antallet af r-kombinationer af et k-sæt}$
+$C(n,r) = \frac{P(n,r)}{r!} = \frac{n!}{r!(n-r)!}$
+
+\begin{proof}
+  Hver fixed $r$-permutation kan blive fundet fra en $r-$kombination ved at permutere de $r$ elementer. Dermed $P(n,r) = r! C(n,r)$
+  \end{proof}
+
+\subsection{Binomial Coefficients}
+
+Det her er nok det vigtigste.
+
+$\binom{n}{r}$ er også kaldet den \textbf{binomielle} koefficient, fordi den forekommer som udvidelse i $(x+y)^{n}$.
+
+\begin{theorem}[The Binomial Theorem]
+$(x+y)^{n} = \sum_{j=0}^{n} \binom{n}{j} x^{n-j}y^{j}$
+\end{theorem}
+
+\begin{proof}
+Leddene er af formen $x^{n-j}y^{j}$ for $j = 0, 1, 2, \ldots, n$og koefficienterne til $x^{n-j}y^{j}$ er antallet af måder man kan vælge $j$ $y$'er fra de $n$ parenteser. 
+\end{proof}
+
+
+\begin{theorem}[Pascal's Identitet]
+$\forall n, j \in \mathbb{Z}$ hvor $n \geq k$ gælder det at $\binom{n+1}{k} = \binom{n}{k} + \binom{n}{k-1}$
+\end{theorem}
+
+
+\begin{proof}
+  Fiks et element $a$ i et $(n+1)$-sæt $T$ lad $S = T - \{a\}$.
+  Der er $\binom{n}{k}$ k-subsets af $T$ som \textbf{ikke} indeholder $a$.
+  Der er $\binom{n}{k-1}$ $k-$subsets af $T$ som indeholder $a$, da de resterende $k-1$ elementer laver et $(k-1)$ subset af $S$. 
+\end{proof}
+
+Vi kan bruge det her til pascal's trekant.
+
+\begin{theorem}[Vandermonde's Teorem]
+  Når $r \leq \min \{m,n\}$ så gælder det at:
+  \[
+\binom{n+m}{r} = \sum_{k=0}^{r} \binom{m}{r-k} \binom{n}{k}
+  \]
+  \end{theorem}
+
+
+  \subsection{Generaliseret Permutation og Kombinationer}
+
+  \subsubsection{Permutationer med gentagelse}
+  
+
+\begin{theorem}
+Antallet af $r-$permutations af et $n-$sæt med getagelser tilladt er $n^{r}$.
+\end{theorem}
+
+\begin{proof}
+Siden vi må vælge det samme igen og igen, har vi $n$  valg hver gang. Hvis vi skal vælge en ting $r$ gange bliver det $n \cdot n \cdots n = n^{r}$
+\end{proof}
+
+\subsubsection{Kombinationer med gentagelse}
+
+\begin{theorem}
+Antallet af r-kombinationer fra et $n-$sæt med gentagelser tilladt er $\binom{n+r-1}{r}$
+\end{theorem}
+
+\begin{proof}
+  Vi kan representere hver $r-$kombination med en streng af $n-1$ 'l' og $r$ '*', hvor de $n-1$ 'l' er brugt til at markere hvilke af de $n$ 'bokse' vi tager fra, og '*' elementer. For eksempel: ``***ll*l**lll*''. Der er $\binom{n-1+r}{r}$ måder at vælge de $r$ '*'\emph{'}er
+\end{proof}
+
+Vi kan for eksempel bruge det her til at finde ud af hvor mange løsninger der er til en ligning, f.eks. $x_{1} + x_{2} + x_{3} = 11$. Dette er bare antallet af 3-kombinationer fra et $3-$sæt med gentagelser. Derfor $\binom{11+3-1}{11} = \binom{13}{11} = \binom{13}{2} = 78$. Vi kan også gøre det med bounds. Tag samme eksempel, men hvor $x_{1} \geq 1, x_{2} \geq 2, x_{3} \geq 3$. Med disse bounds har vi allerede placeret 6 items, og har derfor 5 tilbage. Dvs. at vi bare udregner 5-kombinationer: $\binom{5+3-1}{5} = 21$.
+
+
+\subsubsection{Permutationer med objekter man ikke kan skalne imellem}
+
+Før teoremet giver vi et eksempel:
+Find antal strenge du kan lave ud af bogstaverne fra ordet SUCCESSORo
+Du kan placere
+\begin{itemize}
+\item 3 'S' på $\binom{9}{3}$ måder
+\item 2 'C' på $\binom{6}{2}$ måder
+\item 1 'E' på $\binom{4}{1}$ måder
+\item 1 'O' på $\binom{3}{1}$ måder
+\item 1 'R' på $\binom{2}{1}$ måder
+\item 1 'U' på $\binom{1}{1}$ måder
+\end{itemize}
+
+Dermed får vi antal ved at gange dem sammen: $\binom{9}{3} \binom{6}{2} \binom{4}{1} \binom{3}{1} \binom{2}{1} \binom{1}{1}$.
+
+\begin{theorem}
+Antallet af distinkte permutationer af $n$ objekter af $k$ typer med $n_{i}$ af type $k$ er $\frac{n!}{n_{1}!n_{2}!\cdots n_{k}!}$
+\end{theorem}
+
+\subsection{Distribuering af objekter i bokse}
+
+Der er 4 typer problemer her.
+
+\begin{itemize}
+\item Distribuering af objekter der ikke kan skelnes mellem i bokse der ikke kan skelnes mellem
+\item Distribuering af objekter der kan skelnes mellem i bokse der ikke kan skelnes mellem
+\item Distribuering af objekter der kan skelnes mellem i bokse der kan skelnes mellem
+\item Distribuering af objekter der ikke kan skelnes mellem i bokse der kan skelnes mellem
+  \end{itemize}
+
+\begin{theorem}[Sknelnet Objekter, Skelnet Bokse]
+  Antal måder at dsitribuere $n$ objekter man kan skelne imellem i $k$ bokse man kan skelne imllem, med $n_{i}$ objekter i box $i$ er
+
+  \[
+\frac{n!}{n_{1}!n_{2}! \cdots n_{k}!}
+  \]
+\end{theorem}
+
+
+\begin{theorem}[Ikke Sknelnet Objekter, Skelnet Bokse]
+  Antal måder at distribuere $n$ identiske objekter i $k$ distinke bokse er lig antal $n$ kombinationer af et $n$-sæt med gentagelse:
+  \[
+\binom{n+k-1}{n}
+  \]
+\end{theorem}
+
+
+\begin{theorem}[Sknelnet Objekter, Ikke Skelnet Bokse]
+Her kan du bruge Stirling Numbers of the second kind.
+\end{theorem}
+
+
+\begin{theorem}[Ikke Sknelnet Objekter, Ikke Skelnet Bokse]
+Der må du bare tælle. Desværre
+\end{theorem}
+
+  \newpage
 
 \section{Inclusion Exclusion}
 \label{sec:inclexcl}
