@@ -5,6 +5,7 @@
 \usepackage{amsmath, amsthm, amssymb, amsfonts}
 
 % For better handling of figures and placements
+\usepackage{hyperref}
 \usepackage{graphicx}
 
 % Define theorem styles
@@ -216,9 +217,9 @@ Der er 4 typer problemer her.
 \begin{theorem}[Sknelnet Objekter, Ikke Skelnet Bokse]
 Her kan du bruge Stirling Numbers of the second kind.
 \[
-
   \sum_{j=1}^{k}S(n,j) = \sum_{j=1}^{k}\frac{1}{j!} \sum_{i=0}^{j-1}(-1)^{i} \binom{j}{i} (j-i)^{n}
   \]
+
 \end{theorem}
 
 
@@ -622,7 +623,6 @@ Hold på hat og briller!
                                     &= e^{(e^{t}-1) \Sigma p_{i}}\\
   &\leq e^{(e^{t}-1)\mu}
 \end{split}
-
 \end{equation}
 
 \begin{itemize}
@@ -661,12 +661,127 @@ Hold på hat og briller!
 \label{sec:random}
 
 \begin{itemize}
+  \item Generer tilfældige permutationer
 \item Sandsynligheden for et korrekt min-cut med Karger's
 \item Quicksort og Median-Finding
 \item Monte Carlo
 \item Hiring Problem
 \item Majority Element
 \end{itemize}
+
+\subsection{Generer tilfældige permutation}
+\label{subsec:label}
+
+Hvordan genererer vi tilfældige permutationer? 
+
+\subsubsection{Permute-By-Sorting}
+
+Permute by sorting er meget simpel:
+
+\begin{verbatim}
+n = A.length
+for i = 0 to n
+    P[i] = random(1, n^3)
+sort A using P as keys
+return A
+\end{verbatim}
+
+\begin{lemma}
+$p(P(i) \neq P(j)\;\;\forall 1 \leq i < j \leq n) \geq 1 - \frac{1}{n}$
+\end{lemma}
+
+\begin{proof}
+  $A_{ij}$ er hændelsen at $P(i) = P(j)$
+
+  \[
+p(A_{ij}) = \frac{1}{n^{3}}
+  \]
+
+  \[
+A = \bigcup\limits_{1 \leq i < j \leq n}^{}A_{ij}
+  \]
+
+  \[
+p(A) = p( \bigcup\limits_{1 \leq i < j \leq n}^{}A_{ij}) \leq \sum_{1 \leq i < j \leq n}^{}p(A_{ij}) 
+  \]
+  \[
+= \sum_{1 \leq i < j \leq n}^{} \frac{1}{n^{3}} = \frac{\binom{n}{2}}{n^{3}} < \frac{1}{n}
+  \]
+\end{proof}
+
+\begin{lemma}
+\texttt{Permute-by-sorting} laver en uniform tilfældig permutation når pririoterne er distinkte. 
+\end{lemma}
+
+\begin{proof}
+Antag først at $P(1) < P(2) < \cdots < P(n)$. Vi vil gerne vise at permutationen $1, 2, 3, \ldots, n$ sker med sandsynlighed $\frac{1}{n!}$
+
+For $i = 1, 2, \ldots, n$ lad $X_{i} $ være hændelsen at $A[i]$ får den $i$'e mindste $P-$værdi. Så tager sæger vi $p(X_1 \cap X_{2} \cap \cdots \cap X_{n})$
+
+Vi ved at
+
+\[
+p(X_{1} \cap X_{2} \cap \cdots \cap X_{n}) = p(X_{1}) p(X_{2}|X_{1}) \cdots P(X_{n}| X_{1} \cap \cdots \cap X_{n-1}) 
+\]
+
+
+\[
+p(X_{1}) = \frac{1}{n}, p(X_{2}|X_{1}) = \frac{1}{n-1}, p(X_{i+1} | X_{1} \cap \cdots \cap X_{i}) = \frac{1}{n-i}
+\]
+
+Dermed
+
+\[
+p(X_{1} \cap \cdots \cap X_{n}) = P(X_{1}) \cdot p(X_{2}| X_{1}) \cdots p(X_{i+1}|X_{1} \cap \cdots \cap X_{i}) 
+\]
+
+\[
+= \frac{1}{n} \cdot \frac{1}{n-1} \cdot \cdots \cdot \frac{1}{2} \frac{1}{1} = \frac{1}{n!}
+\]
+
+\end{proof}
+
+
+Det samme argument fungerer for en arbitrær permutation. Elementet med indeks $\sigma(1)$ har sandsynlighed $\frac{1}{n}$ for at få den laveste $p$-værdi. Elementet med indeks $\sigma(i)$ har sandsynlighed $\frac{1}{n-i+1}$ for at få den i'e laveste $p-$værdi. osv.
+
+Permute by sorting kører i $O(n \log n)$ men virker kun hvis alle prioriteter er uinikke, ellers gentager vi algoritmen.
+
+Det forventede antal af repetitions er højest:
+
+\[
+\frac{1}{1- \frac{1}{n}} = \frac{1}{\frac{n-1}{n}} = \frac{n}{n-1} < 2
+\]
+
+Vi kan gøre dette fordi $p$ er en bernoulli trial. Sandsynligheden for at den går galt er $1 - p = 1 - \frac{1}{n}$
+
+
+\subsubsection{Randomize-in-place}
+
+\begin{verbatim}
+Randomize-in-place(A):
+n = A.length
+for i = 1 to n
+    swap A[i] with A[Random(i,n)]
+Return A
+\end{verbatim}
+
+\begin{definition}[k-permutation]
+  En $k-$permutation af et $n$-sæt $A$ er ethver ordnet $k-$subset af $A$.
+  Der er  $P(n,k) = \frac{n!}{(n-k)!}$ af disse.
+\end{definition}
+
+\begin{lemma}
+Randomize-in-place producerer en tilfældig permutation
+\end{lemma}
+
+\begin{proof}
+  Vi beviser den følgende loop invariant:
+
+  (I): lige før iteration $i$ af for loopet, har hver $(i-1)$-permutation af $A$ sandsynlighed $\frac{(n-i+1)!}{n!}$ 
+
+  Resten af bevis mangler
+\end{proof}
+
 
 \subsection{Sandsynligheden for et korrekt min-cut med Karger's}
 \label{subsec:label}
@@ -836,11 +951,26 @@ Givet denne algoritme, hvis du giver en værdi $q \in [n]$, så,
 
 Så for satan! Er vi klar?
 
-Først, \texttt{Selec(S,k)}
+Først, \texttt{Selec(S,k)}. Denne algoritme finder det $k$'e største element i en liste, $S$. 
 
-MANGLER
+Vi kigger på eksemplet hjvor vi vil finde medianen. Med denne algoritme, finder vi så medianenen ved kaldet \texttt{Select(S,n/2)} eller, hvis det er ulige \texttt{Selet(S,(n+1)/2)}.
+
+\noindent
+\includegraphics[width=400pt]{main--randomized-algorithms--median-finding-og-quicksort-ead8.png}
+\vspace{0cm}
+\noindent
+\includegraphics[width=400pt]{main--randomized-algorithms--median-finding-og-quicksort-4a2e.png}
+
+\begin{theorem}[13.17 KT]
+uanset hvordan splitteren vælges, returnerer algoritmen det $k$'e største element af  $S$.
+\end{theorem}
+
+For 13.17 gælder teoremet selv når vi søger det største element, og splitteren altid er det laveste element. I sådan et tilfælde får vi bare $T(n) \leq T(n-1)+cn$, 
+
+Dog er vores mål at få $O(n)$ i average køretid. 
 
 
+En god splitter vil producere $S^{-}$ og $S^{+}$ hvor $|S^{-}| \approx |S^{+}|$, da vi så kan halvere hver gang. 
 
 \newpage
 
@@ -880,7 +1010,7 @@ Dermed skal du forvente at købe $n \log n$ morgenmadsprodukter før du får all
 
 Dette bliver ``bare'' en generaliseret version af kapitel 13.3.
 
-Givet et sæt af clauses, $C_{1}, \ldots, C_{j}}$, hvor af længde $k$, over et sæt af variabler $X = \{x_{1}, \ldots, x_{n}\}$, findes der en satisfying truth assignment?
+Givet et sæt af clauses, $C_{1}, \ldots, C_{j}$, hvor af længde $k$, over et sæt af variabler $X = \{x_{1}, \ldots, x_{n}\}$, findes der en satisfying truth assignment?
 Antag at vi sætter hver variabel $x_{1}, \ldots, x_{n}$ uafhængigt til 0 eller 1 med sandsynlighed $\frac{1}{2}$ hver. Hvad er det forventede antal af caluses satisfied?
 
 Lad $Z$ være det random variable lig med antallet af satisfied clauses. Vi introducerer nu $Z_{i} = \begin{cases}
@@ -906,7 +1036,7 @@ For en $k-$SAT formel, hvor hver klausul har $k$ forskellige variabler, er det f
 
 
 \begin{theorem}
-For hver instans af $k$-SAT er der en truth assignment der satisfier mindst en $\left 1-( \frac{1}{2} \right)^{k}$ del af alle klausuler.
+For hver instans af $k$-SAT er der en truth assignment der satisfier mindst en $1 - \left ( \frac{1}{2} \right )^{k}$ del af alle klausuler.
 \end{theorem}
 
 Næste gælder udelukkende for $k = 3$. Hurtig recap: $1 - \left( \frac{1}{2} \right)^{3} = \frac{7}{8}$.
@@ -951,6 +1081,152 @@ p \geq \frac{\frac{7}{8}k - k'}{k} \geq \frac{1}{8k}
 
 \section{Indicator Random Variables}
 \label{sec:indicator}
+
+
+\subsection{Birthday Paradox}
+\label{subsec:label}
+
+Vi generaliserer birthday paradox.
+\begin{definition}
+Vi har $k$ personer der har et tal mellem 1 og n. Hvor stor skal $k$ være før vi forventer at to har det samme tal?
+\end{definition}
+
+\[
+X_{ij} = \begin{cases}
+  1 & \text{ hvis } i \text{ og } j \text{ holder det samme tal}\\
+  0 & \text{ ellers}
+\end{cases}
+\]
+
+Ydermere
+\[
+  X = \sum_{1 \leq i < j \leq k}^{}X_{ij}
+\]
+
+\[
+E(X) = E(\sum_{1 \leq i < j \leq k}^{}X_{ij}) = \sum_{1 \leq i < j \leq k}^{} E(X_{ij}) = \sum_{1 \leq i < j \leq k}^{} \frac{1}{n} = \binom{k}{2} \cdot \frac{1}{n}
+\]
+
+Så $E(X) = \frac{k(k-1)}{2n} \geq 1$ når $k \geq \sqrt{2n}+1$
+
+Hvis $n = 366$  så sætter vi $k = \sqrt{2 \cdot 366}+1 \geq 28$
+
+\[
+\frac{28 \cdot 27}{2 \cdot 366} \approx 1.03
+\]
+
+\subsection{Balls in Bins}
+\label{subsec:label}
+
+Givet $n$ kugler og $b$ kasser, hvad er det forventede antal gange vi skal kaste før der er én i en given kasse $j$?
+
+$p(\text{kugle rammer i kasse i}) = \frac{1}{b}\;\; \forall i$
+
+Først:
+
+\[
+X_{ij} = \begin{cases}
+  1 & \text{hvis kugle } i \text{ lander i kasse } j\\
+  0 & \text{ ellers}
+\end{cases}
+\]
+
+\[
+p(X_{ij}=1) = \frac{1}{b}
+\]
+
+\[
+X_{j} = \sum_{i=1}^{n} X_{ij}
+\]
+
+$X_{j}$ = forventede antal kugler i kasse $j$
+
+
+\[
+E[X_{j}] = E[\sum_{i=1}^{n}X_{ij}] = \sum_{i=1}^{n} E(X_{ij}) = \sum_{i=1}^{n} \frac{1}{b} = \frac{n}{b}
+\]
+
+
+Det forventede antal kugler vi skal kaste i før der er en i en given kasse $j$ er dermed:
+\[
+\frac{1}{\frac{1}{b}} = b
+\]
+
+Dette kommer fra bernoulli trials.
+
+Lad os nu finde forventede antal kugler før ingen kasser er tomme (samme analyse som coupon collector).
+
+$X$ = antal kasser
+
+\[
+X = \sum_{i=1}^{n}X_{i}
+\]
+
+\[
+X_{i} = \begin{cases}
+  1 & \text{ hvis  du får en bold i kasse }i \\
+  0 & \text{ ellers.}
+\end{cases}
+\]
+
+\[
+X = \sum_{i=1}^{b} \frac{b}{i} = b \sum_{i=1}^{b} \frac{1}{i} = O(b \log b)
+\]
+
+
+\subsection{Streaks}
+\label{subsec:label}
+
+Hvis du kaster en mønt $n$ gange, og udfaldet er p/k hver gang. Et \textbf{streak} er en sekvens af kast hvor det er den samme et antal af gange i streg.
+
+Lad $L$ være det længste streak af plat, når vi kaster en mønt $n$ gange.
+
+$A_{ik}$ = kun plat i kast $i, i+1, \ldots, i+k-1$.
+
+\[
+p(A_{ik}) = 2^{-k}
+\]
+
+
+Så hvis $k = 2 \lceil \log n \rceil $ får vi
+
+\[
+p(A_{i, 2 \lceil \log n \rceil}) = 2^{2 \lceil \log n \rceil} \leq 2^{2 \log n} = n^{-2}
+\]
+
+Der er højest $n - 2 \lceil \log n \rceil  + 1$ positioner når et stræk af plat af længde $2 \lceil \log n \rceil$ kan starte, så
+
+\begin{equation}
+  \label{}
+\begin{split}
+  p(\bigcup\limits_{i=1}^{n- 2 \lceil \log n \rceil +1}A_{i, 2 \lceil \log n \rceil}) &\leq  \sum_{i=1}^{n - 2 \lceil \log n \rceil +1} \frac{1}{n^{2}} \text{ grundet union bound}\\
+  &< n \cdot \frac{1}{n^{2}} = \frac{1}{n}
+\end{split}
+\end{equation}
+
+Hvad er den forventede længde af den længste streak af plat?
+
+$L_{j}$ = hændelsen at det længste streak har længde $j$. $L$ = længden af det længste streak.
+
+\[
+E[L] = \sum_{j=0}^{n} j \cdot p (L_{j})
+\]
+
+Sandsynligheden for en længde streak er større end eller lig med $2 \lceil \log n \rceil$ ethvert sted $\leq p ( \bigcup\limits_{i=1}^{n-2 \lceil \log n \rceil + 1} A_{i, 2 \lceil \log n \rceil} ) < \frac{1}{n}$
+
+\begin{equation}
+\begin{split}
+
+  E[L] &= \sum_{j=0}^{n} j \cdot P(L_{j}) \\
+       &=  \sum_{j=0}^{2 \lceil \log n \rceil - 1}j \cdot p(L_{j}) + \sum_{j= 2 \lceil \log n \rceil}^{n} j \cdot p(L_{j}) \\
+       &< 2 \lceil \log n \rceil \sum_{j=0}^{2 \lceil \log n \rceil - 1} p(L_{j}) + n \sum_{j=2 \lceil \log n \rceil}^{n} p(L_{j}) \\
+       &< 2 \lceil \log n \rceil \cdot 1 + n \cdot \frac{1}{a}\\
+       &= O(\log n)\\
+\end{split}
+\end{equation}
+
+
+\newpage
 
 \section{Universal Hashing}
 \label{sec:hashing}
@@ -1848,9 +2124,9 @@ Det skal gøres klart at \textit{min-cut} egentlig betyder \textit{min-capacity 
 
   Vi beviser ved at gå hver mulighed igennem.
 \begin{enumerate}
-\item[(1) \Rightarrow (2)] Hvis $p$ er et $(s,t)$ path i $N_{f}$, så er $\delta(p) > 0$, så $|f \uparrow f_{p}| = |f| + \delta(p) > |f|$. Hvis $f$ er et maksimumsflow, men der er paths, så ville du kunne increase endnu mere, hvilket betyder at (1) ikke gælder.
-\item[(3) \Rightarrow (1)] Hvis $|f| = c(S,T)$ så er $f$ maximum, da $|f| \leq c(S', T')$ for hvert $(s,t)$-cut $(S',T')$
-\item[(2) \Rightarrow (3)] Antag at der ikke er noget $(s,t)$-path i $N_{f}$ (residualnetværket). Hvis dette gælder er der \textbf{ingen} måde hvorpå du kan gå fra partition $S$ til partition $T$ i cuttet, hvor $S$ er sættet af knuder man kan komme til fra $s$ (source) i $N_{f}$, og $T$ er sættet af knuder du \textbf{ikke} kan komme til. Hvis der \textbf{ikke} er nogen kant $(u,v)$ med $u \in S, v \in T$, betyder det at i $N$ har vi mindst en kant $(u,v)$ der går fra $S$ til $T$ med værdi lig med $c(u,v)$, da hvis $f(u,v) < c(u,v)$ kunne man putte mere flow igennem på $N_{f}$. På samme måde, hvis du har en kant $(u,v)$, den her gang fra $T$ til $S$ med en flowværdi større end 0, så ville du have en kant gående fra $S$ til $T$ i $N_{f}$.
+\item[(1) $\Rightarrow$ (2)] Hvis $p$ er et $(s,t)$ path i $N_{f}$, så er $\delta(p) > 0$, så $|f \uparrow f_{p}| = |f| + \delta(p) > |f|$. Hvis $f$ er et maksimumsflow, men der er paths, så ville du kunne increase endnu mere, hvilket betyder at (1) ikke gælder.
+\item[(3) $\Rightarrow$ (1)] Hvis $|f| = c(S,T)$ så er $f$ maximum, da $|f| \leq c(S', T')$ for hvert $(s,t)$-cut $(S',T')$
+\item[(2) $\Rightarrow$ (3)] Antag at der ikke er noget $(s,t)$-path i $N_{f}$ (residualnetværket). Hvis dette gælder er der \textbf{ingen} måde hvorpå du kan gå fra partition $S$ til partition $T$ i cuttet, hvor $S$ er sættet af knuder man kan komme til fra $s$ (source) i $N_{f}$, og $T$ er sættet af knuder du \textbf{ikke} kan komme til. Hvis der \textbf{ikke} er nogen kant $(u,v)$ med $u \in S, v \in T$, betyder det at i $N$ har vi mindst en kant $(u,v)$ der går fra $S$ til $T$ med værdi lig med $c(u,v)$, da hvis $f(u,v) < c(u,v)$ kunne man putte mere flow igennem på $N_{f}$. På samme måde, hvis du har en kant $(u,v)$, den her gang fra $T$ til $S$ med en flowværdi større end 0, så ville du have en kant gående fra $S$ til $T$ i $N_{f}$.
 \end{enumerate}
 
 Dermed gælder det at:
@@ -1890,8 +2166,162 @@ Husk på det på den her måde: Til at starte med er der måske en vej med læng
 
 
 
+\subsection{Integrality theorem}
+\label{subsec:label}
+
+\begin{theorem}[Integrality Theorem]
+Hvis $N = (V,E,c)$ er et netværk med en heltals-kapacitetsfunktino $c : E \rightarrow \mathbb{Z_{+}}$ og $s \neq t$ er distinkte knuder af $V$, så er der en heltals-værdi maksimumsflow i $N$ (så $f : E \rightarrow \mathbb{Z}_{0}$)
+\end{theorem}
+
+\begin{proof}
+Dette følger fra måden Ford Fulkerson algoritme virker, gennem induktion over de antal augmenting paths der bliver brugt før algoritmen har fundet et maksimumsflow.
+
+\begin{itemize}
+\item Til at starte med $f \equiv 0$, som er et heltal
+\item Antag at flowet $f_{i}$ efter $i$ augmenting paths er heltal
+\item I $N_{f_{i}}$ er alle kapaciteter heltal da $c$ og $f_{i}$ er heltalsfunktioner. Så $\delta(p_{i+1})$ er et heltal hvor $p_{i+1}$ er det $(i+1)$'e augmenting path
+\item Dette indebærer at $f_{i+1}$ også er heltals-værdi, siden vi bare tilføjer eller fjerner $\delta(P_{i+1})$ på nogle kanter.
+\end{itemize}
+\end{proof}
+
+\subsection{Bipartite Matching}
+\label{subsec:label}
+
+En graf $G = (V,E)$ er bipartite hvis vi kan partition dets knuder i to sæt $X,Y$ således at alle knuder i $E$ har en ende i $X$ og en anden i $Y$.Vi kan også skrive en bipartite graf til at være $G = (X,Y,E)$
+
+\begin{definition}[Matching]
+En \textbf{matching} er et sæt af kanter, hvor ingen to kanter dele den samme slutknude.
+\end{definition}
+
+\begin{definition}[Maksimum Matching]
+
+  Maksimums Matching problemet er, givet en graf $G = (V,E)$ find en matching $M \subseteq E$ af maksimumsstørrelse.
+\end{definition}
+
+Dette er meget svært at løse i ikke-bipartite grafer, dog kan de reduceres til et flow-problem i bipartite grafer.
+
+
+Hvad du gør, er at du laver to nye knunder, $s$ og $t$, hvor $s$ har ark til alle knuder i $X$ og alle knuder i $Y$ har ark til $t$. Derudover laver du alle kanter mellem $X$ og $Y$ om til ark der går fra $X$ til $Y$. Kapaciteten i alle arkene er 1.
+
+\begin{theorem}
+Størrelsen af en maksimumsmatching $M^{*}$ i $G$ er lig med værdien af et maksimumsflow $f^{*}$ i $N(G)$ hvor $N(G)$ er en bipartite graf konverteret til et netværk.
+\end{theorem}
+
+\begin{proof}
+
+{\large (a) $|f^{*}| \geq |m^{*}|$}
+
+Hvis jeg ikke når at forstå det her bevis kan du finde det i hans flow remarks noter.
+\end{proof}
+
+\subsection{En application af integrality theorem}
+\label{subsec:label}
+
+
+\begin{definition}
+En graf $G= (V,E)$ er \textbf{$k-$regulær} hvis $d(v) = k\;\;\forall v \in V$, altså, hver knude har $k$ kanter. 
+\end{definition}
+
+\begin{theorem}[König]
+For hver $k \geq 1$, hver $k-$regulær bipartite graf $G = (X,Y,E)$ har en perfekt matching $(|M| = |X| = |Y|)$.
+\end{theorem}
+
+\begin{proof}
+Først observer at hvis $G$ er $k$-regulær, så $|X| = |Y|$, da $|X| \cdot k = |E| = |Y| \cdot k \Rightarrow |X| = |Y|$. 
+
+Husk $N(G)$ og lad $f$ være flow hvor $f(s,X) = 1 = f(Y,t)\;\;\forall x \in X, y \in Y$
+
+$f(xy) = \frac{1}{k}\;\; \forall xy \in E$
+
+Hvis vi sender $1/k$ til hver ark, så får den $1$ flow, da der er $k$ ark.
+\end{proof}
+
+
+
+\subsection{Flows med generalle balancer}
+\label{subsec:label}
+
+
+
+
 \section{Min-Cut}
 \label{sec:mincut}
+
+\subsection{Karger's Algoritme}
+\label{subsec:label}
+
+Karger's algoritme er en algoritme til at finde min-cut (det er den dog ikke særligt god til, men den er hurtig! Så den skal køres flere gange.)
+
+Algoritmen virker ved at ``contracte'' en kant, som den har valgt tilfældigt. Dette bliver den ved med indtil der er to knuder tilbage. 
+
+\begin{theorem}
+  Karger's Algoritme returnerer et globalt min-cut af $G$ med sandsynlighed mindst $\frac{1}{\binom{n}{2}}$
+
+\end{theorem}
+
+\begin{proof}
+Givet et globalt min-cut (A,B) af $G$, og antag at det har størrelse $k$, altså, der er et sæt $F$ med $k$ kanter fra en ende i $A$ og en anden i $B$. Vi vil gerne finde et lower bound på sandsynligheden for at algoritmen giver cuttet $(A,B)$.
+
+Det går galt når en kant i $F$ bliver contracted. Omvendt, hvis en kant ikke i $F$ bliver contracted, er der stadig en chance for at få vores ønskede $(A,B)$ cut.
+
+Vi siger at hver knude har en degree af mindst $k$ (altså den har \textbf{mindst} $k$ kanter til sig). Dermed er sandsynligheden for at en kant i $F$ bliver contracted højest
+\[ \frac{k}{\frac{1}{2}kn} = \frac{2}{n} \]
+
+Lad os nu kigge på situationen efter $j$ iterationer. Sandsynligheden for at en kant i $F$ bliver contracted i næste iteration $j+1$ er \textbf{højest}
+
+\[ \frac{k}{\frac{1}{2}k(n-j)} = \frac{2}{n-j} \]
+
+Cuttet $(A,B)$ bliver returneret af algoritmen hvis ingen kant i $F$ bliver contracted i nogen af iterationerne $1, 2, \ldots, n-2$ (forid der er 2 tilbage).
+
+Vi skriver $\varepsilon_{j}$ til at være hændelsen at en kant i $F$ \textbf{ikke} er contracted i iteration $j$. Vi har vist at $P(\varepsilon_{1}) \geq 1 - \frac{2}{n}$ og $P(\varepsilon_{j+1}|\varepsilon_{1} \cap \varepsilon_{2} \cdots \cap \varepsilon_{n-j}) \geq 1 - \frac{2}{n-j}$
+Vi er interesserede i at finde lower bound på $P[\varepsilon_{1} \cap \varepsilon_{2} \cdots \cap \varepsilon_{n-2}]$. Det kan vi finde således:
+
+\begin{equation}
+\begin{split}
+  P(\varepsilon_{1}) &\cdot P(\varepsilon_{2}|\varepsilon_{1}) \cdots P(\varepsilon_{j+1}| \varepsilon_{1} \cap \varepsilon_{2} \cdots \cap \varepsilon_{j}) \cdots P(\varepsilon_{n-2}| \varepsilon_{1} \cap \varepsilon_{2} \cdots \cap \varepsilon_{n-3})\\
+           &\geq \left( 1-\frac{2}{n} \right) \left( 1- \frac{2}{n-1} \right)\cdots \left( 1- \frac{2}{n-j} \right) \cdots \left( 1- \frac{2}{3}\right)\\
+           &= \left( \frac{n-2}{n} \right) \left( \frac{n-3}{n-1} \right) \left( \frac{n-4}{n-2} \right) \cdots \left( \frac{2}{4} \right) \left( \frac{1}{3} \right)\\
+  &= \frac{2}{n(n-1)} = \binom{n}{2}^{-1}
+\end{split}
+\end{equation}
+\end{proof}
+
+Vi ved nu at et enkelt run at Karger's fejler i at finde et global min-cut med sandsynlighed $( 1 - \frac{1}{\binom{n}{2}})$. Det her tal er meget meget tæt på 1. Men, hvis vi kører algoritmen mange gnage, kan vi komme tættere på.
+
+Hvis vi kører algoritmen $\binom{n}{2}$ gange, så er sandsynligheden for at vi fejler højest
+\[
+\left(1- \frac{1}{\binom{n}{2}}  \right)^{\binom{n}{2}} \leq \frac{1}{e}
+\]
+
+Hvor $\frac{1}{\binom{n}{2}} = \binom{n}{2}^{-1}$
+
+Vi kan drive den længere ned, hvis vi kører algoritmen $\binom{n}{2} \ln n$ gange, så er sandsynligheden $e^{- \ln n} = 1/n$.
+
+\subsubsection{Antallet af min-cuts}
+
+Vi vil gerne finde ud af hvad antallet af min-cuts en graf kan have.
+
+\begin{theorem}
+En undirected graph $G = (V,E)$ på $n$ knuder har højest $\binom{n}{2}$ global min-cuts. 
+\end{theorem}
+
+Lad $G$ være en graf, og $C_{1}, C_{2}, \ldots, C_{r}$ være alle dets globale min-cuts. Lad $\varepsilon_{i}$ vælre hændelsen at $C_{i}$ er returneret af Karger's, og lad $\varepsilon = \bigcup\limits_{i=1}^{r} \varepsilon_{i}$ være hændelsen at algoritmen returnerer et af disse min-cuts.
+
+VI ved at $P(\varepsilon) \geq \frac{1}{\binom{n}{2}}$. Men! Beviset viser faktisk at for hvert $i$ har vi $P(\varepsilon_{i}) \geq \frac{1}{\binom{n}{2}}$. Hvert par af begivenheder, $\varepsilon_{i}$ og $\varepsilon_{j}$ er disjunkte. Dermed, fra union bound, har vi at:
+
+\[
+P[\varepsilon] = P[\bigcup\limits_{i=1}^{r} \varepsilon_{i}] = \sum_{i=1}^{r} P[\varepsilon_{i}] \geq \frac{r}{\binom{n}{2}}
+\]
+
+Men siden $P[\varepsilon] \leq 1$, så må $r \leq \binom{n}{2}$
+
+
+
+
+
+
+
+
 
 \section{Misc}
 \label{sec:misc}
