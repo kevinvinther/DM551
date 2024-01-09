@@ -970,7 +970,103 @@ For 13.17 gælder teoremet selv når vi søger det største element, og splitter
 Dog er vores mål at få $O(n)$ i average køretid. 
 
 
-En god splitter vil producere $S^{-}$ og $S^{+}$ hvor $|S^{-}| \approx |S^{+}|$, da vi så kan halvere hver gang. 
+En god splitter vil producere $S^{-}$ og $S^{+}$ hvor $|S^{-}| \approx |S^{+}|$, da vi så kan halvere hver gang.
+
+Lad $cn$ være køretiden for \texttt{Select} uden det rekursive kald. Med medianen som splitter vil køretiden $T(n)$ være rekursionsligningen $T(n) \leq T(n/2) + cn$. Løsningen til denne ligning er $T(n) = O(n)$. Dette gælder jo dog kun når vi vælger medianen som splitter. Og denne algoritmes egentlige formål er at finde medianen. 
+
+Hvis vi havde en måde at vælger splittere $a_{i}$ på således at der er mindst $\varepsilon n$ elementer både større end og mindre end $a_{i}$ for enhver fixed konstant $\varepsilon > 0$, så vbil størrelsen af de reksurive kald skrumpe med $(1- \varepsilon)$ hve rgang. Dermed ville køretiden blive bounded af $T(n) \leq T((1 - \varepsilon) n) + cn$.
+
+Med denne får vi
+\[
+T(n) \leq cn + (1- \varepsilon)cn + (1 - \varepsilon)^{2}cn + \cdots = [1 + (1- \varepsilon) + (1 - \varepsilon)^{2} + \cdots].
+\]
+\[
+cn \leq \frac{1}{\varepsilon}.
+\]
+
+Serien $1 + (1 - \varepsilon) + (1 - \varepsilon)^{2} + \cdots$ er den geometriske serie hvor hvert led er en konstant faktor $(1 - \varepsilon)$ ganget med det tidligere led. Summen af denne uendelige serie konvergerer til $\frac{1}{\varepsilon}$ når $0 < \varepsilon < 1$, som er hvor $cn \leq \frac{1}{\varepsilon}$ kommer fra. 
+
+Vi vil gerne vælge en splitter ret godt i centrum. Vi ændrer nu i algoritmen, så en splitter bliver valgt uniformt tilfældigt.
+
+Vi siger at en algoritme er i fase $j$ når størrelsen af sættet vi kigger på er højest $ n \left( \frac{3}{4} \right)^{j} $, men større end $n  \left( \frac{3}{4} \right)^{j+1}$. Vi vil gerne vide hvor lang tid vi kan forvente at være i fase $j$.
+
+Vi siger at et element vi kigger på er \textbf{centralt} hvis $\frac{1}{4}$ af sættet er større end elementet, og $\frac{1}{4}$ af sættet er mindre end elementet. Dermed er halvdelen af et sæt centralt. Det betyder også, at hvis vi så vælger en central splitter, så vil mindst $\frac{1}{4}$ af sættet forsvinde, i.e., sættet skrumper med en faktor $\frac{3}{4}$.
+
+Siden halvdelen af elementerne i sættet er centrale, og vi vælger vores splitter uniformt tilfældigt, så er sandsynlgiheden for at vi vælger en central splitter $\frac{1}{2}$. Vi kan se på det her som bernoulli trials, som giver os at vi skal vente $\frac{1}{p}$ gange før vi får en success. Her er $p = \frac{1}{2}$, så d.v.s $\frac{1}{\frac{1}{2}} = \frac{2}{1} = 2$ gange vi skal være  i fase $j$ forventer vi.
+
+Lad $X$ være en random variable lig med antallet af skridt algoritmen tager. Vi kan skrive det som summen $X = X_{0} + X_{1} + X_{2} + \cdots$ hvor $X_{j}$ er antallet af skridt algoritmen er i fase $j$. Når algoritmen er i fase $j$, har sættet højest størrelse $n \left(  \frac{3}{4} \right)^{j}$, og antallet af skridt for én iteration i fase $j$ er højest $cn \left( \frac{3}{4} \right)^{j}$ for en konstant $c$.
+
+Vi har lige argumenteret for at antallet af iterationer vi bruger i fase $j$ er højest 2, og dermed har vi at $E[X_{j}] \leq 2cn \left( \frac{3}{4} \right)^{j}$. Dermed kan vi bounde forventede køretid v.h.a. Linearity of Expectation.
+
+\[
+E(X) = \sum_{j}^{}E[X_{j}] \leq \sum_{j}^{} 2cn \left(  \frac{3}{4} \right)^{j} = 2cn \sum_{j}^{} \left( \frac{3}{4} \right)^{j} \leq 8cn
+\]
+
+Dette har vi fordi summen $\sum_{j}^{} \left(  \frac{3}{4} \right)^{j}$ er en geometrisk series der konvergerer. Dermed har vi det følgende resultat.
+
+\begin{theorem}[13.18]
+Den forventede køretid af \texttt{Select(n,k)} er $O(n)$
+\end{theorem}
+
+Hvor den geometriske serie er:
+\[
+\sum_{n=1}^{\infty}a_{1}(r)^{n-1} = \frac{a_{1}}{1-r}
+\]
+
+Dette gælder kun når $-1 < r < 1$
+
+Dermed:
+
+
+\[
+\sum_{j}^{} \left(  \frac{3}{4} \right) = \frac{1}{1- \left( \frac{3}{4} \right)} = 4
+\]
+
+\subsection{Quicksort}
+\label{subsec:label}
+
+Quicksort minder meget om \texttt{Select(n,k)} men, her kigger vi på begge sæt efter vi har lavet dem, og ikke kun det ene. 
+
+\includegraphics[width=400pt]{main--randomized-algorithms--quicksort-87e6.png}
+\includegraphics[width=400pt]{main--randomized-algorithms--quicksort-3a99.png}
+
+Igen, her, hvis vi finder den værst-mulige splitter hver gang, får vi rekursionsligningen $T(n) \leq T(n-1) + cn$, og vi ender med et bound der hedder $T(n) = \Theta(n^{2})$ som er worst-case.
+
+
+Hvis, til gengæld, at splitteren er medianen hver gang får vi rekursionsligningen $T(n) \leq 2T(n/2) + cn$. Løsningen til denne ligning er $O(n \log n)$
+
+Det er basically det samme her som i medianen, undtagen der er en lille ændring: Hvis vi ikke vælger et centralt element, så vælger vi en ny splitter. Det forventede antal gange dette sker er $\frac{1}{\frac{1}{2}} = 2$  da sandsynligheden for at få et centralt element er $\frac{1}{2}$.
+
+
+Herfra får vi at det forventede køretid på $S$ udover de rekursive kald er $O(n)$.
+Igen laver vi subproblemer af type $j$, hvor hvis man er i sæt j gælder det at $n \left(  \frac{3}{4} \right)^{j+1} < |S'| < n \cdot \left( \frac{3}{4} \right)^{j}$. Dermed er det forventede arbejde på $S'$ minus rekursive kald bare $O \left( \frac{3}{4} \right)^{j}$.
+
+Nu vil vi gerne finde ud af hvor mange subproblemer af typer $j$ der er. igen her siger vi $\frac{1}{\left( \frac{3}{4} \right)^{j+1}} = \frac{4}{3}^{j+1}$. Så den forventede tid på alle disse er $O(n \cdot \left( \frac{3}{4} \right)^{j}  \cdot \left( \frac{4}{3} \right)^{j+1}) = O(\frac{4}{3}n) = O(n) $
+
+\subsubsection{Cormen Versionen}
+
+Lad $X$ være antallet af sammenligninger lavet af Randomized Quicksrot på et sæt af $n$ distinkte tal. Lad $z_{1}< z_{2} < \cdots < z_{n}$ være den sortede orden af elementer i $S$ og lad $X_{ij} = \begin{cases}
+  1 & \text{ hvis }z_{i} \text{ og }z_{j} \text{ bliver sammenlignet i algoritmen}\\
+  0 & \text{ ellers}
+\end{cases}$
+
+Læg her mærke til at $z_{i}$ og $z_{j}$ kun kan blive sammenlignet hvis en af dem er pivoten (splitteren), så $X = \sum_{1 \leq i < j \leq n}^{}X_{ij}$
+
+Lad $Z_{ij} = \{z_{i}, z_{i+1}, \ldots, Z_{j}  \}$. Så er $Z_{i}$ og $Z_{j}$ sammenlignet kun hvis $Z_{i}$ eller $Z_{j}$ er de første pivots valgt fra $Z_{ij}$. Sandsynligheden for dette er $\frac{2}{|Z_{ij}|} = \frac{2}{j-i+1}$.
+
+Dermed kan vi se at $P(X_{ij}=1) = \frac{2}{j-i+1}$, så $E(X_{ij}) = \frac{2}{j-i+1}$, og dermed:
+
+\begin{equation}
+\begin{split}
+  E(X) &= E[ \sum_{i=1}^{n-1}\sum_{j=i}^{n}X_{ij} ]\\
+       &= \sum_{i=1}^{n-1}\sum_{j=i+1}^{n} E(X_{ij})\\
+       &= \sum_{i=1}^{n-1} \sum_{j=i}^{n} \frac{2}{j-i+1}\\
+       &= \sum_{i=1}^{n-1} \sum_{k=1}^{n-i} \frac{2}{k+1} \;\; \text{ hvor } k = j -i\\
+       &< 2 \cdot \sum_{i = 1}^{n-1} \sum_{k=1}^{n} \frac{1}{k}\\
+       &< 2 \sum_{i=1}^{n-1} H(n)\\
+  &< 2 n H(n) = O (n \log n)\\
+\end{split}
+\end{equation
 
 \newpage
 
