@@ -215,6 +215,10 @@ Der er 4 typer problemer her.
 
 \begin{theorem}[Sknelnet Objekter, Ikke Skelnet Bokse]
 Her kan du bruge Stirling Numbers of the second kind.
+\[
+
+  \sum_{j=1}^{k}S(n,j) = \sum_{j=1}^{k}\frac{1}{j!} \sum_{i=0}^{j-1}(-1)^{i} \binom{j}{i} (j-i)^{n}
+  \]
 \end{theorem}
 
 
@@ -259,8 +263,138 @@ Følgende teorem er den generaliseret version.
 \binom{r}{0} - \binom{r}{1} + \binom{r}{2} - \cdots + (-1)^{r}\binom{r}{r} = 0
   \]
   Dermed må det gælde at:
- $1 = \binom{r}{0} = \binom{r}{1} - \binom{r}{2} + \cdots + (-1)^{r+1} \binom{r}{r}$ 
+  $1 = \binom{r}{0} = \binom{r}{1} - \binom{r}{2} + \cdots + (-1)^{r+1} \binom{r}{r}$
+
+  Det eneste vi gørt her er at erstatte $\binom{r}{0}$ med $\binom{r}{1}$, og skifte fortegnet. 
 \end{proof}
+
+\subsection{Alternativ Notation}
+\label{subsec:label}
+
+En alternativ notation bruges ofte i tælleproblemer, der spørger af antallet af elementer i et sæt der har ingen af $n$ egenskaber $P_{1}, P_{2}, \ldots, P_{n}$.
+
+Lad $A_{i}$ være subsettet der indeholder elementerne med egenskaben $P_{i}$. Antallet af elementer med alle egenskaberne $P_{i_{1}}, P_{i_{2}}, \ldots, P_{i_{k}}$ bliver skrevet som $N(P_{i_{1}}, P_{i_{2}}, \ldots, P_{i_{k}})$. Hvis vi skriver dette ned som sæt, får vi $|A_{i_{1}} \cap A_{i_{2}} \cap \cdots \cap A_{i_{k}}| = N(P_{i_{1}}, P_{i_{2}}, \ldots, P_{i_{k}})$
+
+Her kommer den vigtige del: Hvis antallet af elementer hvor ingen har egenskaben $P_{1}, P_2, \ldots, P_{n}$ er skrevet som $N(P_{1}', P_{2}', \ldots, P_{n}')$, og antallet af elementer i sættet er skrevet $N$, følger det at $N(P_{1}'P_{2}'\ldots P_{n}') = N - |A_{1} \cup A_{2} \cup \cdots \cup A_{n}|$.
+
+Fra Inclusion-Exclusion ser vi at:
+\begin{equation}
+  \begin{split}
+    N(P_1', P_{2}' \ldots P_{n}') &= N - \sum_{1 \leq i \leq n}^{}N(P_{i}) \\
+    &+ \sum_{1 \leq i < j \leq n}^{} N(P_{i}P_{j}) - \sum_{1 \leq i < j < k \leq n}^{}N(P_{i}P_{j}P_{k}) + \cdots + (-1)^{n}N(P_1P_{2} \cdots P_{n})
+  \end{split}
+\end{equation}
+
+
+
+\subsection{Antallet af Onto-Funktioner}
+\label{subsec:onto-funktioner}
+
+Hvor mange onto funktioner er der i et sæt fra seks elementer til et med 3?
+
+Antag at elementer i codomænet er $b_{1}, b_{2}$ og $b_{2}$. Lad $P_1, P_2$ og $P_{3}$ være egenskaberne at $b_{1}, b_{2}$ og $b_{3}$ \textbf{ikke} er i rangen af funktionen. Husk at en funktion er onto hvis og kun hvis den har ingen af egenskaberne $P_{1}, P_{2}$ eller $P_3$. Det ved vi er:
+
+\begin{equation}
+\begin{split}
+  N(P_1'P_{2}'P_{3}') = N - [N(P_{1} + N(P_{2}) &+ N(P_{3})\\
+  &+ [N(P_{1}P_{2}) + N(P_{1}P_{3}) + N(P_{2}P_{3})] - N(P_{1}P_{2}P_{3})
+\end{split}
+\end{equation}
+
+Hvor $N$ er antallet af funktioner fra et sæt med 6 elementer til et med 3. Vi ved at $N = 3^{6}$. Husk at $N(P_{i})$ er antallet af funktioner der \textbf{ikke} har $b_{i}$ i deres range, altså, funktioner som ikke resulterer i $b_{i}$. Dvs. der er $2^{6}$ af disse, da de kun kan vælge de 2 andre i så fald. Ydermere er der $\binom{3}{1}$ led af denne slags. Husk at$N(P_{i}P_{j})$ er antallet af funktioner som ikke har $b_{i}$ og $b_{j}$ i deres range. Dermed er der kun et valg, så $N(P_{i}P_{j}) = 1^{6} = 1$. Der er $\binom{3}{2}$ led af denne slags. Ydermere er $N(P_1P_{2}P_{3})= 0$  da der er ingen funktioner der ikke har nogen af dem som output.
+
+Dermed bliver det endelige antal onto funktioner fra et sæt med seks elementer til et med 3
+\[
+3^{6} - \binom{3}{1}2^{6} + \binom{3}{2}1^{6} = 729 - 192 + 3 = 540
+  \]
+
+  \begin{theorem}
+    Lad $m$ og $n$ være positive heltal med $m \geq n$. Så er der
+    \[
+      n^{m} - \binom{n}{1}(n-1)^{m} + \binom{n}{2}(n-2)^{m} - \cdots + (-1)^{n-1}\binom{n}{n-1} \cdot 1^{m}
+    \]
+
+    onto funktioner fra et sæt med $m$ elementer til et sæt med $n$ elementer.
+  \end{theorem}
+
+  \begin{proof}
+Beviset findes i eksempler over teoremet.
+  \end{proof}
+
+
+\subsection{Derangements og Hatcheck}
+\label{subsec:label}
+
+Hatcheck problemet siger basically bare at $n$ personer giver deres hat til en gut som glemmer at sætte navne på. Han giver hver hat til hver person med sandsynlighed $1/n$. Her stiller vi spørgsmålet: Hvad er sandsynligheden for at ingen får den korrekte hat? 
+
+Svaret er simpelt: antalet af måder hattene kan bliver arrangeret på således at ingen hat er i sin originale position, divideret med alle muligheder, $n!$. 
+
+\begin{definition}[Derangement]
+En \textbf{derangement} er en permutation af objekter som lader intet objekt være i sin originale position.
+\end{definition}
+
+\begin{theorem}
+  Antallet af derangements af et sæt med $n$ elementer er
+  \[
+D_{n} = n! \left[ 1 - \frac{1}{1!} + \frac{1}{2!} - \frac{1}{3!} +\cdots + (-1)^{n} \frac{1}{n!} \right]
+  \]
+\end{theorem}
+
+\begin{proof}
+Lad en permutation have egenskaben $P_{i}$ hvis elementet $i$ er fixed. Antallet af derangements er antallet af permutation der har ingen af egenskaberne $P_i$ hvor $i = 1, 2, \ldots, n$.
+
+Altså:
+\[
+D_{n} = N(P_{1}' P_{2}' \cdots P_{n}')
+\]
+
+Ved brug af inclusion-exclusion følger det at:
+
+\[
+D_{n} = N - \sum_{i}^{}N(P_{i}) + \sum_{i < j}^{}N(P_{i}P_{j}) - \sum_{i < j < k}^{} N(P_{i}P_{j}P_{k}) + \cdots + (-1)^{n}N(P_{1}P_{2} \ldots P_{n})
+\]
+
+Hvor $N = n!$, altså alle permutationer af $n$ elementer. Ydermere er $N(P_{i}) = (n-1)!$, da vi vil finde alle permutationer hvor element $i$ \textbf{ikke} er permuted. Ligesådan $N(P_{i}P_{j}) = (n-2)!$, generelt set gælder det at $N(P_{i_{1}}, P_{i_{2}}, P_{i_{m}}) = (n-m)!$
+
+Siden der er $\binom{n}{m}$ måder at vælge $m$ elementer fra $n$ på, følger det at
+\[
+\sum_{1 \leq i \leq n}^{} N(P_{i}) = \binom{n}{1}
+\]
+\[
+\sum_{1 \leq i <j\leq n}^{} N(P_{i}P_{j}) = \binom{n}{2}(n-2)!
+\]
+
+Og generelt
+
+
+\[
+\sum_{1 \leq i \leq n}^{} N(P_{i_{1}}P_{i_{2}}, \ldots, P_{i_{m}}) = \binom{n}{m}(n-m)!
+\]
+
+Hvis vi sætter disse værdier ind i formlen for $D_{n}$ giver det os:
+\[
+D_{n} = n! - \binom{n}{1} (n-1)! + \binom{n}{2}(n-2)! - \cdots + (-1)^{n}\binom{n}{n}(n-n)!
+\]
+
+hvilket er lig
+\[
+= n! - \frac{n!}{1!(n-1)!}(n-1)! + \cdots + (-1)^{n} \frac{n!}{n!0}0!
+\]
+
+Hvilket, hvis vi simplificerer det, giver os
+\[
+D_{n} = n! \left[ 1 - \frac{1}{1!} + \frac{1}{2!} - \cdots + (-1)^{n} \frac{1}{n!} \right]
+\]
+
+Antallet af personer der ikke får sin hat er dermed:
+\[
+\frac{D_{n}}{n!} = 1 - \frac{1}{1!} + \frac{1}{2!} - \cdots + (-1)^{n } \frac{1}{n!}
+\]
+
+Her fjerner vi bare $n!$, da vi dividerer med det for at få svaret. 
+\end{proof}
+
+
 
 \newpage
 
@@ -269,23 +403,361 @@ Følgende teorem er den generaliseret version.
 \label{sec:discprob}
 
 
+\begin{itemize}
+\item Expected Value
+\item Varians
+\item Bayes
+\item Markov's
+\item Chebyshev's
+\item Chernoff
+\end{itemize}
+
+\subsection{Forventede Værdi og Varians}
+\label{subsec:label}
+
+Den forventede værdi er simpelt den værdi vi forventer givet en random variabel. 
+
+\begin{definition}
+  Den forventede værdi på en random variabel $X$ på sample space $S$ er lig med:
+
+  \[
+E[X] = \sum_{s \in S}^{}p(s) X(s)
+  \]
+
+  Deviation af $X$ ved $s \in S$ er $X(s) - E(X)$, altså, forskellen mellem X og $X$'s forventede værdi.
+  
+\end{definition}
+
+\begin{theorem}
+  Hvis $X$ er en random variable og $P(X=r)$ er sandsynligheden for at $X =r$, så $P(x=r) = \sum_{s \in S, X(s)=r}^{}p(s)$, så
+  \[
+    E(X) = \sum_{r \in X(S)}^{} p(X = r)r
+  \]
+\end{theorem}
+
+\begin{definition}
+  Lad $X$ være en tilfældig variabel på sample space $S$. Variancen af $X$, skrevet $V(X)$ er
+  \[
+V(X) = \sum_{s \in S}^{} (X(s) - E(X))^{2}p(s)
+  \]
+
+  Altså, $V(X)$ er det vægtede gennemsnit af deviation af $X$ i anden. Standard deviation af $X$, skrevet $\sigma(X) = \sqrt{V(X)}$
+\end{definition}
+
+\begin{theorem}
+Hvis $X$ er en tilfældig variabel på et sample space $S$, så $V(X) = E(X^{2}) - E(X)^{2}$
+\end{theorem}
+
+\begin{proof}
+\begin{equation}
+  \label{}
+\begin{split}
+  V(X) &= \sum_{s \in S}^{}(X(s) - E(X))^{2}p(s)\\
+       &= \sum_{s \in S}^{} X(s)^{2}p(s) - 2E(X) \sum_{s \in S}^{} X(s)p(s) + E(X)^{2} \sum_{s \in S}^{}p(s)\\
+       &= E(X^{2}) - 2E(X)E(X) + E(X)^{2}\\
+  &= E(X^{2}) - E(X)^{2}
+\end{split}
+\end{equation}
+
+\end{proof}
+
+\subsection{Bayes Theorem}
+\label{subsec:label}
+
+Bayes' Theorem er fantastisk.
+
+\begin{theorem}[Bayes' Theorem]
+  Antag at $E$ og $F$ er hændelser fra et sample space $S$ således at $p(E) \neq 0$ og $p(F) \neq 0$. Så
+
+  \[
+p(F|E) = \frac{P(E|F)P(F)}{P(E|F)P(F)+P(E|\overline{F})P(\overline{F})}
+  \]
+\end{theorem}
+
+\begin{proof}
+  Definitionen af conditional sandsynlighed viser os at
+
+  \[
+p(F|E) = \frac{p(E \cap F)}{p(E)}
+  \]
+
+  og
+
+  \[
+p(E|F) = \frac{p(F \cap E)}{p(F)}
+  \]
+
+  Derfor er $p(E \cap F) = p(F|E)p(E)$ og $p(E \cap F) = p(E|F)p(F)$.
+
+  Vi sætter disse to sider lig hinanden, og dividerer begge sider med $p(E)$:
+
+  \[
+p(F|E)p(E) = p(E|F)p(F)
+  \]
+
+  \[
+p(F|E) = \frac{P(E|F)p(F)}{p(E)}
+  \]
+
+  Vi vil nu vise at $p(E) = p(E|F)p(F) + p(E|\overline{F}) p(\overline{F})$.
+  Først:
+
+  \[
+E = E \cap S = E \cap (F \cup \overline{F}) = (E \cap F) \cup (E \cap \overline{F})
+  \]
+
+  Ydermere, $E \cap F$ og $E \cap \overline{F}$ er disjunkte, fordi hvis $x \in E \cap F$ og $x \in E \cap \overline{F}$, så $x \in F \cap \overline{F} = \emptyset$.
+
+  Dermed er $p(E) = p(E \cap F) + p(E \cap \overline{F})$. Vi har allerede vist at $p(E \cap F) = p(E|F) p(F)$. Ydemere, har vi at $p(E|\overline{F}) = \frac{p(E \cap \overline{F}}{p(\overline{F})}$, hvilket viser at $p(E \cap \overline{F}) = p(E|\overline{F}) p(\overline{F})$. Dermed følger det at
+
+  \[
+p(E) = p(E \cap F) + p(E \cap \overline{F}) = p(E|F) p(F) + p(E|\overline{F}) + p(\overline{F})
+  \]
+  
+\end{proof}
+
+\begin{theorem}[Generalized Bayes' Theorem]
+  Antag at $E$ er en begivenhed fra et sample space $S$ og at $F_1, F_{2}, \ldots, F_{n}$ er mutually exclusive hændelser således at $\bigcup\limits_{i=1}^{n}F_{i} = S$. Antag at $p(E) \neq 0$ og $p(F_{i}) \neq 0$ for $i= 1, 2, \ldots, n$. Så
+  \[
+p(F_{j}|E) = \frac{p(E|F_{j}) p(F_{j})}{\sum_{i=1}^{n}p(E|F_{i})p(F_{i})}
+  \]
+\end{theorem}
+
+
+\subsection{Markov's Inequality}
+\label{subsec:label}
+
+Markov's Inequality er en simpel, men vigtig formel der bruges flere stedet i pensum. Den viser hvad sandsynligheden er for at en random variable er større end eller lig med en defineret konstant.
+
+\begin{theorem}[Markov's Inequality]
+ \[ 
+P(X \geq t) \leq \frac{E[X]}{t}
+\]
+\end{theorem}
+
+\begin{proof}
+\begin{equation}
+\begin{split}
+  E[X] &= \sum_{s \in X(s)}^{} p(X=s)s\\
+       &= \sum_{s \in X(s), s \geq t}^{} p(X=s)s + \sum_{s \in X(s), s < t}^{} p(X=s)s \\
+       &\geq \sum_{s \in X(s), s \geq t}^{} p(X=s)s \\
+       &\geq p(X\geq t)t\\
+\end{split}
+\end{equation}
+
+Vi dividerer begge sider med $t$ og får resultatet
+
+\[
+\frac{E[X]}{t} \geq p(X \geq t)
+\]
+
+
+\end{proof}
+
+\subsection{Chebyshev's Inequality}
+\label{subsec:label}
+
+\begin{theorem}[Chebyshev's Inequality]
+  Lad $X$ være et random variable.
+
+  \[
+P(|X - E(X)| \geq r) \leq \frac{V(X)}{r^{2}}
+  \]
+\end{theorem}
+Altså, den viser sandsynligheden for at du deviater fra expected med mere end eller lig med $a$.
+\begin{proof}
+
+  Lad $A$ være begivenheden $A = \{s \in S | |X(s) - E(X) | \geq r\}$
+
+  Vi vil gerne vise at $p(A) \leq V(X)/r^{2}$
+
+  \begin{equation}
+\begin{split}
+  V(X) &= \sum_{s \in S}^{} (X(s) - E(X))^{2}p(s) \\
+  &= \sum_{s \in A}^{}(X(s) - E(X))^{2}p(s) + \sum_{s \notin A}^{}(X(s) - E(X))^{2}p(s)
+\end{split}
+  \end{equation}
+Den anden sum her er ikke-negativ, da alle led er ikke-negative. Den første sum er mindst $\sum_{s \in A}^{}r^{2}p(s)$. Dermed, $V(X) \geq \sum_{s \in A}^{}r^{2}p(s) = r^{2}p(A)$. Det følger at $V(X)/r^{2} \geq p(A)$
+  
+\end{proof}
+
+\subsection{Chernoff Bounds}
+\label{subsec:label}
+
+Hold på hat og briller!
+
+\begin{itemize}
+  \item :(
+  \item Lad $X$ være et random variable som er summen af flere uafhængige $0-1$-værdi random variables: $X = X_{1} + X_{2} + \cdots + X_{n}$ hvor $X_{i}$ tager værdien $1$ med sandsynlighed $p_{i}$ og 0 ellers. 
+  \item Vi ved at $E(X) = \sum_{i=1}^{n}p_{i}$. 
+  \item Intuitivt, siden $X_{i}$ er uafhængige, tænker man nok at de vil ``cancel out'' så deres sum er lig deres expected value med ret stor sandsynlighed. 
+  \item Vi bruger Chernoff Bounds til at finde denne sandsxynlighed.
+  \item Det kan finde sandsynligheden for både et upper og lower bound. 
+  \end{itemize}
+
+  \begin{theorem}
+  Let $X, X_{1}, X_{2}, \ldots, X_{n}$ be defined as above, and assume that $\mu \geq E(X)$. Then, for any $\delta > 0$, we have
+  \[P(X > (1+\delta)\mu) < \left[ \frac{e^{\delta}}{(1+\delta)^{(1+\delta)}} \right]^{\mu}\]
+\end{theorem}
+\begin{itemize}
+\item Så, i sin essens, er Chernoff Bounds sandsynligheden for at en værdi deviater meget fra $E(X)$.
+\item $\mu$ er oftest bare $E(X)$ (very often, ifølge Jørgen), så længe $\mu \geq E(X)$ er det ok.
+\item Givet følgende observation: \[ \forall t > 0 \; \; p(X > (1 + \delta) \mu) = p(e^{tX} > e^{t(1+\delta)\mu}) \] da $e^{ty}$ er monotont increasing med $y$ (altså, når $y$ bliver større, bliver hele værdien større).
+\item Så dermed siger den bare at sandsynlighederne er de samme, da vi erstatter $y$ med hhv. $X$ og $(1 + \delta) \mu$.
+\item Så; hvorfor gider vi gøre det endnu mere kompliceret at kigge på? 
+\item Fordi den eksponentielle funktion har nogle dejlige properties vi kan bruge.
+\item Vi ved fra Markov's inequality at \[ p(Y > \gamma) \leq \frac{E(Y)}{\gamma} \] og \[ \gamma p(Y > \gamma) \leq E(Y) \]
+\item Fra dette kan vi finde: \[ p(X > (1+ \delta) \mu) = p(e ^{tX} > e^{t(1+ \delta) \mu}) \leq e^{t(1+ \delta) \mu} E[e^{tX}] \]
+\item Nu vil vi så gerne bounde $E[e^{tX}]$: \[ E(e^{tX}) = E(e^{t \sum x_{i}} = E(e^{\sum t X_{i}}) = E( \prod_{i=1}^{n}e^{tX_{i}}) = \prod_{i=1}^{n} E(e^{tX_{i}}) \]
+\item Siden $X_{i}$ er et indicator random variable \[ E(e^{tX_{i}}) = p_{i} \cdot e^{t}+ (1-p_{i}) \cdot e^{t\cdot 0} = p_{i}e^{t} + (1-p_{i}) = 1 + p_{i}(e^{t}-1) \]
+\item Så \[ E(e^{tX_{i}}) \leq e^{p_{i} (e^{t}-1} \]
+\item Da \[ 1 + x \leq e^{x} \] så længe $x \geq 0$
+\item Nu har vi et upper bound. Det vil vi gerne sætte ind:  
+\end{itemize}
+
+\begin{equation}
+\begin{split}
+  E(e^{tX}) = \prod_{i=1}^{n}e^{tX_{i}} &\leq \prod_{i=1}^{n} e^{P_{i}(e^{t}-1} \\
+                                    &= e^{\sum p_{i} (e^{t}-1}\\
+                                    &= e^{(e^{t}-1) \Sigma p_{i}}\\
+  &\leq e^{(e^{t}-1)\mu}
+\end{split}
+
+\end{equation}
+
+\begin{itemize}
+\item Fordi $\sum_{}^{}p_{i} = E(X) \leq \mu$
+\item Vi kan nu få det ind således at $p(X > (1 + \delta) \mu) \leq e^{-t(1 + \delta) \mu} \cdot E(e^{tX})$
+\item Vi sætter $p(X > (1+\delta)\mu) \leq e^{-t (1+\delta) \mu} \cdot e^{(e^{t}-1)\mu}$
+\item Dette holder for alle $t > 0$, så hvis $t = \ln (1+ \delta)$ får vi 
+\end{itemize}
+
+
+\begin{equation*}
+  \begin{split}
+    p(X > (1 + \delta) \mu) &\leq e^{-\ln(1 + \delta) \cdot (1 + \delta) \mu} \cdot e^{(e^{\ln (1 + \delta)}-1) \mu}\\
+                     &= (1+ \delta)^{-(1+ \delta) \mu} \cdot e^{(1 + \delta-1) \mu}\\
+    &= \left[ \frac{e^{\delta}}{(1+\delta)^{(1+\delta)}} \right]^{\mu}
+  \end{split}
+\end{equation*}
+
+\begin{itemize}
+\item Og det var beviset:)
+\item Men vi er ikke færdige!
+\item Det kan også vises at $X$ er langt mindre (lower bound). \[ p(X < (1 - \delta) \mu) < e^{- \frac{1}{2}\mu \delta^{2}} \]
+\item Nogle formler der er nemmere at bruge: \[ p(X > (1 + \delta) \mu) \leq e^{- \frac{\delta}{3}^{2}} \mu \text{ når } 0 < \delta \]
+  \[ p(X < (1- \delta) \mu ) \leq e^{- \frac{\delta}{2}^{2}}\mu \text{ når } 0 < \delta < 1 \]
+\end{itemize}
+
+
+
+
+
+
+\newpage
+
+
 \section{Randomized Algorithms}
 \label{sec:random}
 
 \begin{itemize}
 \item Sandsynligheden for et korrekt min-cut med Karger's
-\item Max K-sat
-\item Max-3-SAT
 \item Quicksort og Median-Finding
 \item Monte Carlo
 \item Hiring Problem
 \item Majority Element
 \end{itemize}
 
+\subsection{Sandsynligheden for et korrekt min-cut med Karger's}
+\label{subsec:label}
+
+
+Karger's algoritme er en algoritme til at finde min-cut (det er den dog ikke særligt god til, men den er hurtig! Så den skal køres flere gange.)
+
+Algoritmen virker ved at ``contracte'' en kant, som den har valgt tilfældigt. Dette bliver den ved med indtil der er to knuder tilbage. 
+
+\begin{theorem}
+  Karger's Algoritme returnerer et globalt min-cut af $G$ med sandsynlighed mindst $\frac{1}{\binom{n}{2}}$
+
+\end{theorem}
+
+\begin{proof}
+Givet et globalt min-cut (A,B) af $G$, og antag at det har størrelse $k$, altså, der er et sæt $F$ med $k$ kanter fra en ende i $A$ og en anden i $B$. Vi vil gerne finde et lower bound på sandsynligheden for at algoritmen giver cuttet $(A,B)$.
+
+Det går galt når en kant i $F$ bliver contracted. Omvendt, hvis en kant ikke i $F$ bliver contracted, er der stadig en chance for at få vores ønskede $(A,B)$ cut.
+
+Vi siger at hver knude har en degree af mindst $k$ (altså den har \textbf{mindst} $k$ kanter til sig). Dermed er sandsynligheden for at en kant i $F$ bliver contracted højest
+\[ \frac{k}{\frac{1}{2}kn} = \frac{2}{n} \]
+
+Lad os nu kigge på situationen efter $j$ iterationer. Sandsynligheden for at en kant i $F$ bliver contracted i næste iteration $j+1$ er \textbf{højest}
+
+\[ \frac{k}{\frac{1}{2}k(n-j)} = \frac{2}{n-j} \]
+
+Cuttet $(A,B)$ bliver returneret af algoritmen hvis ingen kant i $F$ bliver contracted i nogen af iterationerne $1, 2, \ldots, n-2$ (forid der er 2 tilbage).
+
+Vi skriver $\varepsilon_{j}$ til at være hændelsen at en kant i $F$ \textbf{ikke} er contracted i iteration $j$. Vi har vist at $P(\varepsilon_{1}) \geq 1 - \frac{2}{n}$ og $P(\varepsilon_{j+1}|\varepsilon_{1} \cap \varepsilon_{2} \cdots \cap \varepsilon_{n-j}) \geq 1 - \frac{2}{n-j}$
+Vi er interesserede i at finde lower bound på $P[\varepsilon_{1} \cap \varepsilon_{2} \cdots \cap \varepsilon_{n-2}]$. Det kan vi finde således:
+
+\begin{equation}
+\begin{split}
+  P(\varepsilon_{1}) &\cdot P(\varepsilon_{2}|\varepsilon_{1}) \cdots P(\varepsilon_{j+1}| \varepsilon_{1} \cap \varepsilon_{2} \cdots \cap \varepsilon_{j}) \cdots P(\varepsilon_{n-2}| \varepsilon_{1} \cap \varepsilon_{2} \cdots \cap \varepsilon_{n-3})\\
+           &\geq \left( 1-\frac{2}{n} \right) \left( 1- \frac{2}{n-1} \right)\cdots \left( 1- \frac{2}{n-j} \right) \cdots \left( 1- \frac{2}{3}\right)\\
+           &= \left( \frac{n-2}{n} \right) \left( \frac{n-3}{n-1} \right) \left( \frac{n-4}{n-2} \right) \cdots \left( \frac{2}{4} \right) \left( \frac{1}{3} \right)\\
+  &= \frac{2}{n(n-1)} = \binom{n}{2}^{-1}
+\end{split}
+\end{equation}
+\end{proof}
+
+Vi ved nu at et enkelt run at Karger's fejler i at finde et global min-cut med sandsynlighed $( 1 - \frac{1}{\binom{n}{2}})$. Det her tal er meget meget tæt på 1. Men, hvis vi kører algoritmen mange gnage, kan vi komme tættere på.
+
+Hvis vi kører algoritmen $\binom{n}{2}$ gange, så er sandsynligheden for at vi fejler højest
+\[
+\left(1- \frac{1}{\binom{n}{2}}  \right)^{\binom{n}{2}} \leq \frac{1}{e}
+\]
+
+Hvor $\frac{1}{\binom{n}{2}} = \binom{n}{2}^{-1}$
+
+Vi kan drive den længere ned, hvis vi kører algoritmen $\binom{n}{2} \ln n$ gange, så er sandsynligheden $e^{- \ln n} = 1/n$.
+
+\subsubsection{Antallet af min-cuts}
+
+Vi vil gerne finde ud af hvad antallet af min-cuts en graf kan have.
+
+\begin{theorem}
+En undirected graph $G = (V,E)$ på $n$ knuder har højest $\binom{n}{2}$ global min-cuts. 
+\end{theorem}
+
+Lad $G$ være en graf, og $C_{1}, C_{2}, \ldots, C_{r}$ være alle dets globale min-cuts. Lad $\varepsilon_{i}$ vælre hændelsen at $C_{i}$ er returneret af Karger's, og lad $\varepsilon = \bigcup\limits_{i=1}^{r} \varepsilon_{i}$ være hændelsen at algoritmen returnerer et af disse min-cuts.
+
+VI ved at $P(\varepsilon) \geq \frac{1}{\binom{n}{2}}$. Men! Beviset viser faktisk at for hvert $i$ har vi $P(\varepsilon_{i}) \geq \frac{1}{\binom{n}{2}}$. Hvert par af begivenheder, $\varepsilon_{i}$ og $\varepsilon_{j}$ er disjunkte. Dermed, fra union bound, har vi at:
+
+\[
+P[\varepsilon] = P[\bigcup\limits_{i=1}^{r} \varepsilon_{i}] = \sum_{i=1}^{r} P[\varepsilon_{i}] \geq \frac{r}{\binom{n}{2}}
+\]
+
+Men siden $P[\varepsilon] \leq 1$, så må $r \leq \binom{n}{2}$
+
+
+
 
 \subsection{Randomized Majority Element}
 \label{subsec:majorityelement}
 
+Randomized Majority Element er en monte carlo algoritme. Dvs. at den har en bounded køretid, men man er ikke sikker på at man får det rigtige svar. Lad $S = [s_{1}, s_{2}, \ldots, s_{n}]$ være en kollektion af $n$ heltal. Et element $s_{i}$ af $S$ er et majority element hvis mere end halvdelen af elementen er dette. Man kan nemt finde ud af om et element er majority: sortér arrayet og scan det, og se om det forekommer mere end $n/2$ gange. Dette kan dog hurtigst ske i $\Theta(n \log n)$ tid. Vi vil dog kigge på en randomiseret algoritme der kører i $O(n9$ tid:
+
+Lad $\mathcal{A}$ være algoritmen der tager input $S, m$ hvor $S$ er sættet og $m$ er en konstant. Algoritmen kører som følger:
+
+\begin{enumerate}
+\item Gentag $m$ gange
+  \begin{enumerate}
+  \item[(a)] Vælg et tilfældigt element $s \in S$; 
+  \item[(b)] Tjek om $s$ er et majority element af $S$, og hvis så, returnér ``true'' og stop.
+  \end{enumerate}
+  \item\label{item:5} Returnér ``false''
+\end{enumerate}
+
+Lad os analysere dens performance.
+Hvis $\mathcal{A}$ returnerer ``true'', så har $S$ et majority element. Ellers er det ikke sikkert om den har eller ej. Sandsynligheden for at værdien af et valgt element $s$ \textbf{ikke} er lig med værdien af majority elementet er mindre end $1/2$, og siden  vi laver uafhængige tilfældige valg i hver af de $m$ runder, er sandsynligheden højest $(1/2)^{m}$. Hvis $m = 20$ er sandsynligheden mindre end $\frac{1}{1 000 000}$. Så en meget lav chance for ikke at finde det.
 
 
 \subsection{Majority Element med Uendelig Datastrøm}
@@ -359,10 +831,123 @@ Givet denne algoritme, hvis du giver en værdi $q \in [n]$, så,
 \end{itemize}
 
 
+\subsection{Median-Finding og Quicksort}
+\label{subsec:label}
+
+Så for satan! Er vi klar?
+
+Først, \texttt{Selec(S,k)}
+
+MANGLER
+
+
+
 \newpage
 
 \section{Probabilistic Analysis}
 \label{sec:proban}
+
+\subsection{Coupon Collector}
+
+Der er $n$ kuponner. Du kan få alle kuponnerne i morgenmadsprodukter. Givet at der er uniform sandsynlighed for hver kupon (dvs. $1/n$ sandsynlighed i hver karton), hvor mange kartoner kan du så forvente at åbne før du får alle $n$ kuponer?
+
+Lad os starte med at introducere $X$ som er en random variable lig med antallet af bokse du skal købe indtil du har en kupon af hver type. Ydermere, lad os definere $X_{i} = \begin{cases}
+  1 & \text{ hvis du får en kupon i kasse }i\\
+  0 & \text{ ellers}
+\end{cases}$
+
+Dermed $X = X_{1}, X_{2}, \ldots, X_{n}$. Lad os finde den forventede værdi:
+
+\begin{equation}
+\begin{split}
+  E[X] &= \sum_{j=0}^{n-1}E[X_{j}]\\
+       &= \sum_{j=0}^{n-1} \frac{n}{n-j}\\
+       &= n \sum_{j=0}^{n-1} \frac{1}{n-j} \\
+       &= n \sum_{i=1}^{n} \frac{1}{i} \\
+       &= nH(n) \\
+  &= \Theta(n \log n)
+\end{split}
+\end{equation}
+
+Dermed skal du forvente at købe $n \log n$ morgenmadsprodukter før du får alle $n$. 
+
+\subsection{Forventede køretid af Quicksort og Selection}
+\label{subsec:label}
+
+
+\subsection{Randomiseret approximation for max $k$-SAT}
+\label{subsec:label}
+
+Dette bliver ``bare'' en generaliseret version af kapitel 13.3.
+
+Givet et sæt af clauses, $C_{1}, \ldots, C_{j}}$, hvor af længde $k$, over et sæt af variabler $X = \{x_{1}, \ldots, x_{n}\}$, findes der en satisfying truth assignment?
+Antag at vi sætter hver variabel $x_{1}, \ldots, x_{n}$ uafhængigt til 0 eller 1 med sandsynlighed $\frac{1}{2}$ hver. Hvad er det forventede antal af caluses satisfied?
+
+Lad $Z$ være det random variable lig med antallet af satisfied clauses. Vi introducerer nu $Z_{i} = \begin{cases}
+  1 & \text{ hvis clause }C_{i} \text{ er satisfied}\\
+  0 & \text{ ellers}.
+\end{cases}$
+
+Dermed er $Z = Z_{1} + Z_{2} + \cdots + Z_{j}$. Givet at $E[Z_{i}]$ er sandsynligheden for at $C_{i}$ er satisfied, finder vi den hvis bare én af de $k$ literaler er 1. Sandsynligheden for dette \textbf{ikke sker} er $\left( \frac{1}{2} \right)^{k}$. Givet $k = 3$, så $\left( \frac{1}{2} \right)^{3} = \frac{1}{8}$
+
+Dermed
+\begin{equation}
+\begin{split}
+  E[Z] &=E[ \sum_{i=0}^{j} Z_{i} ]\\
+       &= \sum_{i=0}^{j} 1-\left( \frac{1}{2} \right) ^{k}\\
+  &= j 1-\left( \frac{1}{2} \right)^{k}
+\end{split}
+\end{equation}
+
+\begin{theorem}
+  \label{theorem:13.15}
+For en $k-$SAT formel, hvor hver klausul har $k$ forskellige variabler, er det forventede antal af klausuler satisfied af en random assignemtn indenfor $(\frac{1}{2})^{k}$ af optimal.
+\end{theorem}
+
+
+\begin{theorem}
+For hver instans af $k$-SAT er der en truth assignment der satisfier mindst en $\left 1-( \frac{1}{2} \right)^{k}$ del af alle klausuler.
+\end{theorem}
+
+Næste gælder udelukkende for $k = 3$. Hurtig recap: $1 - \left( \frac{1}{2} \right)^{3} = \frac{7}{8}$.
+
+Vi argumenterer at hvis $j \leq 7$, altså, der er 7 eller færre klausuler, så er der et truth assignment der er satisfiable. Dette er fordi når $j \leq 7, $så $\frac{7}{8}j > j - 1$, og siden antallet af klausuler skal være et heltal, må det være lig med $j$.
+
+\subsubsection{Ydere analyse}
+
+Vi vil gerne have en randomiseret algoritme, hvis forventede køretid er polynomiel og den giver en sandhedstabel der satisfier mindst $\frac{7}{8}$ af alle klausuler.
+Vi ved at dette kan findes, fra Teorem~\ref{theorem:13.15}. Men hvor lang tid kommer det til at tage, før vi finder en? 
+
+Hvis vi kan finde sandsynligheden for at en tilfældig sandhedstabel satisfier mindst $\frac{7}{8}k$ klausuler er mindst $p$, så er den forventede antal af ``trials'' brugt af algoritmen $\frac{1}{p}$.
+For $j = 0, 1, 2, 3\ldots, k$, lad $p_{j}$ være sandsynligheden for at en tilfældig truth assignment satisfier præcis $j$ klausuler. Så, det forventede antal af klausuler satisfied, gennem definitionen af forventning, er lig med \[
+\sum_{j=0}^{k}j p_{j}
+\]
+
+Fra den tidligere analyse er dette lig $\frac{7}{8}k$.
+Vi er interesserede i $p = \sum_{j \geq \frac{7}{8}k}^{}p_{j}$, altså, kun når der bliver satisfied mere end $\frac{7}{8}k$ klausuler.
+
+Vi starter med at skrive:
+
+\[
+\frac{7}{8}k = \sum_{j=0}^{k}jp_{j} = \sum_{j < \frac{7}{8}k}^{} jp_{j} + \sum_{j \geq \frac{7}{8}k}^{} j p_{j}
+\]
+
+Nu definerer vi $k'$ til at være det største naturlige tal mindre end $\frac{7}{8}k$. Højresiden i ligningen bliver kun større hvis vi erstatter den første sum med $k'p_{j}$ og leddene i anden sum med $kp_{j}$. Ydermere observerer vi at $\sum_{j < \frac{7}{8}k}^{}p_{j} = 1 - p$ og så
+\[
+\frac{7}{8}k \leq \sum_{j < \frac{7}{8}k}^{} k'p_{j} + \sum_{j \geq \frac{7}{8}k}^{}kp_{j} = k'(1-p)+kp \leq k' + kp
+\]
+
+Og dermed er $kp \geq \frac{7}{8}k - k'$. Men $\frac{7}{8}k - k' \geq \frac{1}{8}$, siden k' er et heltal mindre end $\frac{7}{8}$ gange et andet heltal, så
+\[
+p \geq \frac{\frac{7}{8}k - k'}{k} \geq \frac{1}{8k}
+\]
+
+
+\label{subsec:label}
+
+
+
+\newpage
 
 \section{Indicator Random Variables}
 \label{sec:indicator}
