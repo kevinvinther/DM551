@@ -1867,27 +1867,6 @@ Dermed holder $(3)$ også.
 
 Et problem med FF algoritmen er at hvis du vælger en dårlig vej hver gang, kan du få en virkelig dårlig køretid. Derfor bliver køretiden $O(f^{*}|E|)$ hvor $f^{*}$ er  maksimumsflow.
 
-Dette er hvad der inspirerer Edmonds-Karp algoritmen.
-
-\subsection{Edmonds-Karp}
-\label{subsec:label}
-
-Edmonds-Karp algoritmen er bare Ford-Fulkerson, men hvor vejene valgt i $N_{f}$ er de korteste $(s,t)$-veje, ved brug af depth-first search. Dette giver os en polynomiel køretid $O(|V||E|^{2})$
-
-Husk breadth-first-search: Hvad den gør er at den ``labeller'' knuderne i forhold til hvor langt væk de er fra startknuden, og putter dem i ``lag''. Så lag 1 er 1 alle knuder med distance 1 fra startknuden etc.
-
-Husk på det på den her måde: Til at starte med er der måske en vej med længde 22. Derefter er der måske massere af paths der også har længde 22. Men du får aldrig en path kortere end 22 hvis du starter med en på længde 22. Så derfra går den kun op, indtil du når til ikke at have nogen mulige paths længere. 
-
-
-\begin{itemize}
-\item $\text{dist}(s,t) \geq 1$ i begyndelsen
-\item $\text{dist}(s,t) \leq n-1$ så længe der er et $(s,t)$ path, hvor $n = |V|$. Dette gælder da en path højest kan gå $|V| - 1 $ distance, da, hvis det er $|V|$ ville den gå over en knude to gange.
-\item Højest $|E|$ veje med den samme distance $\text{dist}(s,t) = p$. Hver gang der bliver lavet en augmentation, er der mindst én kant der bliver flipped, og dermed ikke er en del af vejen længere. 
-\item Dermed er der højest $(|V|-1) \cdot |E| = O(|V||E|)$ augmenting paths
-\item Hvert augmenting path findes ved brug af BFS i $O(|V|+|E|)$ tid
-\item Dermed er den fulde tid $O(|V||E| + |V|+|E|) = O(|V||E|^{2})$ skridt til at finde maksimumsflow.
-\end{itemize}
-
 
 
 \section{Min-Cut}
