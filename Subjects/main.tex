@@ -1066,7 +1066,7 @@ Dermed kan vi se at $P(X_{ij}=1) = \frac{2}{j-i+1}$, så $E(X_{ij}) = \frac{2}{j
        &< 2 \sum_{i=1}^{n-1} H(n)\\
   &< 2 n H(n) = O (n \log n)\\
 \end{split}
-\end{equation
+\end{equation}
 
 \newpage
 
@@ -1312,7 +1312,6 @@ Sandsynligheden for en længde streak er større end eller lig med $2 \lceil \lo
 
 \begin{equation}
 \begin{split}
-
   E[L] &= \sum_{j=0}^{n} j \cdot P(L_{j}) \\
        &=  \sum_{j=0}^{2 \lceil \log n \rceil - 1}j \cdot p(L_{j}) + \sum_{j= 2 \lceil \log n \rceil}^{n} j \cdot p(L_{j}) \\
        &< 2 \lceil \log n \rceil \sum_{j=0}^{2 \lceil \log n \rceil - 1} p(L_{j}) + n \sum_{j=2 \lceil \log n \rceil}^{n} p(L_{j}) \\
